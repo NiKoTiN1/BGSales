@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BGSales.Data\BGSales.Data.csproj" />
+    <ProjectReference Include="..\BGSales.Views\BGSales.Views.csproj" />
+  </ItemGroup>
+
+</Project>
