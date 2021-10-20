@@ -10,7 +10,9 @@ namespace BGSales.Data
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            this.Database.EnsureCreated();
         }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Project> Projects { get; set; }
     }
 }

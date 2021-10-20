@@ -1,6 +1,6 @@
 ﻿namespace BGSales.Views.Models
 {
-    public class RegistrationModel
+    public class RegistrationViewModel
     {
         public string Username { get; set; }
         public string Email { get; set; }
