@@ -1,8 +1,6 @@
 ﻿using BGSales.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 #nullable disable
 
@@ -25,6 +23,7 @@ namespace BGSales.Data
             {
 
                 optionsBuilder.UseSqlServer("Server=rodion-HP-ProBook-450-G5,1433;Database=BGS-Staging;MultipleActiveResultSets=true;User id=sa;Password=Z-omby111222;");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-IHNU5NF\\SQLEXPRESS;Database=BGS-Staging;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
@@ -33,7 +32,7 @@ namespace BGSales.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            OnModelCreatingPartial(modelBuilder);
+            this.OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
