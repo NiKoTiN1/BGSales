@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace BGSales.Domain.Models
+﻿namespace BGSales.Domain.Models
 {
-    public class Order
+    public class Order : IEntity
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
     }
 }
