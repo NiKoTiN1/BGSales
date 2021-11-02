@@ -23,9 +23,7 @@ namespace BGSales.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-
                 optionsBuilder.UseSqlServer("***REMOVED***");
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-IHNU5NF\\SQLEXPRESS;Database=BGS-Staging;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
