@@ -66,6 +66,8 @@ namespace BGSales.Web
             {
                 mc.AddProfile(new ApplicationUserMappingProfile());
                 mc.AddProfile(new TokenMappingProfile());
+                mc.AddProfile(new BusinessmanMappingProfile());
+                mc.AddProfile(new BloggerMappingProfile());
             });
 
             var mapper = mappingConfig.CreateMapper();
@@ -86,6 +88,12 @@ namespace BGSales.Web
 
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            services.AddTransient<IBusinessmanRepository, BusinessmanRepository>();
+            services.AddTransient<IBusinessmanService, BusinessmanService>();
+
+            services.AddTransient<IBloggerRepository, BloggerRepository>();
+            services.AddTransient<IBloggerService, BloggerService>();
 
             services.AddSwaggerGen(c =>
             {
