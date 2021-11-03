@@ -13,6 +13,8 @@ namespace BGSales.Data
         {
         }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
