@@ -14,6 +14,8 @@ namespace BGSales.Data
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Blogger> Bloggers { get; set; }
+        public DbSet<Businessman> Businessmans { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
