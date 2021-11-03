@@ -8,24 +8,12 @@ namespace BGSales.Data
 {
     public partial class BGSStagingContext : IdentityDbContext<ApplicationUser>
     {
-        public BGSStagingContext()
-        {
-        }
-
         public BGSStagingContext(DbContextOptions<BGSStagingContext> options)
             : base(options)
         {
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(***REMOVED***);
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
