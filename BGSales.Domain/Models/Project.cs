@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace BGSales.Domain.Models
+﻿namespace BGSales.Domain.Models
 {
-    public class Project
+    public class Project : IEntity
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
         public int AudienceAge { get; set; }
