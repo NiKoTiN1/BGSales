@@ -37,17 +37,17 @@ const LoginForm = (props:any) => {
         <form className="registration-form" onSubmit={submitForm}>
         <h2 className="registration-form__heading">Sign in</h2>
         <div className="registration-form__blok">
-          <label className="registration-form__label">Email address</label>
-          <TextField type="email" name="email"  onChange={(e) => setForm({ ...form, email: e.target.value })}/>
+          <TextField label="Email" type="email" name="email" variant="outlined" onChange={(e) => setForm({ ...form, email: e.target.value })}/>
         </div>
         <div className="registration-form__blok">
-          <label className="registration-form__label" htmlFor="password">Password</label>
-          <TextField type="password"name="password"  onChange={(e) => setForm({ ...form, password: e.target.value })}/>
+          <TextField label="Password" type="password"name="password" variant="outlined" onChange={(e) => setForm({ ...form, password: e.target.value })}/>
         </div>
-        <Button type="submit">
-           Sign in
-        </Button>
-        <Link className="registration-form__link" to='/registration'>Create acount?</Link>
+        <div className="registration-form__button">
+            <Button type="submit" variant="contained">
+              Sign in 
+            </Button>
+            <Link className="registration-form__button_signin" to='/registration'><Button variant="outlined">Sign up</Button></Link>
+        </div>
       </form>
     )
 }
