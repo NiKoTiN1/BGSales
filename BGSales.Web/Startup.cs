@@ -68,7 +68,7 @@ namespace BGSales.Web
                 mc.AddProfile(new TokenMappingProfile());
             });
 
-            IMapper mapper = mappingConfig.CreateMapper();
+            var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
             services.AddCors(Options =>
@@ -105,6 +105,8 @@ namespace BGSales.Web
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(policy);
 
             app.UseAuthentication();
             app.UseAuthorization();
