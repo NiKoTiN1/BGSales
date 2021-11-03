@@ -11,23 +11,29 @@ namespace BGSales.Services.Services
     {
         public AccountService(
             UserManager<ApplicationUser> userManager,
-            IMapper mapper)
+            IMapper mapper,
+            IBusinessmanService businessmanService,
+            IBloggerService bloggerService)
         {
-            this.userManager = userManager;
-            this.mapper = mapper;
+            _userManager = userManager;
+            _mapper = mapper;
+            _businessmanService = businessmanService;
+            _bloggerService = bloggerService;
         }
 
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IMapper mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        private readonly IBusinessmanService _businessmanService;
+        private readonly IBloggerService _bloggerService;
 
         public async Task<ApplicationUser> GetByEmail(string email)
         {
-            return await userManager.FindByEmailAsync(email);
+            return await _userManager.FindByEmailAsync(email);
         }
 
         public async Task<ApplicationUser> GetById(string userId)
         {
-            return await userManager.FindByIdAsync(userId).ConfigureAwait(false);
+            return await _userManager.FindByIdAsync(userId).ConfigureAwait(false);
         }
 
         public bool VerifyUser(ApplicationUser user, string password)
@@ -37,18 +43,27 @@ namespace BGSales.Services.Services
                 return false;
             }
 
-            return userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Success;
+            return _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Success;
         }
 
         public async Task<ApplicationUser> CreateUser(RegistrationViewModel model)
         {
-            ApplicationUser user = mapper.Map<ApplicationUser>(model);
+            var user = _mapper.Map<ApplicationUser>(model);
 
-            IdentityResult test = await userManager.CreateAsync(user, model.Password);
+            var creatingResult = await _userManager.CreateAsync(user, model.Password);
 
-            if (!test.Succeeded)
+            if (!creatingResult.Succeeded)
             {
                 return null;
+            }
+
+            if (user.UserType == UserType.Blogger)
+            {
+                await _bloggerService.CreateBlogger(user);
+            }
+            else
+            {
+                await _businessmanService.CreateBusinessman(user);
             }
 
             return user;
@@ -56,7 +71,7 @@ namespace BGSales.Services.Services
 
         public async Task<bool> UpdateUser(ApplicationUser user)
         {
-            IdentityResult result = await userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
         }
     }
