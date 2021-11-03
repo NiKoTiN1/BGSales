@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGSales.Web", "BGSales.Web\BGSales.Web.csproj", "{8CB5B2DD-4199-4E7E-B1CE-233EB75C120C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGSales.Web", "BGSales.Web\BGSales.Web.csproj", "{8CB5B2DD-4199-4E7E-B1CE-233EB75C120C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGSales.Services", "BGSales.Services\BGSales.Services.csproj", "{A927B95D-0458-495C-95E0-D130F6CC5915}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGSales.Services", "BGSales.Services\BGSales.Services.csproj", "{A927B95D-0458-495C-95E0-D130F6CC5915}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGSales.Domain", "BGSales.Domain\BGSales.Domain.csproj", "{7AC36C43-2606-4B9F-AEE9-A3243E69F3BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGSales.Domain", "BGSales.Domain\BGSales.Domain.csproj", "{7AC36C43-2606-4B9F-AEE9-A3243E69F3BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGSales.Data", "BGSales.Data\BGSales.Data.csproj", "{3557A737-CB55-49F8-9443-CCB260CD0080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGSales.Data", "BGSales.Data\BGSales.Data.csproj", "{3557A737-CB55-49F8-9443-CCB260CD0080}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGSales.Views", "BGSales.Views\BGSales.Views.csproj", "{BD3335A0-BEEF-45D2-8790-3EAFE87104DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGSales.Views", "BGSales.Views\BGSales.Views.csproj", "{BD3335A0-BEEF-45D2-8790-3EAFE87104DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
