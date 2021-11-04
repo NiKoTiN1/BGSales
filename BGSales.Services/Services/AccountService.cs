@@ -57,13 +57,20 @@ namespace BGSales.Services.Services
                 return null;
             }
 
-            if (user.UserType == UserType.Blogger)
+            try
             {
-                await _bloggerService.CreateBlogger(user);
+                if (user.UserType == UserType.Blogger)
+                {
+                    await _bloggerService.CreateBlogger(user);
+                }
+                else
+                {
+                    await _businessmanService.CreateBusinessman(user);
+                }
             }
-            else
+            catch
             {
-                await _businessmanService.CreateBusinessman(user);
+                await _userManager.DeleteAsync(user);
             }
 
             return user;
