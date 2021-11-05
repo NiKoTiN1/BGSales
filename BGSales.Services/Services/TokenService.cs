@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -38,13 +37,13 @@ namespace BGSales.Services.Services
                 {
                     new Claim("UserId", user.Id.ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddDays(Convert.ToInt32(this.configuration["Authentication:LIFETIME"])),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.configuration["Authentication:KEY"])), SecurityAlgorithms.HmacSha256Signature),
-                Audience = this.configuration["Authentication:AUDIENCE"],
-                Issuer = this.configuration["Authentication:ISSUER"],
+                Expires = DateTime.UtcNow.AddHours(Convert.ToInt32(configuration["Authentication:LIFETIME"])),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:KEY"])), SecurityAlgorithms.HmacSha256Signature),
+                Audience = configuration["Authentication:AUDIENCE"],
+                Issuer = configuration["Authentication:ISSUER"],
             };
             var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
@@ -69,16 +68,16 @@ namespace BGSales.Services.Services
             var tokenValidationParamters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = this.configuration["Authentication:ISSUER"],
+                ValidIssuer = configuration["Authentication:ISSUER"],
                 ValidateAudience = true,
-                ValidAudience = this.configuration["Authentication:AUDIENCE"],
+                ValidAudience = configuration["Authentication:AUDIENCE"],
                 ValidateLifetime = false,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.configuration["Authentication:KEY"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:KEY"])),
                 ValidateIssuerSigningKey = true
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(accessToken, tokenValidationParamters, out SecurityToken securityToken);
+            var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParamters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -111,13 +110,13 @@ namespace BGSales.Services.Services
 
         public bool RemoveToken(string refreshToken)
         {
-            RefreshToken tokenFromDb = this.refreshTokenRepository.Get(token => token.Token == refreshToken).SingleOrDefault();
+            var tokenFromDb = refreshTokenRepository.Get(token => token.Token == refreshToken).SingleOrDefault();
             if (tokenFromDb == null)
             {
                 return false;
             }
 
-            this.refreshTokenRepository.Remove(tokenFromDb);
+            refreshTokenRepository.Remove(tokenFromDb);
             return true;
         }
     }
