@@ -114,6 +114,8 @@ namespace BGSales.Web
 
             app.UseRouting();
 
+            app.UseCors(policy);
+
             app.UseAuthentication();
             app.UseAuthorization();
 
