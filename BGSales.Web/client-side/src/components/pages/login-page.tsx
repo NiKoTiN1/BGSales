@@ -1,13 +1,12 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
 import LoginForm from '../login-form';
-
+import { Route } from 'react-router-dom';
 
 const LoginPage = () => {
 
     return (
         <div>
-            <Route component={LoginForm}/>
+             <Route component={LoginForm}/>
         </div>
         
     )

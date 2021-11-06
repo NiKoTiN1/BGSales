@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 // import {StateProps, HistoryProps} from '../../interfaces/interfaces'
 import './login-form.scss';
 import { Link } from 'react-router-dom';
-
+import {postProfileData} from '../../actions';
 
 // type Props = HistoryProps & StateProps
 
@@ -20,18 +20,12 @@ const LoginForm = (props:any) => {
 
   const submitForm = (e:any) => {
     e.preventDefault();
-    // ser.postData('api/login',{
-    //   Username: form.email,
-    //   Password: form.password,
-    // })
-    // .then((data:any) => {
-    //   props.checkUsername(true)
-    //   serToken.addToken(data);
-    //   setTimeout(()=>props.history.push('/infopage'),900);
-    // })  
-    // .catch((data:any) => {
-    //   console.log(data);
-    // })
+    const user = {
+      Email: form.email,
+      Password: form.password,
+    }
+    props.dispatch(postProfileData(user));
+    props.history.push('/');
   };
     return (
         <form className="registration-form" onSubmit={submitForm}>
