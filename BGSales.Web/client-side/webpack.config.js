@@ -18,12 +18,11 @@ module.exports = {
     //   port: 8081,
     //   proxy: {
     //     '/api/**': {
-    //       target: 'http://react-test.somee.com',
+    //       target: 'https://localhost:5001',
     //       secure: false,
     //       changeOrigin: true
     //     },
     //   },
-
     // },
     module: {
         rules: [
