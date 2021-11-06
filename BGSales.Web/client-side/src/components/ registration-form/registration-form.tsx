@@ -4,15 +4,19 @@ import Button from '@material-ui/core/Button';
 import './registration-form.scss';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
+import {postData} from '../../actions';
+
 
 function RegistrationForm(props:any) {
   const [form , setForm] = useState({
-      email: '',
-      password: '',
       firstName: '',
       lastName: '',
-      rePassword: ''
+      email: '',
+      password: '',
+      rePassword: '',
+      role: true, 
   })
+  const [errorChecked , setErrorChecked] = useState(false);
 
   const submitForm = async(e:any) => {
     e.preventDefault();
@@ -27,36 +31,48 @@ function RegistrationForm(props:any) {
         Email: form.email,
         Password: form.password,
       }
-      await props.dispatch(postData(newUser));
+      props.dispatch(postData(newUser));
       props.history.push('/');
     }
+
   }
-  
-    return (
+
+  return (
       <form className="registration-form" onSubmit ={submitForm}>
         <h2 className="registration-form__heading">Sign up</h2>
-        <div className="registration-form__blok">
-          <label className="registration-form__label">Email address</label>
-          <TextField  type='email' name='email'  onChange={(e:any) => setForm({ ...form, email: e.target.value })}/>
+        <div>
+          <div className="registration-form__blok">
+            <TextField label="FirstName" type="firstName" name="firstName"  variant="outlined" onChange={(e:any) => setForm({ ...form, firstName: e.target.value })}/>
+          </div>
+          <div className="registration-form__blok">
+            <TextField label="LastName" type="lastName" name="lastName"  variant="outlined" onChange={(e:any) => setForm({ ...form, lastName: e.target.value })}/>
+          </div>
+          <div className="registration-form__blok">
+            <TextField  label="Email" type='email' name='email' variant="outlined" onChange={(e:any) => setForm({ ...form, email: e.target.value })}/>
+          </div>
+          <div className="registration-form__blok">
+            <TextField label="Password" type="password" name="password" variant="outlined" onChange={(e:any) => setForm({ ...form, password: e.target.value })}/>
+          </div>
+          <div className="registration-form__blok">
+            <TextField label="Password" error={errorChecked} type="password"name="password" variant="outlined" onChange={(e:any) => setForm({ ...form, rePassword: e.target.value })}/>
+          </div>
+          <div className="registration-form__checkbox">
+              <input type="checkbox" checked={form.role} onChange={()=>setForm({ ...form, role: true })} />
+              <label>advertiser</label>
+          </div>
+          <div className="registration-form__checkbox">
+              <input type="checkbox" checked={!form.role} onChange={()=>setForm({ ...form, role: false })}/>
+              <label>media person</label>
+          </div>
+          <div className="registration-form__button">
+            <Button type="submit" variant="contained">
+              Sign up 
+            </Button>
+            <Link className="registration-form__button_signin" to='/authorization'><Button variant="outlined">Sign in</Button></Link>
+          </div>
         </div>
-        <div className="registration-form__blok">
-          <label className="registration-form__label" htmlFor="password">Password</label>
-          <TextField type="password"name="password"  onChange={(e:any) => setForm({ ...form, password: e.target.value })}/>
-        </div>
-        <div className="registration-form__blok">
-          <label className="registration-form__label" htmlFor="firstName">FirstName</label>
-          <TextField type="firstName" name="firstName"  onChange={(e:any) => setForm({ ...form, firstName: e.target.value })}/>
-        </div>
-        <div className="registration-form__blok">
-          <label className="registration-form__label" htmlFor="lastName">LastName</label>
-          <TextField type="lastName" name="lastName"  onChange={(e:any) => setForm({ ...form, lastName: e.target.value })}/>
-        </div>
-        <Button type="submit">
-           Sign up
-        </Button>
-        <Link className="registration-form__link" to='/authorization'>Sign in</Link>
       </form>
-    )
+  )
 }
 
 const mapStateToProps =  (state: any) =>{
