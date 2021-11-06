@@ -2,15 +2,13 @@ import React, { Suspense, useEffect}from 'react'
 import {connect} from 'react-redux';
 import { Route, Switch} from 'react-router-dom';
 import AppHeader from '../app-header';
-import {addCheckUser} from '../../actions';
+import {refreshToken} from '../../actions';
 import {MainPage, LoginPage, RegistretionPage} from '../pages/index'
 import './app.scss';
 
 const App = (props:any) => {
   useEffect(()=>{
-    if(localStorage.getItem('acessToken')){
-      props.dispatch(addCheckUser(true));
-    }
+    props.dispatch(refreshToken());
   })
   return (
     <div>

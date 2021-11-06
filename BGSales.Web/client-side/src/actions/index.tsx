@@ -59,8 +59,26 @@ const postProfileData = (user:any) => {
         })
     }
 }
-
+const refreshToken = () => {
+    return (dispatch:any) => {
+        axios(
+        {
+          method: "PUT",
+          url: 'https://localhost:5001/api/Token/refresh', 
+        })
+        .then((data:any) => {
+            addToken(data);
+            dispatch(addCheckUser(true));
+        })
+        .catch((data:any) => {
+            localStorage.removeItem('acessToken');
+            localStorage.removeItem('refreshToken');
+            dispatch(addCheckUser(false));
+        })
+    }
+}
 export {
+    refreshToken,
     addCheckUser,
     postProfileData,
     postData
