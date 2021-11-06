@@ -1,9 +1,9 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import RegistartionForm from '../ registration-form'
 
 
-const AuthorizationPage = () => {
+const RegistartionPage = () => {
 
     return (
         <div>
@@ -14,4 +14,4 @@ const AuthorizationPage = () => {
 }
 
   
-  export default AuthorizationPage ;
+  export default RegistartionPage ;
