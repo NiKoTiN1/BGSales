@@ -10,26 +10,26 @@ function RegistrationForm(props:any) {
       email: '',
       password: '',
       firstName: '',
-      lastName: ''
+      lastName: '',
+      rePassword: ''
   })
 
-  const submitForm = (e:any) => {
+  const submitForm = async(e:any) => {
     e.preventDefault();
-    // ser.postData('api/register', {
-    //   Username: form.email,
-    //   Password: form.password,
-    //   FirstName: form.firstName,
-    //   LastName: form.lastName
-    // })
-    // .then((data:any) => {
-    //   props.checkUsername(true)
-    //   serToken.addToken(data);
-    //   setTimeout(()=>props.history.push('/infopage'),900);
-    // })
-    // .catch((data:any) => {
-    //   console.log(data);
-    // })
-    
+    if(form.password !== form.rePassword){
+      setErrorChecked(true);
+    } else {
+      setErrorChecked(false);
+      const newUser = {
+        FirstName: form.firstName,
+        LastName: form.lastName,
+        UserType: form.role ? 'Businessman' : 'Blogger',
+        Email: form.email,
+        Password: form.password,
+      }
+      await props.dispatch(postData(newUser));
+      props.history.push('/');
+    }
   }
   
     return (
@@ -59,11 +59,11 @@ function RegistrationForm(props:any) {
     )
 }
 
-// const mapDispatchToProps = {
-//   checkUsername
+const mapStateToProps =  (state: any) =>{
+  return {
+    checkUser: state.reducer.checkUser,
+  }
+}
 
-// }
-
-
-export default connect()(RegistrationForm) ;
+export default connect(mapStateToProps)(RegistrationForm) ;
 
