@@ -1,11 +1,15 @@
-import React, { Suspense, lazy, useEffect}from 'react'
+import React, { Suspense, useEffect}from 'react'
 import {connect} from 'react-redux';
-import { Route, Switch,Redirect} from 'react-router-dom';
+import { Route, Switch} from 'react-router-dom';
 import AppHeader from '../app-header';
+import {refreshToken} from '../../actions';
 import {MainPage, LoginPage, RegistretionPage} from '../pages/index'
 import './app.scss';
 
 const App = (props:any) => {
+  useEffect(()=>{
+    props.dispatch(refreshToken());
+  })
   return (
     <div>
       <AppHeader/>
@@ -19,6 +23,7 @@ const App = (props:any) => {
     </div>
   )
 }
+
 
 
 export default connect()(App) ;

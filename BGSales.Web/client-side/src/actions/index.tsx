@@ -1,37 +1,85 @@
 import axios from 'axios';
-const headers = { 
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-};
-const registrUser = (newUser:any) => {
+const addProfileUser = (newUser:any) => {
     return {
-        type: 'REGISTR_USER',
+        type: 'PROFILE_USER',
         payload: newUser
     }
 }
-
-const postData = (data:any) => {
+const addCheckUser = (checkUser:any) => {
+    return {
+        type: 'ADD_CHECK',
+        payload: checkUser
+    }
+}
+const addToken = (data:any) => {
+    localStorage.setItem("acessToken", data.data.accessToken)
+    localStorage.setItem("refreshToken", data.data.refreshToken)
+}
+const postData = (user:any) => {
     return (dispatch:any) => {
+        const formCheck = new FormData();
+        formCheck.append('FirstName', user.FirstName);
+        formCheck.append('LastName', user.LastName);
+        formCheck.append('UserType', user.UserType);
+        formCheck.append('Email', user.Email);
+        formCheck.append('Password', user.Password);
         axios(
         {
           method: "POST",
           url: 'https://localhost:5001/api/Account/register', 
-          headers:headers,
-          data: {...data}
+          data: formCheck
         })
         .then((data:any) => {
-            console.log(data);
-            //    props.checkUsername(true)
-            //   serToken.addToken(data);
-            //    setTimeout(()=>props.history.push('/infopage'),900);
+            addToken(data);
+            dispatch(addCheckUser(true));
         })
         .catch((data:any) => {
             console.log(data);
         })
     }
 }
-
+const postProfileData = (user:any) => {
+    return (dispatch:any) => {
+        const formCheck = new FormData();
+        formCheck.append('Email', user.Email);
+        formCheck.append('Password', user.Password);
+        axios(
+        {
+          method: "POST",
+          url: 'https://localhost:5001/api/Account/login', 
+          data: formCheck
+        })
+        .then((data:any) => {
+            //dispatch(registrUser());
+            addToken(data);
+            dispatch(addCheckUser(true));
+        })
+        .catch((data:any) => {
+            console.log(data);
+        })
+    }
+}
+const refreshToken = () => {
+    return (dispatch:any) => {
+        axios(
+        {
+          method: "PUT",
+          url: 'https://localhost:5001/api/Token/refresh', 
+        })
+        .then((data:any) => {
+            addToken(data);
+            dispatch(addCheckUser(true));
+        })
+        .catch((data:any) => {
+            localStorage.removeItem('acessToken');
+            localStorage.removeItem('refreshToken');
+            dispatch(addCheckUser(false));
+        })
+    }
+}
 export {
-    registrUser,
+    refreshToken,
+    addCheckUser,
+    postProfileData,
     postData
 };
