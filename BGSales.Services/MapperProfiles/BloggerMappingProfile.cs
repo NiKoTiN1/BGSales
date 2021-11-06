@@ -10,7 +10,6 @@ namespace BGSales.Services.MapperProfiles
         {
             CreateMap<ApplicationUser, Blogger>()
              .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
-             .ForMember(dest => dest.User, opt => opt.MapFrom(src => src))
              .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
         }
     }

@@ -15,25 +15,26 @@ function RegistrationForm(props:any) {
       password: '',
       rePassword: '',
       role: true, 
-     
   })
   const [errorChecked , setErrorChecked] = useState(false);
 
-  const submitForm = (e:any) => {
+  const submitForm = async(e:any) => {
     e.preventDefault();
     if(form.password !== form.rePassword){
       setErrorChecked(true);
     } else {
       setErrorChecked(false);
+      const newUser = {
+        FirstName: form.firstName,
+        LastName: form.lastName,
+        UserType: form.role ? 'Businessman' : 'Blogger',
+        Email: form.email,
+        Password: form.password,
+      }
+      props.dispatch(postData(newUser));
+      props.history.push('/');
     }
-    const newUser = {
-      FirstName: form.firstName,
-      LastName: form.lastName,
-      UserType: form.role ? 'Businessman' : 'Blogger',
-      Email: form.email,
-      Password: form.password,
-    }
-    props.dispatch(postData(newUser));
+
   }
 
   return (
@@ -74,10 +75,11 @@ function RegistrationForm(props:any) {
   )
 }
 
-// const mapDispatchToProps = {
-//   checkUsername
+const mapStateToProps =  (state: any) =>{
+  return {
+    checkUser: state.reducer.checkUser,
+  }
+}
 
-// }
-
-export default connect()(RegistrationForm) ;
+export default connect(mapStateToProps)(RegistrationForm) ;
 
