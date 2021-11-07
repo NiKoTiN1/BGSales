@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-// import {checkUsername} from '../../actions';
-// import Service from '../../services/services'
 import {connect} from 'react-redux';
-// import ServiceToken from '../../services/servicesToken'
-// import {StateProps, HistoryProps} from '../../interfaces/interfaces'
-import './login-form.scss';
 import { Link } from 'react-router-dom';
 import {postProfileData} from '../../actions';
+import LogFormPropsInterface from '../../interfaces/LogFormPropsInterface';
+import './login-form.scss';
 
-// type Props = HistoryProps & StateProps
-
-const LoginForm = (props:any) => {
+const LoginForm = ({dispatch, history}: LogFormPropsInterface) => {
     const [form , setForm] = useState({
         email: '',
         password: ''
@@ -24,8 +19,8 @@ const LoginForm = (props:any) => {
       Email: form.email,
       Password: form.password,
     }
-    props.dispatch(postProfileData(user));
-    props.history.push('/');
+    dispatch(postProfileData(user));
+    history.push('/');
   };
     return (
         <form className="registration-form" onSubmit={submitForm}>
@@ -45,10 +40,5 @@ const LoginForm = (props:any) => {
       </form>
     )
 }
-
-// const mapDispatchToProps = {
-//   checkUsername
-
-// }
 
 export default connect()(LoginForm) ;

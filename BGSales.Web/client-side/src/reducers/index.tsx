@@ -1,16 +1,14 @@
-const initialState: any= {
-    currentUser: [],
+import InitialStateInterface from '../interfaces/InitialStateInterface';
+import ActionInterface from '../interfaces/ActionInterface';
+import {ActionType} from '../interfaces/ActionType';
+
+const initialState: InitialStateInterface= {
     checkUser: false
 }
 
-const reducer = (state = initialState, action: any) => {
+const reducer = (state = initialState, action: ActionInterface) => {
     switch (action.type) {
-        case 'PROFILE_USER':
-            return {
-                ...state,
-                currentUser: action.payload,
-            } 
-        case 'ADD_CHECK':
+        case ActionType.ADD_CHECK:
             return {
                 ...state,
                 checkUser: action.payload
