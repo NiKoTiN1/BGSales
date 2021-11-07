@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import './user-menu.scss';
 import { Button } from '@material-ui/core';
 import {addCheckUser} from '../../actions';
+import {imageSrc} from '../../imageRequire';
+import PropsUserMenuInterface from '../../interfaces/PropsUserMenuInterface';
 
-const UserMenu = (props:any) => {
+const UserMenu = ({dispatch}:PropsUserMenuInterface) => {
     const [userMenu, setUserMenu] = useState(false);
-    const imageSrc = require('../../assets/images.png')
     const logOut = () => {
-      props.dispatch(addCheckUser(false));
-      localStorage.removeItem('acessToken');
+      dispatch(addCheckUser(false));
+      localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
     };
     return (
@@ -30,11 +30,4 @@ const UserMenu = (props:any) => {
         </div> 
     )
 };
-
-const mapStateToProps =  (state: any) =>{
-    return {
-      checkUser: state.reducer.checkUser,
-    }
-  }
-
-export default connect(mapStateToProps)(UserMenu);
+export default connect()(UserMenu);

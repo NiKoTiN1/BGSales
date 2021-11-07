@@ -4,11 +4,12 @@ import { Route, Switch} from 'react-router-dom';
 import AppHeader from '../app-header';
 import {refreshToken} from '../../actions';
 import {MainPage, LoginPage, RegistretionPage} from '../pages/index'
+import PropsAppInterface from '../../interfaces/PropsAppInterface';
 import './app.scss';
 
-const App = (props:any) => {
+const App = ({dispatch}:PropsAppInterface) => {
   useEffect(()=>{
-    props.dispatch(refreshToken());
+    dispatch(refreshToken());
   })
   return (
     <div>
@@ -23,7 +24,5 @@ const App = (props:any) => {
     </div>
   )
 }
-
-
 
 export default connect()(App) ;
