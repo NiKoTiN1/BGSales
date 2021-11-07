@@ -5,9 +5,9 @@ import './registration-form.scss';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 import {postData} from '../../actions';
+import LogFormPropsInterface from '../../interfaces/LogFormPropsInterface';
 
-
-function RegistrationForm(props:any) {
+function RegistrationForm({dispatch, history}: LogFormPropsInterface) {
   const [form , setForm] = useState({
       firstName: '',
       lastName: '',
@@ -31,8 +31,8 @@ function RegistrationForm(props:any) {
         Email: form.email,
         Password: form.password,
       }
-      props.dispatch(postData(newUser));
-      props.history.push('/');
+      dispatch(postData(newUser));
+      history.push('/');
     }
 
   }
@@ -75,11 +75,5 @@ function RegistrationForm(props:any) {
   )
 }
 
-const mapStateToProps =  (state: any) =>{
-  return {
-    checkUser: state.reducer.checkUser,
-  }
-}
-
-export default connect(mapStateToProps)(RegistrationForm) ;
+export default connect()(RegistrationForm) ;
 
