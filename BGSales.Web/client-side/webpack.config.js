@@ -13,17 +13,9 @@ module.exports = {
     resolve: {
         extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
-    // devServer: {
-    //   historyApiFallback: true,
-    //   port: 8081,
-    //   proxy: {
-    //     '/api/**': {
-    //       target: 'https://localhost:5001',
-    //       secure: false,
-    //       changeOrigin: true
-    //     },
-    //   },
-    // },
+    devServer: {
+      historyApiFallback: true,
+    },
     module: {
         rules: [
             { test: /\.tsx?$/, use: "ts-loader"},
@@ -44,9 +36,9 @@ module.exports = {
                   }]
             },
             {
-              test: /\.(png|svg|jpg|jpeg|gif)$/i,
-              type: 'asset',
-            },
+              test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+              type: 'asset/resource',
+            }, 
         ],
         
     },

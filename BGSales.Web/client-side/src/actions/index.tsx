@@ -1,22 +1,21 @@
 import axios from 'axios';
-const addProfileUser = (newUser:any) => {
+import {ActionType} from '../interfaces/ActionType';
+import TokenDataInterface from '../interfaces/TokenDataInterface';
+import RegistrationUserInterface from '../interfaces/RegistrationUserInterface';
+import LogInUserInterface from '../interfaces/LogInUserInterface';
+
+const addCheckUser = (checkUser:boolean) => {
     return {
-        type: 'PROFILE_USER',
-        payload: newUser
-    }
-}
-const addCheckUser = (checkUser:any) => {
-    return {
-        type: 'ADD_CHECK',
+        type: ActionType.ADD_CHECK,
         payload: checkUser
     }
 }
-const addToken = (data:any) => {
-    localStorage.setItem("acessToken", data.data.accessToken)
-    localStorage.setItem("refreshToken", data.data.refreshToken)
+const addToken = (data:TokenDataInterface) => {
+    localStorage.setItem("accessToken", data.accessToken)
+    localStorage.setItem("refreshToken", data.refreshToken)
 }
-const postData = (user:any) => {
-    return (dispatch:any) => {
+const postData = (user:RegistrationUserInterface) => {
+    return (dispatch:Function) => {
         const formCheck = new FormData();
         formCheck.append('FirstName', user.FirstName);
         formCheck.append('LastName', user.LastName);
@@ -30,16 +29,13 @@ const postData = (user:any) => {
           data: formCheck
         })
         .then((data:any) => {
-            addToken(data);
+            addToken(data.data);
             dispatch(addCheckUser(true));
-        })
-        .catch((data:any) => {
-            console.log(data);
         })
     }
 }
-const postProfileData = (user:any) => {
-    return (dispatch:any) => {
+const postProfileData = (user:LogInUserInterface) => {
+    return (dispatch:Function) => {
         const formCheck = new FormData();
         formCheck.append('Email', user.Email);
         formCheck.append('Password', user.Password);
@@ -51,27 +47,24 @@ const postProfileData = (user:any) => {
         })
         .then((data:any) => {
             //dispatch(registrUser());
-            addToken(data);
+            addToken(data.data);
             dispatch(addCheckUser(true));
-        })
-        .catch((data:any) => {
-            console.log(data);
         })
     }
 }
 const refreshToken = () => {
-    return (dispatch:any) => {
+    return (dispatch:Function) => {
         axios(
         {
           method: "PUT",
           url: 'https://localhost:5001/api/Token/refresh', 
         })
         .then((data:any) => {
-            addToken(data);
+            addToken(data.data);
             dispatch(addCheckUser(true));
         })
-        .catch((data:any) => {
-            localStorage.removeItem('acessToken');
+        .catch(() => {
+            localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             dispatch(addCheckUser(false));
         })
