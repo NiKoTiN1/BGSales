@@ -1,12 +1,9 @@
 import React from 'react';
-
+import Main from '../main';
 const MainPage = () => {
 
     return (
-        <div>
-            <p>MainPage</p>
-        </div>
-        
+        <Main />
     )
 }
 
