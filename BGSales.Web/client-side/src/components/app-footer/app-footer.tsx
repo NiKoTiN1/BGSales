@@ -5,9 +5,9 @@ import './app-footer.scss';
 const AppFooter = () => {
 
     return (
-        <header className="footer">
-            <label ></label>
-        </header>
+        <div className="footer">
+            <label className="footer__label">&#169; Gatskevich Rodion, Biletsky Nikita</label>
+        </div>
     )
 };
 
