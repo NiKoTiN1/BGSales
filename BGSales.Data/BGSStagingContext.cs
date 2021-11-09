@@ -22,6 +22,7 @@ namespace BGSales.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<StripeInfo> StripeInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
