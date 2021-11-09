@@ -4,14 +4,16 @@ using BGSales.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BGSales.Data.Migrations
 {
     [DbContext(typeof(BGSStagingContext))]
-    partial class BGSStagingContextModelSnapshot : ModelSnapshot
+    [Migration("20211109194516_OrdersProjectsChatCommentsMessages")]
+    partial class OrdersProjectsChatCommentsMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,9 +141,6 @@ namespace BGSales.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AvatarId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
 
@@ -149,8 +148,6 @@ namespace BGSales.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AvatarId");
 
                     b.HasIndex("UserId");
 
@@ -468,15 +465,9 @@ namespace BGSales.Data.Migrations
 
             modelBuilder.Entity("BGSales.Domain.Models.Businessman", b =>
                 {
-                    b.HasOne("BGSales.Domain.Models.Image", "Avatar")
-                        .WithMany()
-                        .HasForeignKey("AvatarId");
-
                     b.HasOne("BGSales.Domain.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Avatar");
 
                     b.Navigation("User");
                 });
