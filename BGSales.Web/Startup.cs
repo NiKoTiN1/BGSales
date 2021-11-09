@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using System;
 using System.Text;
 
@@ -84,9 +85,9 @@ namespace BGSales.Web
                     });
             });
 
-            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAccountService, Services.Services.AccountService>();
 
-            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<ITokenService, Services.Services.TokenService>();
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddTransient<IBusinessmanRepository, BusinessmanRepository>();
@@ -94,6 +95,8 @@ namespace BGSales.Web
 
             services.AddTransient<IBloggerRepository, BloggerRepository>();
             services.AddTransient<IBloggerService, BloggerService>();
+
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
             services.AddSwaggerGen(c =>
             {
@@ -103,6 +106,7 @@ namespace BGSales.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            StripeConfiguration.ApiKey = Configuration["Stripe:SecretKey"];
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
