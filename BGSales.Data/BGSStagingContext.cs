@@ -16,11 +16,25 @@ namespace BGSales.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Blogger> Bloggers { get; set; }
         public DbSet<Businessman> Businessmans { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Chat> Chat { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<StripeInfo> StripeInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+
+            modelBuilder
+                .Entity<ApplicationUser>()
+                .HasMany(e => e.Comments)
+                .WithOne(e => e.Owner)
+                .OnDelete(DeleteBehavior.Cascade);
 
             OnModelCreatingPartial(modelBuilder);
         }
