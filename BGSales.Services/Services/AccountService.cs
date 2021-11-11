@@ -3,7 +3,6 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Threading.Tasks;
 
 namespace BGSales.Services.Services
@@ -63,12 +62,10 @@ namespace BGSales.Services.Services
                 if (user.UserType == UserType.Blogger)
                 {
                     await _bloggerService.CreateBlogger(user);
-                    await AddRoleToUser(user, Roles.Blogger);
                 }
                 else
                 {
                     await _businessmanService.CreateBusinessman(user);
-                    await AddRoleToUser(user, Roles.Businessman);
                 }
             }
             catch
@@ -83,16 +80,6 @@ namespace BGSales.Services.Services
         {
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
-        }
-
-        private async Task AddRoleToUser(ApplicationUser user, Roles role)
-        {
-            var result = await _userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
-            await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
-            if (!result.Succeeded)
-            {
-                throw new Exception("Cannot set role to user!");
-            }
         }
     }
 }
