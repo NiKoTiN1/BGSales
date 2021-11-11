@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BGSales.Services.Services
 {
@@ -20,27 +21,29 @@ namespace BGSales.Services.Services
             IConfiguration configuration,
             UserManager<ApplicationUser> userManager)
         {
-            this.refreshTokenRepository = refreshTokenRepository;
-            this.configuration = configuration;
-            this.userManager = userManager;
+            _refreshTokenRepository = refreshTokenRepository;
+            _configuration = configuration;
+            _userManager = userManager;
         }
 
-        private readonly IRefreshTokenRepository refreshTokenRepository;
-        private readonly IConfiguration configuration;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public string GenerateToken(ApplicationUser user)
+        public async Task<string> GenerateToken(ApplicationUser user)
         {
+            var userRole = Enum.Parse(typeof(Roles), (await _userManager.GetRolesAsync(user)).SingleOrDefault());
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("UserId", user.Id.ToString()),
+                    new Claim("Role", userRole.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(Convert.ToInt32(configuration["Authentication:LIFETIME"])),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:KEY"])), SecurityAlgorithms.HmacSha256Signature),
-                Audience = configuration["Authentication:AUDIENCE"],
-                Issuer = configuration["Authentication:ISSUER"],
+                Expires = DateTime.UtcNow.AddHours(Convert.ToInt32(_configuration["Authentication:LIFETIME"])),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:KEY"])), SecurityAlgorithms.HmacSha256Signature),
+                Audience = _configuration["Authentication:AUDIENCE"],
+                Issuer = _configuration["Authentication:ISSUER"],
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -68,11 +71,11 @@ namespace BGSales.Services.Services
             var tokenValidationParamters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = configuration["Authentication:ISSUER"],
+                ValidIssuer = _configuration["Authentication:ISSUER"],
                 ValidateAudience = true,
-                ValidAudience = configuration["Authentication:AUDIENCE"],
+                ValidAudience = _configuration["Authentication:AUDIENCE"],
                 ValidateLifetime = false,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:KEY"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:KEY"])),
                 ValidateIssuerSigningKey = true
             };
 
@@ -110,13 +113,13 @@ namespace BGSales.Services.Services
 
         public bool RemoveToken(string refreshToken)
         {
-            var tokenFromDb = refreshTokenRepository.Get(token => token.Token == refreshToken).SingleOrDefault();
+            var tokenFromDb = _refreshTokenRepository.Get(token => token.Token == refreshToken).SingleOrDefault();
             if (tokenFromDb == null)
             {
                 return false;
             }
 
-            refreshTokenRepository.Remove(tokenFromDb);
+            _refreshTokenRepository.Remove(tokenFromDb);
             return true;
         }
     }
