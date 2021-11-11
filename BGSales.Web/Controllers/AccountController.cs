@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,68 +12,68 @@ namespace BGSales.Web.Controllers
     {
         public AccountController(IAccountService accountService, ITokenService tokenService, IMapper mapper)
         {
-            this.accountService = accountService;
-            this.tokenService = tokenService;
-            this.mapper = mapper;
+            _accountService = accountService;
+            _tokenService = tokenService;
+            _mapper = mapper;
         }
 
-        private readonly IAccountService accountService;
-        private readonly ITokenService tokenService;
-        private readonly IMapper mapper;
+        private readonly IAccountService _accountService;
+        private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromForm] RegistrationViewModel model)
         {
-            if (!this.ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return this.BadRequest("Model error!");
+                return BadRequest("Model error!");
             }
 
-            ApplicationUser user = await this.accountService.CreateUser(model);
+            var user = await _accountService.CreateUser(model);
 
             if (user == null)
             {
-                return this.BadRequest("User with this username is already created!");
+                return BadRequest("User with this username is already created!");
             }
 
-            user.RefreshToken = this.tokenService.GenerateRefreshToken();
-            var isUpdated = await this.accountService.UpdateUser(user);
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+            var isUpdated = await _accountService.UpdateUser(user);
 
             if (!isUpdated)
             {
-                this.BadRequest("User cannot set refresh error!");
+                BadRequest("User cannot set refresh error!");
             }
 
-            TokenViewModel tokenModel = this.mapper.Map<TokenViewModel>(user.RefreshToken);
-            tokenModel.AccessToken = this.tokenService.GenerateToken(user);
+            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
+            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
 
-            return this.Ok(tokenModel);
+            return Ok(tokenModel);
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromForm] LoginViewModel model)
         {
-            ApplicationUser user = await this.accountService.GetByEmail(model.Email);
+            var user = await _accountService.GetByEmail(model.Email);
 
-            if (!this.accountService.VerifyUser(user, model.Password))
+            if (!_accountService.VerifyUser(user, model.Password))
             {
-                return this.BadRequest("Invalid email or password.");
+                return BadRequest("Invalid email or password.");
             }
 
-            user.RefreshToken = this.tokenService.GenerateRefreshToken();
-            var isUpdated = await this.accountService.UpdateUser(user);
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+            var isUpdated = await _accountService.UpdateUser(user);
 
             if (!isUpdated)
             {
-                this.BadRequest("User cannot set refresh error!");
+                BadRequest("User cannot set refresh error!");
             }
 
-            TokenViewModel tokenModel = this.mapper.Map<TokenViewModel>(user.RefreshToken);
-            tokenModel.AccessToken = this.tokenService.GenerateToken(user);
+            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
+            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
 
-            return this.Ok(tokenModel);
+            return Ok(tokenModel);
         }
     }
 }
