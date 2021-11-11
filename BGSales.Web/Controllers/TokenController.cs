@@ -11,12 +11,12 @@ namespace BGSales.Web.Controllers
     {
         public TokenController(ITokenService tokenService, IAccountService accountService)
         {
-            this.tokenService = tokenService;
-            this.accountService = accountService;
+            _tokenService = tokenService;
+            _accountService = accountService;
         }
 
-        private readonly ITokenService tokenService;
-        private readonly IAccountService accountService;
+        private readonly ITokenService _tokenService;
+        private readonly IAccountService _accountService;
 
         [HttpPut]
         [Route("refresh")]
@@ -28,18 +28,18 @@ namespace BGSales.Web.Controllers
             }
             if (model.AccessToken == null || string.IsNullOrEmpty(model.AccessToken))
             {
-                tokenService.RemoveToken(model.RefreshToken);
+                _tokenService.RemoveToken(model.RefreshToken);
                 return BadRequest(new { Error = "You have no refreshToken!" });
             }
 
-            var userId = tokenService.GetUserIdFromAccessToken(model.AccessToken);
-            var user = await accountService.GetById(userId);
-            var isRefreshTokenValid = tokenService.ValidateRefreshToken(user, model.RefreshToken);
+            var userId = _tokenService.GetUserIdFromAccessToken(model.AccessToken);
+            var user = await _accountService.GetById(userId);
+            var isRefreshTokenValid = _tokenService.ValidateRefreshToken(user, model.RefreshToken);
             if (!isRefreshTokenValid)
             {
                 return BadRequest();
             }
-            model.AccessToken = tokenService.GenerateToken(user);
+            model.AccessToken = await _tokenService.GenerateToken(user);
             return Ok(model);
         }
     }
