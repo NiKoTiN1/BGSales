@@ -1,38 +1,40 @@
-
 .registration-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  word-wrap: normal;
+  &__heading {
+    font-family: "Playfair Display SC", serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-size: 24px;
+    color: #cfbdbd;
+    text-align: center;
+  }
+  &__container {
     display: flex;
     flex-direction: column;
+    margin: 20px 0px;
     align-items: center;
-    word-wrap: normal;
-    &__heading{
-        font-family: 'Playfair Display SC', serif;
-        font-weight: 500;
-        letter-spacing: 1px;
-        font-size: 24px;
-        color: #cfbdbd;
-        text-align: center;
+  }
+  &__label {
+    display: flex;
+    font-size: 16px;
+    color: #e69a18;
+    font-style: italic;
+  }
+  &__link {
+    display: flex;
+    margin-top: 30px;
+  }
+  &__button {
+    margin-top: 30px;
+    &_signin {
+      margin-left: 55px;
+      text-decoration: none;
     }
-    &__blok{
-        display: flex;
-        flex-direction: column;
-        margin: 20px 0px;
-        align-items: center;
+    &_back {
+      text-decoration: none;
     }
-    &__label{
-        display: flex;
-        font-size: 16px;
-        color: #e69a18;
-        font-style: italic;
-    }
-    &__link{
-        display: flex;
-        margin-top: 30px;
-    }
-    &__button{
-        margin-top: 30px;
-        &_signin{
-            margin-left: 55px;
-            text-decoration: none;
-        }
-    }
+  }
 }

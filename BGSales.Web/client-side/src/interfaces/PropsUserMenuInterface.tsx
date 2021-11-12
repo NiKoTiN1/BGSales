@@ -1,3 +1,3 @@
-export default interface PropsUserMenuInterface{
-    dispatch: Function;
+export default interface PropsUserMenuInterface {
+  dispatch: Function;
 }
