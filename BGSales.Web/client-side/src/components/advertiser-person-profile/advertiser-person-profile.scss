@@ -1,0 +1,46 @@
+.media-profile {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: rgba(47, 255, 158, 0.041);
+  margin-top: 50px;
+  &__img {
+    width: 200px;
+    height: 200px;
+  }
+  .information {
+    display: flex;
+    margin-right: 100px;
+    margin-left: 100px;
+    flex-direction: row;
+    &__name {
+      margin-left: 30px;
+    }
+  }
+}
+.media-header {
+  display: flex;
+  justify-content: center;
+  h1 {
+    font-family: "Courier New", Courier, monospace;
+    color: rgba(0, 0, 0, 0.664);
+  }
+}
+
+.information-activity {
+  display: flex;
+  margin-right: 100px;
+  margin-left: 100px;
+  flex-direction: row;
+  &__name {
+    margin-left: 30px;
+  }
+}
+.edit {
+  margin-top: 20px;
+  margin-left: 20px;
+  &__link {
+    text-decoration: none;
+    color: black;
+  }
+}

@@ -1,3 +1,6 @@
-export default interface InitialStateInterface{
-    checkUser: boolean;
+import CurrentUserInterface from "./CurrentUserInterface";
+
+export default interface InitialStateInterface {
+  currentUser: CurrentUserInterface;
+  checkUser: boolean;
 }

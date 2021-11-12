@@ -1,5 +1,5 @@
-import InitialStateInterface from './InitialStateInterface';
+import InitialStateInterface from "./InitialStateInterface";
 
 export default interface StateInterface {
-    reducer: InitialStateInterface;
-};
+  reducer: InitialStateInterface;
+}
