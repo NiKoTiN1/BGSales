@@ -8,7 +8,7 @@ namespace BGSales.Services.MapperProfiles
     {
         public TokenMappingProfile()
         {
-            this.CreateMap<RefreshToken, TokenViewModel>()
+            CreateMap<RefreshToken, TokenViewModel>()
                     .ForMember(dest => dest.RefreshToken, opt => opt.MapFrom(src => src.Token));
         }
     }

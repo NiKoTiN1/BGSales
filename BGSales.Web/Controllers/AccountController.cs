@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
+using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BGSales.Web.Controllers
@@ -10,16 +14,55 @@ namespace BGSales.Web.Controllers
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
-        public AccountController(IAccountService accountService, ITokenService tokenService, IMapper mapper)
+        public AccountController(IAccountService accountService,
+            ITokenService tokenService,
+            IMapper mapper,
+            IBloggerService bloggerService,
+            IBusinessmanService businessmanService)
         {
             _accountService = accountService;
             _tokenService = tokenService;
             _mapper = mapper;
+            _bloggerService = bloggerService;
+            _businessmanService = businessmanService;
         }
 
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly IBloggerService _bloggerService;
+        private readonly IBusinessmanService _businessmanService;
+
+        [HttpGet]
+        [Authorize]
+        [Route("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _accountService.GetById(userIdClaim.Value);
+
+            if (user == null)
+            {
+                throw new Exception("User not found!");
+            }
+
+            if (user.UserType == UserType.Blogger)
+            {
+                var model = _bloggerService.Get(user);
+                return Ok(model);
+            }
+            else
+            {
+                var model = _businessmanService.Get(user);
+                return Ok(model);
+            }
+        }
 
         [HttpPost]
         [Route("register")]

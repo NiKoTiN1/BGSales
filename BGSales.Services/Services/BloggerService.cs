@@ -2,6 +2,8 @@
 using BGSales.Data.Interfaces;
 using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
+using BGSales.Views.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BGSales.Services.Services
@@ -23,6 +25,21 @@ namespace BGSales.Services.Services
             var blogger = _mapper.Map<Blogger>(user);
 
             await _bloggerRepository.Add(blogger);
+        }
+
+        public BloggerViewModel Get(ApplicationUser user)
+        {
+            var blogger = _bloggerRepository.Get(b => b.UserId == user.Id).SingleOrDefault();
+
+            if (blogger == null)
+            {
+                throw new System.Exception("Cannot find blogger with this Id!");
+            }
+
+            var model = _mapper.Map<BloggerViewModel>(user);
+            model = _mapper.Map(blogger, model);
+
+            return model;
         }
     }
 }
