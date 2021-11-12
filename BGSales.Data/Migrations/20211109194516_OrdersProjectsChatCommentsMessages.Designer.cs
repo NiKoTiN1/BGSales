@@ -4,14 +4,16 @@ using BGSales.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BGSales.Data.Migrations
 {
     [DbContext(typeof(BGSStagingContext))]
-    partial class BGSStagingContextModelSnapshot : ModelSnapshot
+    [Migration("20211109194516_OrdersProjectsChatCommentsMessages")]
+    partial class OrdersProjectsChatCommentsMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +29,6 @@ namespace BGSales.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("AvatarId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -77,9 +76,6 @@ namespace BGSales.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StripeInfoId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -92,8 +88,6 @@ namespace BGSales.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AvatarId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -104,14 +98,15 @@ namespace BGSales.Data.Migrations
 
                     b.HasIndex("RefreshTokenId");
 
-                    b.HasIndex("StripeInfoId");
-
                     b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("BGSales.Domain.Models.Blogger", b =>
                 {
                     b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AvatarId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Nickname")
@@ -133,6 +128,8 @@ namespace BGSales.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AvatarId");
 
                     b.HasIndex("UserId");
 
@@ -311,25 +308,6 @@ namespace BGSales.Data.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("BGSales.Domain.Models.StripeInfo", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsCardAdded")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("StripeId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StripeInfo");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -463,30 +441,24 @@ namespace BGSales.Data.Migrations
 
             modelBuilder.Entity("BGSales.Domain.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("BGSales.Domain.Models.Image", "Avatar")
-                        .WithMany()
-                        .HasForeignKey("AvatarId");
-
                     b.HasOne("BGSales.Domain.Models.RefreshToken", "RefreshToken")
                         .WithMany()
                         .HasForeignKey("RefreshTokenId");
 
-                    b.HasOne("BGSales.Domain.Models.StripeInfo", "StripeInfo")
-                        .WithMany()
-                        .HasForeignKey("StripeInfoId");
-
-                    b.Navigation("Avatar");
-
                     b.Navigation("RefreshToken");
-
-                    b.Navigation("StripeInfo");
                 });
 
             modelBuilder.Entity("BGSales.Domain.Models.Blogger", b =>
                 {
+                    b.HasOne("BGSales.Domain.Models.Image", "Avatar")
+                        .WithMany()
+                        .HasForeignKey("AvatarId");
+
                     b.HasOne("BGSales.Domain.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Avatar");
 
                     b.Navigation("User");
                 });
