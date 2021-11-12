@@ -1,6 +1,6 @@
 import CurrentUserInterface from "./CurrentUserInterface";
 
-export default interface PropsUserMenuInterface {
-  dispatch: Function;
+export default interface AppHeaderInterface {
+  checkUser: boolean;
   currentUser: CurrentUserInterface;
 }

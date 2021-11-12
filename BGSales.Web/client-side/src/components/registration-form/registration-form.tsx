@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { postData } from "../../actions";
 import LogFormPropsInterface from "../../interfaces/LogFormPropsInterface";
 
-function RegistrationForm({ dispatch, history}: LogFormPropsInterface) {
+function RegistrationForm({ dispatch, history }: LogFormPropsInterface) {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -39,60 +39,55 @@ function RegistrationForm({ dispatch, history}: LogFormPropsInterface) {
   return (
     <form className="registration-form" onSubmit={submitForm}>
       <h2 className="registration-form__heading">Sign up</h2>
-      <div className="registration-form__container">
-        <div className="registration-form__container__field">
+      <div>
+        <div className="registration-form__field">
           <TextField
             label="FirstName"
-            name="firstName"
             variant="outlined"
             onChange={(e: any) =>
               setForm({ ...form, firstName: e.target.value })
             }
           />
         </div>
-        <div className="registration-form__containe__field">
+        <div className="registration-form__field">
           <TextField
             label="LastName"
-            name="lastName"
             variant="outlined"
             onChange={(e: any) =>
               setForm({ ...form, lastName: e.target.value })
             }
           />
         </div>
-        <div className="registration-form__container__field">
+        <div className="registration-form__field">
           <TextField
             label="Email"
             type="email"
-            name="email"
             variant="outlined"
             onChange={(e: any) => setForm({ ...form, email: e.target.value })}
           />
         </div>
-        <div className="registration-form__container__field">
+        <div className="registration-form__field">
           <TextField
             label="Password"
             type="password"
-            name="password"
             variant="outlined"
             onChange={(e: any) =>
               setForm({ ...form, password: e.target.value })
             }
           />
         </div>
-        <div className="registration-form__container__field">
+        <div className="registration-form__field">
           <TextField
             label="Password"
             error={errorChecked}
             type="password"
-            name="password"
             variant="outlined"
             onChange={(e: any) =>
               setForm({ ...form, rePassword: e.target.value })
             }
           />
         </div>
-        <div className="registration-form__container__checkbox">
+        <div className="registration-form__checkbox">
           <input
             type="checkbox"
             checked={form.role}
@@ -100,7 +95,7 @@ function RegistrationForm({ dispatch, history}: LogFormPropsInterface) {
           />
           <label>advertiser</label>
         </div>
-        <div className="registration-form__container__checkbox">
+        <div className="registration-form__checkbox">
           <input
             type="checkbox"
             checked={!form.role}
@@ -108,7 +103,7 @@ function RegistrationForm({ dispatch, history}: LogFormPropsInterface) {
           />
           <label>media person</label>
         </div>
-        <div className="registration-form__container__button">
+        <div className="registration-form__button">
           <Button type="submit" variant="contained">
             Sign up
           </Button>

@@ -3,17 +3,33 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./app-header.scss";
 import UserMenu from "../user-menu";
-const AppHeader = (props: any) => {
+import AppHeaderInterface from "../../interfaces/AppHeaderInterface";
+import StateInterface from "../../interfaces/StateInterface";
+
+const AppHeader = ({ checkUser, currentUser }: AppHeaderInterface) => {
   return (
     <header className="header">
-      {props.checkUser ? (
+      {checkUser ? (
         <>
-          <Link className="header__link projects" to="/allProjects">
-            All Projects
-          </Link>
-          <Link className="header__link projects" to="/myProjects">
-            My Projects
-          </Link>
+          {currentUser.role === "Blogger" ? (
+            <>
+              <Link className="header__link projects" to="/allProjects">
+                All Projects
+              </Link>
+              <Link className="header__link projects" to="/selectedProjects">
+                Selected Projects
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link className="header__link projects" to="/bloggers">
+                Bloggers
+              </Link>
+              <Link className="header__link projects" to="/myProjects">
+                My Projects
+              </Link>{" "}
+            </>
+          )}
           <Link className="header__link notification" to="#">
             <span>Inbox</span>
             <span className="notification__badge">1</span>
@@ -32,9 +48,10 @@ const AppHeader = (props: any) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: StateInterface) => {
   return {
     checkUser: state.reducer.checkUser,
+    currentUser: state.reducer.currentUser,
   };
 };
 

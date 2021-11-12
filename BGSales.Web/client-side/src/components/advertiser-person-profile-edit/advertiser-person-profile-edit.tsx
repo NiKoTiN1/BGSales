@@ -7,8 +7,14 @@ import { imageSrc } from "../../imageRequire";
 import { changeProfile } from "../../actions";
 import "./advertiser-person-profile-edit.scss";
 import FormInterface from "../../interfaces/FormInterface";
+import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
+import StateInterface from "../../interfaces/StateInterface";
 
-const AdvertiserPersonProfileEdit = ({ dispatch, currentUser, history }: any) => {
+const AdvertiserPersonProfileEdit = ({
+  dispatch,
+  currentUser,
+  history,
+}: PersonProfileEditInterface) => {
   const [form, setForm] = useState<FormInterface>({
     imageUrl: currentUser.profile.imageUrl,
     firstName: currentUser.profile.firstName,
@@ -117,9 +123,7 @@ const AdvertiserPersonProfileEdit = ({ dispatch, currentUser, history }: any) =>
               <TextField
                 label="Number Offers"
                 defaultValue={form.numberOffers}
-                error={
-                  form.numberOffers === "" || !Number(form.numberOffers)
-                }
+                error={form.numberOffers === "" || !Number(form.numberOffers)}
                 variant="outlined"
                 onChange={(e: any) =>
                   setForm({ ...form, numberOffers: e.target.value })
@@ -135,7 +139,7 @@ const AdvertiserPersonProfileEdit = ({ dispatch, currentUser, history }: any) =>
     </>
   );
 };
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.reducer.currentUser,
   };

@@ -1,11 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { imageSrc } from "../../imageRequire";
 import "./media-person-profile.scss";
 import { Button } from "@material-ui/core";
+import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
+import { imageSrc } from "../../imageRequire";
+import StateInterface from "../../interfaces/StateInterface";
 
-const MediaPersonProfile = ({ currentUser }: any) => {
+const MediaPersonProfile = ({
+  currentUser,
+  dispatch,
+}: PersonProfileInterface) => {
   return (
     <>
       <div className="edit">
@@ -17,7 +22,11 @@ const MediaPersonProfile = ({ currentUser }: any) => {
         <p>
           <img
             className="media-profile__img"
-            src={currentUser.profile.imageUrl}
+            src={
+              currentUser.profile.imageUrl
+                ? currentUser.profile.imageUrl
+                : imageSrc
+            }
             alt=""
           />
         </p>
@@ -58,7 +67,7 @@ const MediaPersonProfile = ({ currentUser }: any) => {
     </>
   );
 };
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.reducer.currentUser,
   };

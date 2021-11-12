@@ -3,8 +3,14 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./advertiser-person-profile.scss";
 import { Button } from "@material-ui/core";
+import { imageSrc } from "../../imageRequire";
+import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
+import StateInterface from "../../interfaces/StateInterface";
 
-const AdvertiserPersonProfile = ({ currentUser }: any) => {
+const AdvertiserPersonProfile = ({
+  currentUser,
+  dispatch,
+}: PersonProfileInterface) => {
   return (
     <>
       <div className="edit">
@@ -16,7 +22,11 @@ const AdvertiserPersonProfile = ({ currentUser }: any) => {
         <p>
           <img
             className="media-profile__img"
-            src={currentUser.profile.imageUrl}
+            src={
+              currentUser.profile.imageUrl
+                ? currentUser.profile.imageUrl
+                : imageSrc
+            }
             alt=""
           />
         </p>
@@ -38,7 +48,7 @@ const AdvertiserPersonProfile = ({ currentUser }: any) => {
     </>
   );
 };
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.reducer.currentUser,
   };

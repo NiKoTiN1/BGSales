@@ -12,34 +12,24 @@
     color: #cfbdbd;
     text-align: center;
   }
-  &__container {
-    &__field{
-      display: flex;
-      flex-direction: column;
-      margin: 20px 0px;
-      align-items: center;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px;
+    align-items: center;
+  }
+
+  &__button {
+    margin-top: 30px;
+    &_signin {
+      margin-left: 55px;
     }
-    &__label {
-      display: flex;
-      font-size: 16px;
-      color: #e69a18;
-      font-style: italic;
+    &_back {
+      text-decoration: none;
     }
-    &__link {
-      display: flex;
-      margin-top: 30px;
-    }
-    &__checkbox {
-      margin-left: 0px;
-    }
-    &__button {
-      margin-top: 30px;
-      &_signin {
-        margin-left: 55px;
-      }
-      &_back {
-        text-decoration: none;
-      }
-    }
+  }
+  &__checkbox {
+    margin-left: 0px;
   }
 }

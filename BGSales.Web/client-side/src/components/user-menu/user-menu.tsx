@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 import { addCheckUser } from "../../actions";
 import { imageSrc } from "../../imageRequire";
 import PropsUserMenuInterface from "../../interfaces/PropsUserMenuInterface";
+import StateInterface from "../../interfaces/StateInterface";
 
-const UserMenu = ({ dispatch, currentUser }: any) => {
+const UserMenu = ({ dispatch, currentUser }: PropsUserMenuInterface) => {
   const [userMenu, setUserMenu] = useState(false);
   const logOut = () => {
     dispatch(addCheckUser(false));
@@ -29,7 +30,11 @@ const UserMenu = ({ dispatch, currentUser }: any) => {
           <div>
             <Link
               className="user-menu__select__button"
-              to={currentUser.role === "Blogger" ? "/profileMedia" : "#"}
+              to={
+                currentUser.role === "Blogger"
+                  ? "/profileMedia"
+                  : "/profileAdvertiser"
+              }
             >
               <Button
                 className="user-menu__select__button_exit"
@@ -54,7 +59,7 @@ const UserMenu = ({ dispatch, currentUser }: any) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.reducer.currentUser,
   };

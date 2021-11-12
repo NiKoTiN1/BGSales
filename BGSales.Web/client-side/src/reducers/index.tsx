@@ -5,7 +5,7 @@ import { imageSrc } from "../imageRequire";
 
 const initialState: InitialStateInterface = {
   currentUser: {
-    role: "Businessman",
+    role: "Blogger",
     profile: {
       imageUrl: imageSrc,
       firstName: "Rodion",

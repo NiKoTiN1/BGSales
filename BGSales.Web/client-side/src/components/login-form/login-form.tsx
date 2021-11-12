@@ -7,7 +7,7 @@ import { postProfileData } from "../../actions";
 import LogFormPropsInterface from "../../interfaces/LogFormPropsInterface";
 import "./login-form.scss";
 
-const LoginForm = ({ dispatch, history}: LogFormPropsInterface) => {
+const LoginForm = ({ dispatch, history }: LogFormPropsInterface) => {
   const [form, setForm] = useState({
     email: "",
     password: "",

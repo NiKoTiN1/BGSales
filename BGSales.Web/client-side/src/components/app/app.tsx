@@ -10,11 +10,11 @@ import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
 import AppHeader from "../app-header";
 import AppFooter from "../app-footer";
-import { refreshToken } from "../../actions";
 import PropsAppInterface from "../../interfaces/PropsAppInterface";
 import "./app.scss";
+import StateInterface from "../../interfaces/StateInterface";
 
-const App = ({ currentUser, dispatch }: any) => {
+const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   useEffect(() => {
     // dispatch(refreshToken());
   });
@@ -36,7 +36,7 @@ const App = ({ currentUser, dispatch }: any) => {
           {currentUser.role !== "Blogger" ? (
             <Redirect to="/authorization" />
           ) : (
-            <Route component={MediaPersonProfileEdit}/>
+            <Route component={MediaPersonProfileEdit} />
           )}
         </Route>
         <Route path="/profileAdvertiser" exact>
@@ -50,7 +50,7 @@ const App = ({ currentUser, dispatch }: any) => {
           {currentUser.role !== "Businessman" ? (
             <Redirect to="/authorization" />
           ) : (
-            <Route component={AdvertiserPersonProfileEdit}/>
+            <Route component={AdvertiserPersonProfileEdit} />
           )}
         </Route>
       </Switch>
@@ -58,7 +58,7 @@ const App = ({ currentUser, dispatch }: any) => {
     </div>
   );
 };
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.reducer.currentUser,
   };
