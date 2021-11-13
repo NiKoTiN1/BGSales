@@ -42,6 +42,18 @@ namespace BGSales.Services.Services
             return model;
         }
 
+        public Businessman GetByUserId(string userId)
+        {
+            var businessman = _businessmanRepository.Get(b => b.UserId == userId).SingleOrDefault();
+
+            if (businessman == null)
+            {
+                throw new System.Exception("Cannot find businessman with this Id!");
+            }
+
+            return businessman;
+        }
+
         public async Task<BusinessmanViewModel> Update(UpdateBusinessmanViewModel model)
         {
             var businessman = _businessmanRepository.Get(b => b.UserId == model.UserId).SingleOrDefault();

@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="client-side\src\assets\Jpg\" />
-    <Folder Include="Controllers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

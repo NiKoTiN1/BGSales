@@ -146,6 +146,11 @@ namespace BGSales.Services.Services
             return updatedModel;
         }
 
+        public async Task<bool> IsInRole(ApplicationUser user, Roles role)
+        {
+            return await _userManager.IsInRoleAsync(user, role.ToString());
+        }
+
         private async Task AddRoleToUser(ApplicationUser user, Roles role)
         {
             var result = await _userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
