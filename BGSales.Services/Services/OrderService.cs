@@ -61,7 +61,8 @@ namespace BGSales.Services.Services
 
             var model = _mapper.Map<OrderViewModel>(order);
             var businessman = _businessmanService.GetByBusinessmanId(order.AdvertiserId);
-            var businessmanModel = _mapper.Map<BusinessmanViewModel>(businessman);
+            var businessmanModel = _mapper.Map<BusinessmanViewModel>(businessman.User);
+            businessmanModel = _mapper.Map(businessman, businessmanModel);
 
             model.Advitiser = businessmanModel;
 
