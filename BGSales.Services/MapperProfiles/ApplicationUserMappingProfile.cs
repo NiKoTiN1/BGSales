@@ -35,6 +35,15 @@ namespace BGSales.Services.MapperProfiles
             CreateMap<UpdateBusinessmanViewModel, ApplicationUser>()
                  .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                  .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName));
+
+            CreateMap<ApplicationUser, StripeInfo>()
+                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => 0));
+
+            CreateMap<ApplicationUser, PartialProfileViewModel>()
+                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+                 .ForMember(dest => dest.UrlImage, opt => opt.MapFrom(src => src.Avatar.Path))
+                 .ForMember(dest => dest.Money, opt => opt.MapFrom(src => src.StripeInfo.Balance));
         }
     }
 }

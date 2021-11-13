@@ -53,6 +53,10 @@ namespace BGSales.Services.Services
         public async Task<ApplicationUser> CreateUser(RegistrationViewModel model)
         {
             var user = _mapper.Map<ApplicationUser>(model);
+            var stripeInfo = _mapper.Map<StripeInfo>(user);
+
+            stripeInfo.UserId = user.Id;
+            user.StripeInfo = stripeInfo;
 
             var creatingResult = await _userManager.CreateAsync(user, model.Password);
 

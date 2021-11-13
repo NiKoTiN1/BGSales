@@ -123,6 +123,29 @@ namespace BGSales.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("profile/parital")]
+        public async Task<IActionResult> ProfileParital()
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _accountService.GetById(userIdClaim.Value);
+
+            if (user == null)
+            {
+                throw new Exception("User not found!");
+            }
+
+            var model = _mapper.Map<PartialProfileViewModel>(user);
+            return Ok(model);
+        }
+
         [HttpPut]
         [Authorize]
         [Route("update/blogger")]
