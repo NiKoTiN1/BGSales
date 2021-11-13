@@ -11,5 +11,7 @@ namespace BGSales.Services.Interfaces
         public bool VerifyUser(ApplicationUser user, string password);
         public Task<ApplicationUser> CreateUser(RegistrationViewModel model);
         public Task<bool> UpdateUser(ApplicationUser user);
+        public Task<BloggerViewModel> UpdateBlogger(UpdateBloggerViewModel model, string rootPath);
+        public Task<BusinessmanViewModel> UpdateBusinessman(UpdateBusinessmanViewModel model, string rootPath);
     }
 }

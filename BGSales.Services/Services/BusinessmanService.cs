@@ -2,6 +2,9 @@
 using BGSales.Data.Interfaces;
 using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
+using BGSales.Views.Models;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BGSales.Services.Services
@@ -23,6 +26,45 @@ namespace BGSales.Services.Services
             var businessman = _mapper.Map<Businessman>(user);
 
             await _businessmanRepository.Add(businessman);
+        }
+
+        public BusinessmanViewModel Get(ApplicationUser user)
+        {
+            var businessman = _businessmanRepository.Get(b => b.UserId == user.Id).SingleOrDefault();
+
+            if (businessman == null)
+            {
+                throw new System.Exception("Cannot find businessman with this Id!");
+            }
+            var model = _mapper.Map<BusinessmanViewModel>(user);
+            model = _mapper.Map(businessman, model);
+
+            return model;
+        }
+
+        public async Task<BusinessmanViewModel> Update(UpdateBusinessmanViewModel model)
+        {
+            var businessman = _businessmanRepository.Get(b => b.UserId == model.UserId).SingleOrDefault();
+
+            if (businessman == null)
+            {
+                throw new System.Exception("Cannot find businessman with this Id!");
+            }
+
+            businessman = _mapper.Map(model, businessman);
+
+            try
+            {
+                await _businessmanRepository.Update(businessman);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            var updatedModel = _mapper.Map<BusinessmanViewModel>(businessman);
+
+            return updatedModel;
         }
     }
 }

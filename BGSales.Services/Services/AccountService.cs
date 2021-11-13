@@ -14,18 +14,21 @@ namespace BGSales.Services.Services
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
             IBusinessmanService businessmanService,
-            IBloggerService bloggerService)
+            IBloggerService bloggerService,
+            IImageService imageService)
         {
             _userManager = userManager;
             _mapper = mapper;
             _businessmanService = businessmanService;
             _bloggerService = bloggerService;
+            _imageService = imageService;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IBusinessmanService _businessmanService;
         private readonly IBloggerService _bloggerService;
+        private readonly IImageService _imageService;
 
         public async Task<ApplicationUser> GetByEmail(string email)
         {
@@ -83,6 +86,64 @@ namespace BGSales.Services.Services
         {
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
+        }
+
+        public async Task<BloggerViewModel> UpdateBlogger(UpdateBloggerViewModel model, string rootPath)
+        {
+            var user = await GetById(model.UserId);
+
+            if (user == null)
+            {
+                throw new Exception("Cannot find user!");
+            }
+
+            var updatedUser = _mapper.Map(model, user);
+
+            if (model.ImageFile != null)
+            {
+                var image = await _imageService.CreateImage(rootPath, model.ImageFile);
+                updatedUser.AvatarId = image.Id;
+            }
+
+            var userUpdateResult = await _userManager.UpdateAsync(user);
+            var updatedModel = await _bloggerService.Update(model);
+            updatedModel = _mapper.Map(user, updatedModel);
+
+            if (!userUpdateResult.Succeeded)
+            {
+                throw new Exception("Error during user update.");
+            }
+
+            return updatedModel;
+        }
+
+        public async Task<BusinessmanViewModel> UpdateBusinessman(UpdateBusinessmanViewModel model, string rootPath)
+        {
+            var user = await GetById(model.UserId);
+
+            if (user == null)
+            {
+                throw new Exception("Cannot find user!");
+            }
+
+            var updatedUser = _mapper.Map(model, user);
+
+            if (model.ImageFile != null)
+            {
+                var image = await _imageService.CreateImage(rootPath, model.ImageFile);
+                updatedUser.AvatarId = image.Id;
+            }
+
+            var userUpdateResult = await _userManager.UpdateAsync(user);
+            var updatedModel = await _businessmanService.Update(model);
+            updatedModel = _mapper.Map(user, updatedModel);
+
+            if (!userUpdateResult.Succeeded)
+            {
+                throw new Exception("Error during user update.");
+            }
+
+            return updatedModel;
         }
 
         private async Task AddRoleToUser(ApplicationUser user, Roles role)
