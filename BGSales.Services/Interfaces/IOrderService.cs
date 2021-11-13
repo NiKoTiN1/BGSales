@@ -7,5 +7,6 @@ namespace BGSales.Services.Interfaces
     {
         public Task CreateOrder(CreateOrderViewModel viewModel, string userId);
         public OrderViewModel GetOrderInfo(string orderId);
+        public PartialOrderViewModel GetPartialOrderInfo(string orderId);
     }
 }

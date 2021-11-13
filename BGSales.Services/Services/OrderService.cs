@@ -68,5 +68,12 @@ namespace BGSales.Services.Services
 
             return model;
         }
+
+        public PartialOrderViewModel GetPartialOrderInfo(string orderId)
+        {
+            var fullInfo = GetOrderInfo(orderId);
+            var model = _mapper.Map<PartialOrderViewModel>(fullInfo);
+            return model;
+        }
     }
 }

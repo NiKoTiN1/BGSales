@@ -34,6 +34,22 @@ namespace BGSales.Web.Controllers
             return Ok(model);
         }
 
+        [HttpGet]
+        [Route("partial/{orderId}")]
+        public IActionResult GetPartialOrder([FromRoute] string orderId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var model = _orderService.GetPartialOrderInfo(orderId);
+
+            return Ok(model);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel viewModel)

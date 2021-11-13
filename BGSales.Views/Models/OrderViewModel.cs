@@ -4,6 +4,7 @@ namespace BGSales.Views.Models
 {
     public class OrderViewModel
     {
+        public string OrderId { get; set; }
         public string Title { get; set; }
         public int AudienceAge { get; set; }
         public string Description { get; set; }
