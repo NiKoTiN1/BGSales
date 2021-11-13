@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Collections.Generic;
 
 namespace BGSales.Domain.Models
 {
@@ -26,5 +27,6 @@ namespace BGSales.Domain.Models
         public string Id { get; set; }
         public string UserId { get; set; }
         public string CompanyName { get; set; }
+        public virtual List<Order> Orders { get; set; }
     }
 }

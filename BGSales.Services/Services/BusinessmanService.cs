@@ -30,7 +30,7 @@ namespace BGSales.Services.Services
 
         public BusinessmanViewModel Get(ApplicationUser user)
         {
-            var businessman = _businessmanRepository.Get(b => b.UserId == user.Id).SingleOrDefault();
+            var businessman = _businessmanRepository.Get(b => b.UserId == user.Id, new[] { "Orders" }).SingleOrDefault();
 
             if (businessman == null)
             {
