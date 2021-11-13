@@ -1,13 +1,13 @@
-.footer{
-    display: flex;
-    background-color: black;
-    height: 100px;
-    width: 100%;
-	margin-top: auto;
-    align-items: center;
-    justify-content: center;
-    &__label{
-        color: white;
-        font-size: 14px;
-    }
+.footer {
+  display: flex;
+  background-color: black;
+  height: 100px;
+  width: 100%;
+  margin-top: auto;
+  align-items: center;
+  justify-content: center;
+  &__label {
+    color: white;
+    font-size: 14px;
+  }
 }

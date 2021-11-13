@@ -1,2 +1,2 @@
-var imageSrc = require('../assets/profile.png');
+var imageSrc = require("../assets/profile.png");
 export { imageSrc };

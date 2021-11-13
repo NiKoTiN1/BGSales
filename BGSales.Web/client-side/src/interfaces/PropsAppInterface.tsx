@@ -1,3 +1,6 @@
+import CurrentUserInterface from "./CurrentUserInterface";
+
 export default interface PropsAppInterface {
-    dispatch: Function;
+  dispatch: Function;
+  currentUser: CurrentUserInterface;
 }

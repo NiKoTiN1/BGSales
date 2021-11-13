@@ -1,5 +1,3 @@
-const imageSrc = require('../assets/profile.png')
+const imageSrc = require("../assets/profile.png");
 
-export{
-    imageSrc
-}
+export { imageSrc };
