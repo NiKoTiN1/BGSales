@@ -3,6 +3,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -18,13 +19,15 @@ namespace BGSales.Web.Controllers
             ITokenService tokenService,
             IMapper mapper,
             IBloggerService bloggerService,
-            IBusinessmanService businessmanService)
+            IBusinessmanService businessmanService,
+            IWebHostEnvironment appEnvironment)
         {
             _accountService = accountService;
             _tokenService = tokenService;
             _mapper = mapper;
             _bloggerService = bloggerService;
             _businessmanService = businessmanService;
+            _appEnvironment = appEnvironment;
         }
 
         private readonly IAccountService _accountService;
@@ -32,37 +35,7 @@ namespace BGSales.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IBloggerService _bloggerService;
         private readonly IBusinessmanService _businessmanService;
-
-        [HttpGet]
-        [Authorize]
-        [Route("profile")]
-        public async Task<IActionResult> Profile()
-        {
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
-
-            if (string.IsNullOrEmpty(userIdClaim.Value))
-            {
-                return Unauthorized();
-            }
-
-            var user = await _accountService.GetById(userIdClaim.Value);
-
-            if (user == null)
-            {
-                throw new Exception("User not found!");
-            }
-
-            if (user.UserType == UserType.Blogger)
-            {
-                var model = _bloggerService.Get(user);
-                return Ok(model);
-            }
-            else
-            {
-                var model = _businessmanService.Get(user);
-                return Ok(model);
-            }
-        }
+        private readonly IWebHostEnvironment _appEnvironment;
 
         [HttpPost]
         [Route("register")]
@@ -117,6 +90,81 @@ namespace BGSales.Web.Controllers
             tokenModel.AccessToken = await _tokenService.GenerateToken(user);
 
             return Ok(tokenModel);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _accountService.GetById(userIdClaim.Value);
+
+            if (user == null)
+            {
+                throw new Exception("User not found!");
+            }
+
+            if (user.UserType == UserType.Blogger)
+            {
+                var model = _bloggerService.Get(user);
+                return Ok(model);
+            }
+            else
+            {
+                var model = _businessmanService.Get(user);
+                return Ok(model);
+            }
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("update/blogger")]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBloggerViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            if (viewModel.UserId != userIdClaim.Value)
+            {
+                throw new Exception("You cannot update this profile.");
+            }
+
+            var updatedModel = await _accountService.UpdateBlogger(viewModel, _appEnvironment.ContentRootPath);
+
+            return Ok(updatedModel);
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("update/businessman")]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBusinessmanViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            if (viewModel.UserId != userIdClaim.Value)
+            {
+                throw new Exception("You cannot update this profile.");
+            }
+
+            var updatedModel = await _accountService.UpdateBusinessman(viewModel, _appEnvironment.ContentRootPath);
+
+            return Ok(updatedModel);
         }
     }
 }

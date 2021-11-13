@@ -8,5 +8,6 @@ namespace BGSales.Services.Interfaces
     {
         public Task CreateBlogger(ApplicationUser user);
         public BloggerViewModel Get(ApplicationUser user);
+        public Task<BloggerViewModel> Update(UpdateBloggerViewModel model);
     }
 }

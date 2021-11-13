@@ -15,6 +15,9 @@ namespace BGSales.Services.MapperProfiles
 
             CreateMap<Businessman, BusinessmanViewModel>()
                  .ForMember(dest => dest.NameCompany, opt => opt.MapFrom(src => src.CompanyName));
+
+            CreateMap<UpdateBusinessmanViewModel, Businessman>()
+                 .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.NameCompany));
         }
     }
 }

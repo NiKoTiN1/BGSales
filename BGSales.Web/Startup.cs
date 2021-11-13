@@ -20,6 +20,7 @@ using Stripe;
 using System;
 using System.Text;
 
+
 namespace BGSales.Web
 {
     public class Startup
@@ -69,6 +70,7 @@ namespace BGSales.Web
                 mc.AddProfile(new TokenMappingProfile());
                 mc.AddProfile(new BusinessmanMappingProfile());
                 mc.AddProfile(new BloggerMappingProfile());
+                mc.AddProfile(new ImageMappingProfile());
             });
 
             var mapper = mappingConfig.CreateMapper();
@@ -96,6 +98,11 @@ namespace BGSales.Web
             services.AddTransient<IBloggerRepository, BloggerRepository>();
             services.AddTransient<IBloggerService, BloggerService>();
 
+            services.AddTransient<IImageRepository, ImageRepository>();
+            services.AddTransient<IImageService, ImageService>();
+
+            services.AddSingleton<IConfiguration>(provider => Configuration);
+
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
             services.AddSwaggerGen(c =>
@@ -112,6 +119,11 @@ namespace BGSales.Web
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BGSales.Web v1"));
+            }
+
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
             }
 
             app.UseHttpsRedirection();

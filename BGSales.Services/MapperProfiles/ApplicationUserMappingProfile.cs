@@ -27,6 +27,14 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                  .ForMember(dest => dest.SecondName, opt => opt.MapFrom(src => src.LastName))
                  .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Avatar.Path));
+
+            CreateMap<UpdateBloggerViewModel, ApplicationUser>()
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName));
+
+            CreateMap<UpdateBusinessmanViewModel, ApplicationUser>()
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName));
         }
     }
 }
