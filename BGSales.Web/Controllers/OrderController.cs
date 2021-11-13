@@ -18,6 +18,22 @@ namespace BGSales.Web.Controllers
 
         private readonly IOrderService _orderService;
 
+        [HttpGet]
+        [Route("{orderId}")]
+        public IActionResult GetOrder([FromRoute] string orderId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var model = _orderService.GetOrderInfo(orderId);
+
+            return Ok(model);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel viewModel)

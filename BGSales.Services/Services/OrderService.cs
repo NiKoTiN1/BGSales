@@ -4,6 +4,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BGSales.Services.Services
@@ -47,6 +48,24 @@ namespace BGSales.Services.Services
             {
                 throw new Exception("Error during creating order in DB");
             }
+        }
+
+        public OrderViewModel GetOrderInfo(string orderId)
+        {
+            var order = _orderRepository.Get(o => o.Id == orderId).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find this order");
+            }
+
+            var model = _mapper.Map<OrderViewModel>(order);
+            var businessman = _businessmanService.GetByBusinessmanId(order.AdvertiserId);
+            var businessmanModel = _mapper.Map<BusinessmanViewModel>(businessman);
+
+            model.Advitiser = businessmanModel;
+
+            return model;
         }
     }
 }

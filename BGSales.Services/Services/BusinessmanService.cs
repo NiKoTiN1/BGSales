@@ -78,5 +78,16 @@ namespace BGSales.Services.Services
 
             return updatedModel;
         }
+        public Businessman GetByBusinessmanId(string id)
+        {
+            var businessman = _businessmanRepository.Get(b => b.Id == id).SingleOrDefault();
+
+            if (businessman == null)
+            {
+                throw new System.Exception("Cannot find businessman with this BusinessId!");
+            }
+
+            return businessman;
+        }
     }
 }

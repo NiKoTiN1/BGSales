@@ -15,6 +15,13 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                  .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
                  .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate));
+
+            CreateMap<Order, OrderViewModel>()
+                 .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
+                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
+                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                 .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
+                 .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate));
         }
     }
 }
