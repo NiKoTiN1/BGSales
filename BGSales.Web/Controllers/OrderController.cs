@@ -35,8 +35,8 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("partial/{orderId}")]
-        public IActionResult GetPartialOrder([FromRoute] string orderId)
+        [Route("all")]
+        public IActionResult GetAllOrders()
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -45,7 +45,7 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            var model = _orderService.GetPartialOrderInfo(orderId);
+            var model = _orderService.GetAllBusinessmanOrders(userIdClaim.Value);
 
             return Ok(model);
         }

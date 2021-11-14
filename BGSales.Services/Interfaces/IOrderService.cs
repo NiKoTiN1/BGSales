@@ -1,4 +1,5 @@
 ﻿using BGSales.Views.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BGSales.Services.Interfaces
@@ -7,6 +8,6 @@ namespace BGSales.Services.Interfaces
     {
         public Task CreateOrder(CreateOrderViewModel viewModel, string userId);
         public OrderViewModel GetOrderInfo(string orderId);
-        public PartialOrderViewModel GetPartialOrderInfo(string orderId);
+        public List<PartialOrderViewModel> GetAllBusinessmanOrders(string userId);
     }
 }

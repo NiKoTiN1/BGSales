@@ -4,6 +4,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -69,11 +70,12 @@ namespace BGSales.Services.Services
             return model;
         }
 
-        public PartialOrderViewModel GetPartialOrderInfo(string orderId)
+        public List<PartialOrderViewModel> GetAllBusinessmanOrders(string userId)
         {
-            var fullInfo = GetOrderInfo(orderId);
-            var model = _mapper.Map<PartialOrderViewModel>(fullInfo);
-            return model;
+            var businessman = _businessmanService.GetByUserId(userId);
+            var orders = _orderRepository.Get(o => o.AdvertiserId == businessman.Id)
+                .Select(o => _mapper.Map<PartialOrderViewModel>(o));
+            return orders.ToList();
         }
     }
 }
