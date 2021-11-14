@@ -71,6 +71,7 @@ namespace BGSales.Web
                 mc.AddProfile(new BusinessmanMappingProfile());
                 mc.AddProfile(new BloggerMappingProfile());
                 mc.AddProfile(new ImageMappingProfile());
+                mc.AddProfile(new OrderMappingProfile());
             });
 
             var mapper = mappingConfig.CreateMapper();
@@ -100,6 +101,9 @@ namespace BGSales.Web
 
             services.AddTransient<IImageRepository, ImageRepository>();
             services.AddTransient<IImageService, ImageService>();
+
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IOrderService, Services.Services.OrderService>();
 
             services.AddSingleton<IConfiguration>(provider => Configuration);
 

@@ -13,5 +13,6 @@ namespace BGSales.Services.Interfaces
         public Task<bool> UpdateUser(ApplicationUser user);
         public Task<BloggerViewModel> UpdateBlogger(UpdateBloggerViewModel model, string rootPath);
         public Task<BusinessmanViewModel> UpdateBusinessman(UpdateBusinessmanViewModel model, string rootPath);
+        public Task<bool> IsInRole(ApplicationUser user, Roles role);
     }
 }

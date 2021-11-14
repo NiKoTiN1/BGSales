@@ -8,6 +8,8 @@ namespace BGSales.Services.Interfaces
     {
         public Task CreateBusinessman(ApplicationUser user);
         public BusinessmanViewModel Get(ApplicationUser user);
+        public Businessman GetByUserId(string userId);
+        public Businessman GetByBusinessmanId(string id);
         public Task<BusinessmanViewModel> Update(UpdateBusinessmanViewModel model);
     }
 }

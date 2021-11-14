@@ -30,7 +30,7 @@ namespace BGSales.Services.Services
 
         public BusinessmanViewModel Get(ApplicationUser user)
         {
-            var businessman = _businessmanRepository.Get(b => b.UserId == user.Id).SingleOrDefault();
+            var businessman = _businessmanRepository.Get(b => b.UserId == user.Id, new[] { "Orders" }).SingleOrDefault();
 
             if (businessman == null)
             {
@@ -40,6 +40,18 @@ namespace BGSales.Services.Services
             model = _mapper.Map(businessman, model);
 
             return model;
+        }
+
+        public Businessman GetByUserId(string userId)
+        {
+            var businessman = _businessmanRepository.Get(b => b.UserId == userId).SingleOrDefault();
+
+            if (businessman == null)
+            {
+                throw new System.Exception("Cannot find businessman with this Id!");
+            }
+
+            return businessman;
         }
 
         public async Task<BusinessmanViewModel> Update(UpdateBusinessmanViewModel model)
@@ -65,6 +77,17 @@ namespace BGSales.Services.Services
             var updatedModel = _mapper.Map<BusinessmanViewModel>(businessman);
 
             return updatedModel;
+        }
+        public Businessman GetByBusinessmanId(string id)
+        {
+            var businessman = _businessmanRepository.Get(b => b.Id == id).SingleOrDefault();
+
+            if (businessman == null)
+            {
+                throw new System.Exception("Cannot find businessman with this BusinessId!");
+            }
+
+            return businessman;
         }
     }
 }

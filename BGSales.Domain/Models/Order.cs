@@ -12,5 +12,6 @@ namespace BGSales.Domain.Models
         public string AdvertiserId { get; set; }
         public double Budget { get; set; }
         public DateTime CreateDate { get; set; }
+        public DateTime UpdateDate { get; set; }
     }
 }

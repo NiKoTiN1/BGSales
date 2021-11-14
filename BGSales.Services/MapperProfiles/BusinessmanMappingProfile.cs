@@ -14,6 +14,7 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<Businessman, BusinessmanViewModel>()
+                 .ForMember(dest => dest.OrdersCount, opt => opt.MapFrom(src => src.Orders.Count))
                  .ForMember(dest => dest.NameCompany, opt => opt.MapFrom(src => src.CompanyName));
 
             CreateMap<UpdateBusinessmanViewModel, Businessman>()
