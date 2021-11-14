@@ -29,6 +29,13 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
                  .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Advertiser.CompanyName))
                  .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id));
+
+            CreateMap<UpdateOrderViewModel, Order>()
+                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title))
+                 .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
+                 .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
+                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate));
         }
     }
 }

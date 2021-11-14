@@ -77,5 +77,27 @@ namespace BGSales.Services.Services
                 .Select(o => _mapper.Map<PartialOrderViewModel>(o));
             return orders.ToList();
         }
+
+        public async Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model)
+        {
+            var order = _orderRepository.Get(o => o.Id == model.OrderId, new[] { "Advertiser" }).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
+            var updatedOrder = _mapper.Map(model, order);
+
+            await _orderRepository.Update(updatedOrder);
+
+            var updatedVeiwModel = _mapper.Map<OrderViewModel>(updatedOrder);
+
+            var businessmanModel = _mapper.Map<BusinessmanViewModel>(order.Advertiser.User);
+            businessmanModel = _mapper.Map(order.Advertiser, businessmanModel);
+            updatedVeiwModel.Advitiser = businessmanModel;
+
+            return updatedVeiwModel;
+        }
     }
 }

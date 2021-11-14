@@ -65,5 +65,21 @@ namespace BGSales.Web.Controllers
 
             return Ok();
         }
+
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> CreateOrder([FromForm] UpdateOrderViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var updatedModel = await _orderService.UpdateOrder(viewModel);
+
+            return Ok(updatedModel);
+        }
     }
 }
