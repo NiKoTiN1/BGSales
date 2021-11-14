@@ -77,9 +77,25 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            var updatedModel = await _orderService.UpdateOrder(viewModel);
+            var updatedModel = await _orderService.UpdateOrder(viewModel, userIdClaim.Value);
 
             return Ok(updatedModel);
+        }
+
+        [HttpDelete]
+        [Route("remove/{orderId}")]
+        public async Task<IActionResult> RemoveOrder([FromRoute] string orderId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            await _orderService.DeleteOrder(orderId, userIdClaim.Value);
+
+            return Ok();
         }
     }
 }

@@ -78,13 +78,18 @@ namespace BGSales.Services.Services
             return orders.ToList();
         }
 
-        public async Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model)
+        public async Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model, string userId)
         {
             var order = _orderRepository.Get(o => o.Id == model.OrderId, new[] { "Advertiser" }).SingleOrDefault();
 
             if (order == null)
             {
                 throw new Exception("Cannot find order with this Id");
+            }
+
+            if (order.Advertiser.UserId != userId)
+            {
+                throw new Exception("You have no permission to update this order");
             }
 
             var updatedOrder = _mapper.Map(model, order);
@@ -98,6 +103,23 @@ namespace BGSales.Services.Services
             updatedVeiwModel.Advitiser = businessmanModel;
 
             return updatedVeiwModel;
+        }
+
+        public async Task DeleteOrder(string orderId, string userId)
+        {
+            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Advertiser" }).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
+            if (order.Advertiser.UserId != userId)
+            {
+                throw new Exception("You have no permission to update this order");
+            }
+
+            await _orderRepository.Remove(order);
         }
     }
 }
