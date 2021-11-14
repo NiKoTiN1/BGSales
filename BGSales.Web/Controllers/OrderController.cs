@@ -2,6 +2,7 @@
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,14 +36,24 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public IActionResult GetAllOrders()
+        [Route("all/{businessmanId}")]
+        public IActionResult GetAllOrders([FromRoute] string userId)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
             if (string.IsNullOrEmpty(userIdClaim.Value))
             {
                 return Unauthorized();
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new Exception("UserId is required");
+            }
+
+            if (userId != userIdClaim.Value)
+            {
+                throw new Exception("You have no permission to get this order");
             }
 
             var model = _orderService.GetAllBusinessmanOrders(userIdClaim.Value);
