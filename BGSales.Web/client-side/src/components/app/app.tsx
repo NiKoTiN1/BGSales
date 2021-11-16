@@ -11,13 +11,19 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import AppHeader from "../app-header";
 import AppFooter from "../app-footer";
 import PropsAppInterface from "../../interfaces/PropsAppInterface";
+import jwt from "jwt-decode";
 import "./app.scss";
 import StateInterface from "../../interfaces/StateInterface";
+import { addRole } from "../../actions";
 
 const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   useEffect(() => {
-    // dispatch(refreshToken());
-  });
+    const token = localStorage.getItem("accessToken");
+    if(token!= null){
+      const user = jwt(String(token));
+      dispatch(addRole(Object(user).Role));
+    }
+  }, []);
   return (
     <div className="main-content">
       <AppHeader />

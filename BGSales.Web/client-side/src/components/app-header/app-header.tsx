@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./app-header.scss";
 import UserMenu from "../user-menu";
 import AppHeaderInterface from "../../interfaces/AppHeaderInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import { getPartialProfileData } from "../../actions";
 
-const AppHeader = ({ checkUser, currentUser }: AppHeaderInterface) => {
+const AppHeader = ({
+  checkUser,
+  currentUser,
+  dispatch,
+}: AppHeaderInterface) => {
+  useEffect(() => {
+    if (localStorage.getItem("accessToken") !== null) {
+      dispatch(getPartialProfileData());
+    }
+  }, []);
   return (
     <header className="header">
       {checkUser ? (
