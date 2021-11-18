@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Collections.Generic;
 
 namespace BGSales.Domain.Models
 {
@@ -35,5 +36,6 @@ namespace BGSales.Domain.Models
         public int Subscribers { get; set; }
         public int AgeAudience { get; set; }
         public int BloggerExperience { get; set; }
+        public virtual List<Chat> Chats { get; set; }
     }
 }
