@@ -17,7 +17,6 @@ namespace BGSales.Data
         public DbSet<Blogger> Bloggers { get; set; }
         public DbSet<Businessman> Businessmans { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Project> Projects { get; set; }
         public DbSet<Chat> Chat { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Comment> Comments { get; set; }

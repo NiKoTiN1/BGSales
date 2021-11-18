@@ -4,14 +4,16 @@ using BGSales.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BGSales.Data.Migrations
 {
     [DbContext(typeof(BGSStagingContext))]
-    partial class BGSStagingContextModelSnapshot : ModelSnapshot
+    [Migration("20211118224452_removedProjectsEntity")]
+    partial class removedProjectsEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
