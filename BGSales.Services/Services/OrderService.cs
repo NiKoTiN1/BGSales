@@ -53,7 +53,7 @@ namespace BGSales.Services.Services
 
         public OrderViewModel GetOrderInfo(string orderId)
         {
-            var order = _orderRepository.Get(o => o.Id == orderId).SingleOrDefault();
+            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests" }).SingleOrDefault();
 
             if (order == null)
             {
@@ -66,6 +66,21 @@ namespace BGSales.Services.Services
             businessmanModel = _mapper.Map(businessman, businessmanModel);
 
             model.Advitiser = businessmanModel;
+
+            if (order.Blogger == null)
+            {
+                var requestedBloggers = new List<BloggerViewModel>();
+                foreach (var blogger in order.BloggerRequests)
+                {
+                    requestedBloggers.Add(_mapper.Map<BloggerViewModel>(blogger));
+                }
+                model.BloggerRequests = requestedBloggers;
+            }
+            else
+            {
+                var aceptedBlogger = _mapper.Map<BloggerViewModel>(order.Blogger);
+                model.Blogger = aceptedBlogger;
+            }
 
             return model;
         }

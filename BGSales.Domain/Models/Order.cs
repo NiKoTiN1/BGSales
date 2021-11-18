@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BGSales.Domain.Models
 {
@@ -13,5 +14,7 @@ namespace BGSales.Domain.Models
         public double Budget { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
+        public Blogger Blogger { get; set; }
+        public virtual List<Blogger> BloggerRequests { get; set; }
     }
 }
