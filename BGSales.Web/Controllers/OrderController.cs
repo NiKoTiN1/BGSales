@@ -87,6 +87,32 @@ namespace BGSales.Web.Controllers
             return Ok(model);
         }
 
+        [HttpGet]
+        [Route("requested/{bloggerUserId}")]
+        public IActionResult GetAllRequestedOrders([FromRoute] string bloggerUserId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            if (string.IsNullOrEmpty(bloggerUserId))
+            {
+                throw new Exception("UserId is required");
+            }
+
+            if (bloggerUserId != userIdClaim.Value)
+            {
+                throw new Exception("You have no permission to get this order");
+            }
+
+            var model = _orderService.GetAllRequestedPartialOrders(userIdClaim.Value);
+
+            return Ok(model);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel viewModel)

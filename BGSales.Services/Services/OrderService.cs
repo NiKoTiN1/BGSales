@@ -107,6 +107,14 @@ namespace BGSales.Services.Services
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
+        public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId)
+        {
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+                .ToList();
+            var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId == userId));
+            return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
+        }
+
         public async Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model, string userId)
         {
             var order = _orderRepository.Get(o => o.Id == model.OrderId, new[] { "Advertiser" }).SingleOrDefault();
