@@ -34,5 +34,6 @@ namespace BGSales.Domain.Models
         public string Subjects { get; set; }
         public int Subscribers { get; set; }
         public int AgeAudience { get; set; }
+        public int BloggerExperience { get; set; }
     }
 }

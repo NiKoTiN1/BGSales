@@ -30,11 +30,13 @@ namespace BGSales.Services.MapperProfiles
 
             CreateMap<UpdateBloggerViewModel, ApplicationUser>()
                  .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName));
+                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName))
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<UpdateBusinessmanViewModel, ApplicationUser>()
                  .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName));
+                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SecondName))
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<ApplicationUser, StripeInfo>()
                  .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
