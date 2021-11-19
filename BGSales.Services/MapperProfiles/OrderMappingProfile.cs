@@ -35,7 +35,8 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
                  .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate));
+                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate))
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

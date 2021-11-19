@@ -34,8 +34,9 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Subjects, opt => opt.MapFrom(src => src.Subjects))
                  .ForMember(dest => dest.Subscribers, opt => opt.MapFrom(src => src.Subscribers))
                  .ForMember(dest => dest.AgeAudience, opt => opt.MapFrom(src => src.AgeAudience))
+                 .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
                  .ForMember(dest => dest.BloggerExperience, opt => opt.MapFrom(src => src.BloggerExperience))
-                 .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname));
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
