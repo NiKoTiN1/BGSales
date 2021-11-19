@@ -36,7 +36,7 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("all/{businessmanId}")]
+        [Route("all/{userId}")]
         public IActionResult GetAllOrders([FromRoute] string userId)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");

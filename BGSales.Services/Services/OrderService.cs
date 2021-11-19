@@ -94,9 +94,9 @@ namespace BGSales.Services.Services
         public List<PartialOrderViewModel> GetAllBusinessmanOrders(string userId)
         {
             var businessman = _businessmanService.GetByUserId(userId);
-            var orders = _orderRepository.Get(o => o.AdvertiserId == businessman.Id)
-                .Select(o => _mapper.Map<PartialOrderViewModel>(o));
-            return orders.ToList();
+            var orders = _orderRepository.Get(o => o.AdvertiserId == businessman.Id, new[] { "Blogger", "BloggerRequests" })
+                .ToList();
+            return orders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
         public async Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model, string userId)
