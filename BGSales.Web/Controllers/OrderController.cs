@@ -36,8 +36,8 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("all/{userId}")]
-        public IActionResult GetAllOrders([FromRoute] string userId)
+        [Route("available/{bloggerUserId}")]
+        public IActionResult GetAllAvailableOrders([FromRoute] string bloggerUserId)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -46,12 +46,38 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(bloggerUserId))
             {
                 throw new Exception("UserId is required");
             }
 
-            if (userId != userIdClaim.Value)
+            if (bloggerUserId != userIdClaim.Value)
+            {
+                throw new Exception("You have no permission to get this order");
+            }
+
+            var model = _orderService.GetAllAvailablePartialOrders(userIdClaim.Value);
+
+            return Ok(model);
+        }
+
+        [HttpGet]
+        [Route("all/{businessmanUserId}")]
+        public IActionResult GetAllBusinessmanOrders([FromRoute] string businessmanUserId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            if (string.IsNullOrEmpty(businessmanUserId))
+            {
+                throw new Exception("UserId is required");
+            }
+
+            if (businessmanUserId != userIdClaim.Value)
             {
                 throw new Exception("You have no permission to get this order");
             }
