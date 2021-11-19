@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./media-person-profile.scss";
@@ -6,11 +6,15 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
+import { getProfileData } from "../../actions";
 
 const MediaPersonProfile = ({
   currentUser,
   dispatch,
 }: PersonProfileInterface) => {
+  useEffect(() => {
+    dispatch(getProfileData());
+  }, []);
   return (
     <>
       <div className="edit">
@@ -41,9 +45,10 @@ const MediaPersonProfile = ({
           <div className="information__name col-2">
             <p>{currentUser.profile.firstName}</p>
             <p>{currentUser.profile.secondName}</p>
-            <p>{currentUser.profile.ageAdvertising}</p>
-            <a href={currentUser.profile.linkChannel}>link to channel/page</a>
             <p>0</p>
+            {/* <p>{currentUser.profile.ageAdvertising}</p> */}
+            <a href={currentUser.profile.linkChannel}>link to channel/page</a>
+            <p>{currentUser.profile.ordersCompleted}</p>
           </div>
         </div>
       </div>
@@ -58,7 +63,7 @@ const MediaPersonProfile = ({
           <p>Average age of the audience:</p>
         </div>
         <div className="information-activity__name col-2">
-          <p>{currentUser.profile.ordersCompleted}</p>
+          <p>{currentUser.profile.activity}</p>
           <p>{currentUser.profile.subjects}</p>
           <p>{currentUser.profile.numberSubscribers}</p>
           <p>{currentUser.profile.ageAudience}</p>

@@ -20,7 +20,11 @@ const UserMenu = ({ dispatch, currentUser }: PropsUserMenuInterface) => {
       <p>
         <img
           className="user-menu__img"
-          src={imageSrc}
+          src={
+            currentUser.profile.imageUrl
+              ? currentUser.profile.imageUrl
+              : imageSrc
+          }
           alt=""
           onClick={() => setUserMenu(!userMenu)}
         />

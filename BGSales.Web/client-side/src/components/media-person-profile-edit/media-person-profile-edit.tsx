@@ -1,15 +1,14 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { imageSrc } from "../../imageRequire";
-import { changeProfile } from "../../actions";
+import { putMediaProfileData } from "../../actions";
 import "./media-person-profile-edit.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
 import StateInterface from "../../interfaces/StateInterface";
-
 const MediaPersonProfileEdit = ({
   dispatch,
   currentUser,
@@ -19,16 +18,15 @@ const MediaPersonProfileEdit = ({
     imageUrl: currentUser.profile.imageUrl,
     firstName: currentUser.profile.firstName,
     secondName: currentUser.profile.secondName,
+    nickname: currentUser.profile.nickname,
     ageAdvertising: currentUser.profile.ageAdvertising,
     linkChannel: currentUser.profile.linkChannel,
-    ordersCompleted: `${currentUser.profile.ordersCompleted}`,
     activity: currentUser.profile.activity,
     subjects: currentUser.profile.subjects,
     numberSubscribers: `${currentUser.profile.numberSubscribers}`,
-    ageAudience: currentUser.profile.ageAudience,
-    nameCompany: currentUser.profile.nameCompany,
-    numberOffers: `${currentUser.profile.numberOffers}`,
+    ageAudience: `${currentUser.profile.ageAudience}`,
   });
+
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -37,28 +35,24 @@ const MediaPersonProfileEdit = ({
         errorFlag = true;
       }
     }
-    if (
-      !Number(form["ordersCompleted"]) ||
-      !Number(form["numberSubscribers"])
-    ) {
+    if (!Number(form["numberSubscribers"])) {
       errorFlag = true;
     }
     const userProfile = {
+      userId: currentUser.profile.userId,
       imageUrl: form.imageUrl,
+      nickname: String(form.nickname),
       firstName: String(form.firstName),
       secondName: String(form.secondName),
       ageAdvertising: String(form.ageAdvertising),
       linkChannel: String(form.linkChannel),
-      ordersCompleted: Number(form.ordersCompleted),
       activity: String(form.activity),
       subjects: String(form.subjects),
       numberSubscribers: Number(form.numberSubscribers),
-      ageAudience: String(form.ageAudience),
-      nameCompany: String(form.nameCompany),
-      numberOffers: Number(form.numberOffers),
+      ageAudience: Number(form.ageAudience),
     };
     if (!errorFlag) {
-      dispatch(changeProfile(userProfile));
+      dispatch(putMediaProfileData(userProfile));
       history.push("/profileMedia");
     }
   };
@@ -113,7 +107,18 @@ const MediaPersonProfileEdit = ({
             </div>
             <div className="container">
               <TextField
-                label="Age of working with advertising"
+                label="Nickname"
+                defaultValue={form.nickname}
+                variant="outlined"
+                error={form.nickname === ""}
+                onChange={(e: any) =>
+                  setForm({ ...form, nickname: e.target.value })
+                }
+              />
+            </div>
+            <div className="container">
+              <TextField
+                label="Age working with advertising"
                 defaultValue={form.ageAdvertising}
                 variant="outlined"
                 error={form.ageAdvertising === ""}
@@ -130,19 +135,6 @@ const MediaPersonProfileEdit = ({
                 error={form.linkChannel === ""}
                 onChange={(e: any) =>
                   setForm({ ...form, linkChannel: e.target.value })
-                }
-              />
-            </div>
-            <div className="container">
-              <TextField
-                label="Number of completed orders"
-                defaultValue={form.ordersCompleted}
-                error={
-                  form.ordersCompleted === "" || !Number(form.ordersCompleted)
-                }
-                variant="outlined"
-                onChange={(e: any) =>
-                  setForm({ ...form, ordersCompleted: e.target.value })
                 }
               />
             </div>

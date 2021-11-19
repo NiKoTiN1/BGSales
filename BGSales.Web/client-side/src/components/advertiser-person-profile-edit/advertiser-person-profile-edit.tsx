@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { imageSrc } from "../../imageRequire";
-import { changeProfile } from "../../actions";
+import { putAdvertiserProfileData } from "../../actions";
 import "./advertiser-person-profile-edit.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
@@ -19,15 +19,7 @@ const AdvertiserPersonProfileEdit = ({
     imageUrl: currentUser.profile.imageUrl,
     firstName: currentUser.profile.firstName,
     secondName: currentUser.profile.secondName,
-    ageAdvertising: currentUser.profile.ageAdvertising,
-    linkChannel: currentUser.profile.linkChannel,
-    ordersCompleted: `${currentUser.profile.ordersCompleted}`,
-    activity: currentUser.profile.activity,
-    subjects: currentUser.profile.subjects,
-    numberSubscribers: `${currentUser.profile.numberSubscribers}`,
-    ageAudience: currentUser.profile.ageAudience,
     nameCompany: currentUser.profile.nameCompany,
-    numberOffers: `${currentUser.profile.numberOffers}`,
   });
   const submitForm = (e: any) => {
     e.preventDefault();
@@ -37,25 +29,15 @@ const AdvertiserPersonProfileEdit = ({
         errorFlag = true;
       }
     }
-    if (!Number(form["numberOffers"])) {
-      errorFlag = true;
-    }
     const userProfile = {
+      userId: currentUser.profile.userId,
       imageUrl: form.imageUrl,
       firstName: String(form.firstName),
       secondName: String(form.secondName),
-      ageAdvertising: String(form.ageAdvertising),
-      linkChannel: String(form.linkChannel),
-      ordersCompleted: Number(form.ordersCompleted),
-      activity: String(form.activity),
-      subjects: String(form.subjects),
-      numberSubscribers: Number(form.numberSubscribers),
-      ageAudience: String(form.ageAudience),
       nameCompany: String(form.nameCompany),
-      numberOffers: Number(form.numberOffers),
     };
     if (!errorFlag) {
-      dispatch(changeProfile(userProfile));
+      dispatch(putAdvertiserProfileData(userProfile));
       history.push("/profileAdvertiser");
     }
   };
@@ -116,17 +98,6 @@ const AdvertiserPersonProfileEdit = ({
                 error={form.nameCompany === ""}
                 onChange={(e: any) =>
                   setForm({ ...form, nameCompany: e.target.value })
-                }
-              />
-            </div>
-            <div className="container">
-              <TextField
-                label="Number Offers"
-                defaultValue={form.numberOffers}
-                error={form.numberOffers === "" || !Number(form.numberOffers)}
-                variant="outlined"
-                onChange={(e: any) =>
-                  setForm({ ...form, numberOffers: e.target.value })
                 }
               />
             </div>
