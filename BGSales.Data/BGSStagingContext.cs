@@ -35,6 +35,24 @@ namespace BGSales.Data
                 .WithOne(e => e.Owner)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder
+                .Entity<Blogger>()
+                .HasMany(e => e.Orders)
+                .WithMany(e => e.BloggerRequests);
+
+            modelBuilder
+                .Entity<Blogger>()
+                .HasMany(e => e.RequestedOrders)
+                .WithOne(e => e.Blogger)
+                .HasForeignKey("BloggerId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<Order>()
+                .HasOne(e => e.Blogger)
+                .WithMany(e => e.RequestedOrders)
+                .OnDelete(DeleteBehavior.SetNull);
+
             OnModelCreatingPartial(modelBuilder);
         }
 

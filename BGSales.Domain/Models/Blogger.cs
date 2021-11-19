@@ -37,5 +37,7 @@ namespace BGSales.Domain.Models
         public int AgeAudience { get; set; }
         public int BloggerExperience { get; set; }
         public virtual List<Chat> Chats { get; set; }
+        public virtual List<Order> Orders { get; set; }
+        public virtual List<Order> RequestedOrders { get; set; }
     }
 }
