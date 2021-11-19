@@ -1,4 +1,4 @@
-export default interface UserProfileInterface {
+export default interface MediaProfileInterface {
   userId: string;
   imageUrl: string | ArrayBuffer | null;
   nickname: string;
@@ -6,11 +6,8 @@ export default interface UserProfileInterface {
   secondName: string;
   ageAdvertising: string;
   linkChannel: string;
-  ordersCompleted: number | string;
   activity: string;
   subjects: string;
   numberSubscribers: number | string;
   ageAudience: number | string;
-  nameCompany: string;
-  numberOffers: number | string;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./advertiser-person-profile.scss";
@@ -6,11 +6,15 @@ import { Button } from "@material-ui/core";
 import { imageSrc } from "../../imageRequire";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import { getProfileData } from "../../actions";
 
 const AdvertiserPersonProfile = ({
   currentUser,
   dispatch,
 }: PersonProfileInterface) => {
+  useEffect(() => {
+    dispatch(getProfileData());
+  }, []);
   return (
     <>
       <div className="edit">
@@ -41,7 +45,11 @@ const AdvertiserPersonProfile = ({
             <p>{currentUser.profile.firstName}</p>
             <p>{currentUser.profile.secondName}</p>
             <p>{currentUser.profile.nameCompany}</p>
-            <p>{currentUser.profile.numberOffers}</p>
+            <p>
+              {currentUser.profile.numberOffers
+                ? currentUser.profile.numberOffers
+                : 0}
+            </p>
           </div>
         </div>
       </div>
