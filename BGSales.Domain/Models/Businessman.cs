@@ -28,5 +28,6 @@ namespace BGSales.Domain.Models
         public string UserId { get; set; }
         public string CompanyName { get; set; }
         public virtual List<Order> Orders { get; set; }
+        public virtual List<Chat> Chats { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using BGSales.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BGSales.Data.Migrations
 {
     [DbContext(typeof(BGSStagingContext))]
-    partial class BGSStagingContextModelSnapshot : ModelSnapshot
+    [Migration("20211118224452_removedProjectsEntity")]
+    partial class removedProjectsEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,9 +270,6 @@ namespace BGSales.Data.Migrations
                     b.Property<int>("AudienceAge")
                         .HasColumnType("int");
 
-                    b.Property<string>("BloggerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<double>("Budget")
                         .HasColumnType("float");
 
@@ -289,8 +288,6 @@ namespace BGSales.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdvertiserId");
-
-                    b.HasIndex("BloggerId");
 
                     b.ToTable("Orders");
                 });
@@ -331,21 +328,6 @@ namespace BGSales.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StripeInfo");
-                });
-
-            modelBuilder.Entity("BloggerOrder", b =>
-                {
-                    b.Property<string>("BloggerRequestsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OrdersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("BloggerRequestsId", "OrdersId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("BloggerOrder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -521,11 +503,11 @@ namespace BGSales.Data.Migrations
             modelBuilder.Entity("BGSales.Domain.Models.Chat", b =>
                 {
                     b.HasOne("BGSales.Domain.Models.Blogger", "Blogger")
-                        .WithMany("Chats")
+                        .WithMany()
                         .HasForeignKey("BloggerId");
 
                     b.HasOne("BGSales.Domain.Models.Businessman", "Businessman")
-                        .WithMany("Chats")
+                        .WithMany()
                         .HasForeignKey("BusinessmanId");
 
                     b.Navigation("Blogger");
@@ -568,29 +550,7 @@ namespace BGSales.Data.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("AdvertiserId");
 
-                    b.HasOne("BGSales.Domain.Models.Blogger", "Blogger")
-                        .WithMany("RequestedOrders")
-                        .HasForeignKey("BloggerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.Navigation("Advertiser");
-
-                    b.Navigation("Blogger");
-                });
-
-            modelBuilder.Entity("BloggerOrder", b =>
-                {
-                    b.HasOne("BGSales.Domain.Models.Blogger", null)
-                        .WithMany()
-                        .HasForeignKey("BloggerRequestsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BGSales.Domain.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -649,17 +609,8 @@ namespace BGSales.Data.Migrations
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("BGSales.Domain.Models.Blogger", b =>
-                {
-                    b.Navigation("Chats");
-
-                    b.Navigation("RequestedOrders");
-                });
-
             modelBuilder.Entity("BGSales.Domain.Models.Businessman", b =>
                 {
-                    b.Navigation("Chats");
-
                     b.Navigation("Orders");
                 });
 

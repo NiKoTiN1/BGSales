@@ -43,6 +43,18 @@ namespace BGSales.Services.Services
             return model;
         }
 
+        public Blogger GetByUserId(string userId)
+        {
+            var blogger = _bloggerRepository.Get(b => b.UserId == userId).SingleOrDefault();
+
+            if (blogger == null)
+            {
+                throw new System.Exception("Cannot find blogger with this Id!");
+            }
+
+            return blogger;
+        }
+
         public async Task<BloggerViewModel> Update(UpdateBloggerViewModel model)
         {
             var blogger = _bloggerRepository.Get(b => b.UserId == model.UserId).SingleOrDefault();

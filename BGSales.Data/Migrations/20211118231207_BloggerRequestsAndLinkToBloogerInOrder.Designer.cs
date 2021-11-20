@@ -4,14 +4,16 @@ using BGSales.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BGSales.Data.Migrations
 {
     [DbContext(typeof(BGSStagingContext))]
-    partial class BGSStagingContextModelSnapshot : ModelSnapshot
+    [Migration("20211118231207_BloggerRequestsAndLinkToBloogerInOrder")]
+    partial class BloggerRequestsAndLinkToBloogerInOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,6 +128,9 @@ namespace BGSales.Data.Migrations
                     b.Property<string>("Nickname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Subjects")
                         .HasColumnType("nvarchar(max)");
 
@@ -148,6 +153,8 @@ namespace BGSales.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("UserId");
 
@@ -333,21 +340,6 @@ namespace BGSales.Data.Migrations
                     b.ToTable("StripeInfo");
                 });
 
-            modelBuilder.Entity("BloggerOrder", b =>
-                {
-                    b.Property<string>("BloggerRequestsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OrdersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("BloggerRequestsId", "OrdersId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("BloggerOrder");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -502,6 +494,10 @@ namespace BGSales.Data.Migrations
 
             modelBuilder.Entity("BGSales.Domain.Models.Blogger", b =>
                 {
+                    b.HasOne("BGSales.Domain.Models.Order", null)
+                        .WithMany("BloggerRequests")
+                        .HasForeignKey("OrderId");
+
                     b.HasOne("BGSales.Domain.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -569,28 +565,12 @@ namespace BGSales.Data.Migrations
                         .HasForeignKey("AdvertiserId");
 
                     b.HasOne("BGSales.Domain.Models.Blogger", "Blogger")
-                        .WithMany("RequestedOrders")
-                        .HasForeignKey("BloggerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithMany()
+                        .HasForeignKey("BloggerId");
 
                     b.Navigation("Advertiser");
 
                     b.Navigation("Blogger");
-                });
-
-            modelBuilder.Entity("BloggerOrder", b =>
-                {
-                    b.HasOne("BGSales.Domain.Models.Blogger", null)
-                        .WithMany()
-                        .HasForeignKey("BloggerRequestsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BGSales.Domain.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -652,8 +632,6 @@ namespace BGSales.Data.Migrations
             modelBuilder.Entity("BGSales.Domain.Models.Blogger", b =>
                 {
                     b.Navigation("Chats");
-
-                    b.Navigation("RequestedOrders");
                 });
 
             modelBuilder.Entity("BGSales.Domain.Models.Businessman", b =>
@@ -666,6 +644,11 @@ namespace BGSales.Data.Migrations
             modelBuilder.Entity("BGSales.Domain.Models.Chat", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("BGSales.Domain.Models.Order", b =>
+                {
+                    b.Navigation("BloggerRequests");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,5 +6,6 @@
         public string CompanyName { get; set; }
         public string Title { get; set; }
         public int Budget { get; set; }
+        public int Requests { get; set; }
     }
 }

@@ -28,7 +28,8 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
                  .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
                  .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Advertiser.CompanyName))
-                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id));
+                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
+                 .ForMember(dest => dest.Requests, opt => opt.MapFrom(src => src.BloggerRequests.Count));
 
             CreateMap<UpdateOrderViewModel, Order>()
                  .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title))

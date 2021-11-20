@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BGSales.Web.Controllers
@@ -36,8 +37,8 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("all/{businessmanId}")]
-        public IActionResult GetAllOrders([FromRoute] string userId)
+        [Route("available/{bloggerUserId}")]
+        public IActionResult GetAllAvailableOrders([FromRoute] string bloggerUserId)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -46,17 +47,45 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            if (string.IsNullOrEmpty(userId))
+            CheckPermission(bloggerUserId, userIdClaim);
+
+            var model = _orderService.GetAllAvailablePartialOrders(userIdClaim.Value);
+
+            return Ok(model);
+        }
+
+        [HttpGet]
+        [Route("all/{businessmanUserId}")]
+        public IActionResult GetAllBusinessmanOrders([FromRoute] string businessmanUserId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
             {
-                throw new Exception("UserId is required");
+                return Unauthorized();
             }
 
-            if (userId != userIdClaim.Value)
-            {
-                throw new Exception("You have no permission to get this order");
-            }
+            CheckPermission(businessmanUserId, userIdClaim);
 
             var model = _orderService.GetAllBusinessmanOrders(userIdClaim.Value);
+
+            return Ok(model);
+        }
+
+        [HttpGet]
+        [Route("requested/{bloggerUserId}")]
+        public IActionResult GetAllRequestedOrders([FromRoute] string bloggerUserId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            CheckPermission(bloggerUserId, userIdClaim);
+
+            var model = _orderService.GetAllRequestedPartialOrders(userIdClaim.Value);
 
             return Ok(model);
         }
@@ -73,6 +102,24 @@ namespace BGSales.Web.Controllers
             }
 
             await _orderService.CreateOrder(viewModel, userIdClaim.Value);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("request")]
+        public async Task<IActionResult> RequestOrder([FromForm] RequestOrderViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            CheckPermission(viewModel.UserId, userIdClaim);
+
+            await _orderService.RequestOrder(viewModel);
 
             return Ok();
         }
@@ -107,6 +154,19 @@ namespace BGSales.Web.Controllers
             await _orderService.DeleteOrder(orderId, userIdClaim.Value);
 
             return Ok();
+        }
+
+        private void CheckPermission(string modelBloggerId, Claim userIdClaim)
+        {
+            if (string.IsNullOrEmpty(modelBloggerId))
+            {
+                throw new Exception("UserId is required");
+            }
+
+            if (modelBloggerId != userIdClaim.Value)
+            {
+                throw new Exception("You have no permission to get this order");
+            }
         }
     }
 }

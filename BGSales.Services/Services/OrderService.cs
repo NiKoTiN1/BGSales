@@ -15,18 +15,21 @@ namespace BGSales.Services.Services
         public OrderService(IOrderRepository orderRepository,
             IMapper mapper,
             IBusinessmanService businessmanService,
+            IBloggerService bloggerService,
             IAccountService accountService)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _businessmanService = businessmanService;
             _accountService = accountService;
+            _bloggerService = bloggerService;
         }
 
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
         private readonly IBusinessmanService _businessmanService;
         private readonly IAccountService _accountService;
+        private readonly IBloggerService _bloggerService;
 
         public async Task CreateOrder(CreateOrderViewModel viewModel, string userId)
         {
@@ -53,7 +56,7 @@ namespace BGSales.Services.Services
 
         public OrderViewModel GetOrderInfo(string orderId)
         {
-            var order = _orderRepository.Get(o => o.Id == orderId).SingleOrDefault();
+            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests" }).SingleOrDefault();
 
             if (order == null)
             {
@@ -67,15 +70,49 @@ namespace BGSales.Services.Services
 
             model.Advitiser = businessmanModel;
 
+            if (order.Blogger == null)
+            {
+                var requestedBloggers = new List<BloggerViewModel>();
+                foreach (var blogger in order.BloggerRequests)
+                {
+                    var userModel = _mapper.Map<BloggerViewModel>(blogger.User);
+                    var bloggerModel = _mapper.Map(blogger, userModel);
+                    requestedBloggers.Add(bloggerModel);
+                }
+                model.BloggerRequests = requestedBloggers;
+            }
+            else
+            {
+                var userModel = _mapper.Map<BloggerViewModel>(order.Blogger.User);
+                var bloggerModel = _mapper.Map(order.Blogger, userModel);
+                model.Blogger = bloggerModel;
+            }
+
             return model;
         }
 
         public List<PartialOrderViewModel> GetAllBusinessmanOrders(string userId)
         {
             var businessman = _businessmanService.GetByUserId(userId);
-            var orders = _orderRepository.Get(o => o.AdvertiserId == businessman.Id)
-                .Select(o => _mapper.Map<PartialOrderViewModel>(o));
-            return orders.ToList();
+            var orders = _orderRepository.Get(o => o.AdvertiserId == businessman.Id, new[] { "Blogger", "BloggerRequests" })
+                .ToList();
+            return orders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
+        }
+
+        public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId)
+        {
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+                .ToList();
+            var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId != userId));
+            return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
+        }
+
+        public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId)
+        {
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+                .ToList();
+            var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId == userId));
+            return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
         public async Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model, string userId)
@@ -120,6 +157,34 @@ namespace BGSales.Services.Services
             }
 
             await _orderRepository.Remove(order);
+        }
+
+        public async Task RequestOrder(RequestOrderViewModel viewModel)
+        {
+            var order = _orderRepository.Get(o => o.Id == viewModel.OrderId, new[] { "Advertiser", "Blogger", "BloggerRequests" }).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
+            if (order.Blogger != null)
+            {
+                throw new Exception("This order already acepted");
+            }
+
+            var isBloggerRequested = order.BloggerRequests.SingleOrDefault(br => br.UserId == viewModel.UserId) != null;
+
+            if (isBloggerRequested)
+            {
+                throw new Exception("You cannot request this project one more time");
+            }
+
+            var blogger = _bloggerService.GetByUserId(viewModel.UserId);
+
+            order.BloggerRequests.Add(blogger);
+
+            await _orderRepository.Update(order);
         }
     }
 }

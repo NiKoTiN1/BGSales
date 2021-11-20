@@ -17,7 +17,6 @@ namespace BGSales.Data
         public DbSet<Blogger> Bloggers { get; set; }
         public DbSet<Businessman> Businessmans { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Project> Projects { get; set; }
         public DbSet<Chat> Chat { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -35,6 +34,24 @@ namespace BGSales.Data
                 .HasMany(e => e.Comments)
                 .WithOne(e => e.Owner)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<Blogger>()
+                .HasMany(e => e.Orders)
+                .WithMany(e => e.BloggerRequests);
+
+            modelBuilder
+                .Entity<Blogger>()
+                .HasMany(e => e.RequestedOrders)
+                .WithOne(e => e.Blogger)
+                .HasForeignKey("BloggerId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<Order>()
+                .HasOne(e => e.Blogger)
+                .WithMany(e => e.RequestedOrders)
+                .OnDelete(DeleteBehavior.SetNull);
 
             OnModelCreatingPartial(modelBuilder);
         }
