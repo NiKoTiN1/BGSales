@@ -56,7 +56,7 @@ namespace BGSales.Services.Services
 
         public OrderViewModel GetOrderInfo(string orderId)
         {
-            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests" }).SingleOrDefault();
+            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests", "Advertiser" }).SingleOrDefault();
 
             if (order == null)
             {
@@ -101,7 +101,7 @@ namespace BGSales.Services.Services
 
         public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId)
         {
-            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
             var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId != userId));
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
@@ -109,7 +109,7 @@ namespace BGSales.Services.Services
 
         public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId)
         {
-            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
             var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId == userId));
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
