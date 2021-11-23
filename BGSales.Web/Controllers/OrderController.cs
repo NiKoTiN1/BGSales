@@ -124,6 +124,24 @@ namespace BGSales.Web.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("accept")]
+        public async Task<IActionResult> AcceptOrder([FromForm] AcceptOrderViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            CheckPermission(viewModel.BusinessmanUserId, userIdClaim);
+
+            await _orderService.AcceptOrder(viewModel);
+
+            return Ok();
+        }
+
         [HttpPut]
         [Route("update")]
         public async Task<IActionResult> CreateOrder([FromForm] UpdateOrderViewModel viewModel)

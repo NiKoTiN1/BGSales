@@ -142,6 +142,38 @@ namespace BGSales.Services.Services
             return updatedVeiwModel;
         }
 
+        public async Task AcceptOrder(AcceptOrderViewModel model)
+        {
+            var order = _orderRepository.Get(o => o.Id == model.OrderId, new[] { "Advertiser", "BloggerRequests" }).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
+            if (order.Advertiser.UserId != model.BusinessmanUserId)
+            {
+                throw new Exception("You have no permission to work with this order");
+            }
+
+            if (!string.IsNullOrEmpty(order.BloggerId))
+            {
+                throw new Exception("This order is accepted");
+            }
+
+            var blogger = order.BloggerRequests.SingleOrDefault(b => b.UserId == model.BloggerUserId);
+
+            if (blogger == null)
+            {
+                throw new Exception("This blogger have to request before");
+            }
+
+            order.BloggerRequests = new List<Blogger>();
+            order.BloggerId = blogger.Id;
+
+            await _orderRepository.Update(order);
+        }
+
         public async Task DeleteOrder(string orderId, string userId)
         {
             var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Advertiser" }).SingleOrDefault();
