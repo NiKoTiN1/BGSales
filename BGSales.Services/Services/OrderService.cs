@@ -56,7 +56,7 @@ namespace BGSales.Services.Services
 
         public OrderViewModel GetOrderInfo(string orderId)
         {
-            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests" }).SingleOrDefault();
+            var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests", "Advertiser" }).SingleOrDefault();
 
             if (order == null)
             {
@@ -101,7 +101,7 @@ namespace BGSales.Services.Services
 
         public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId)
         {
-            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
             var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId != userId));
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
@@ -109,7 +109,7 @@ namespace BGSales.Services.Services
 
         public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId)
         {
-            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests" })
+            var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
             var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId == userId));
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
@@ -140,6 +140,38 @@ namespace BGSales.Services.Services
             updatedVeiwModel.Advitiser = businessmanModel;
 
             return updatedVeiwModel;
+        }
+
+        public async Task AcceptOrder(AcceptOrderViewModel model)
+        {
+            var order = _orderRepository.Get(o => o.Id == model.OrderId, new[] { "Advertiser", "BloggerRequests" }).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
+            if (order.Advertiser.UserId != model.BusinessmanUserId)
+            {
+                throw new Exception("You have no permission to work with this order");
+            }
+
+            if (!string.IsNullOrEmpty(order.BloggerId))
+            {
+                throw new Exception("This order is accepted");
+            }
+
+            var blogger = order.BloggerRequests.SingleOrDefault(b => b.UserId == model.BloggerUserId);
+
+            if (blogger == null)
+            {
+                throw new Exception("This blogger have to request before");
+            }
+
+            order.BloggerRequests = new List<Blogger>();
+            order.BloggerId = blogger.Id;
+
+            await _orderRepository.Update(order);
         }
 
         public async Task DeleteOrder(string orderId, string userId)

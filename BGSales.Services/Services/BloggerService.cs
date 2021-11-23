@@ -4,6 +4,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +54,26 @@ namespace BGSales.Services.Services
             }
 
             return blogger;
+        }
+
+        public List<BloggerViewModel> GetAllBloggers()
+        {
+            var bloggers = _bloggerRepository.Get(b => true).ToList();
+            if (bloggers.Count == 0)
+            {
+                throw new System.Exception("There is no bloggers");
+            }
+
+            var bloggerModels = new List<BloggerViewModel>();
+
+            foreach (var blogger in bloggers)
+            {
+                var model = _mapper.Map<BloggerViewModel>(blogger.User);
+                model = _mapper.Map(blogger, model);
+                bloggerModels.Add(model);
+            }
+
+            return bloggerModels;
         }
 
         public async Task<BloggerViewModel> Update(UpdateBloggerViewModel model)

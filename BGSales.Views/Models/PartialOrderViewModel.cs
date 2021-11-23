@@ -5,7 +5,7 @@
         public string OrderId { get; set; }
         public string CompanyName { get; set; }
         public string Title { get; set; }
-        public int Budget { get; set; }
+        public double Budget { get; set; }
         public int Requests { get; set; }
     }
 }
