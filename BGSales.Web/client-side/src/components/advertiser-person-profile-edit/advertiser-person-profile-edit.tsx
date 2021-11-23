@@ -112,7 +112,7 @@ const AdvertiserPersonProfileEdit = ({
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(AdvertiserPersonProfileEdit);

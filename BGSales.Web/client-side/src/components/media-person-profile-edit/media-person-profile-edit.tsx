@@ -199,7 +199,7 @@ const MediaPersonProfileEdit = ({
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(MediaPersonProfileEdit);

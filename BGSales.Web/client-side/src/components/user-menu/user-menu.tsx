@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "./user-menu.scss";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { addCheckUser } from "../../actions";
+import { addCheckUser, addRole} from "../../actions";
 import { imageSrc } from "../../imageRequire";
 import PropsUserMenuInterface from "../../interfaces/PropsUserMenuInterface";
 import StateInterface from "../../interfaces/StateInterface";
@@ -11,6 +11,7 @@ import StateInterface from "../../interfaces/StateInterface";
 const UserMenu = ({ dispatch, currentUser }: PropsUserMenuInterface) => {
   const [userMenu, setUserMenu] = useState(false);
   const logOut = () => {
+    dispatch(addRole(""));
     dispatch(addCheckUser(false));
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -65,7 +66,7 @@ const UserMenu = ({ dispatch, currentUser }: PropsUserMenuInterface) => {
 
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(UserMenu);

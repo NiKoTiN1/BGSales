@@ -38,15 +38,14 @@ const MediaPersonProfile = ({
           <div className="information__name col-1">
             <p>First name:</p>
             <p>Second name:</p>
-            <p>Age of working with advertising:</p>
+            <p>Age of working in media:</p>
             <p>Link to channel:</p>
             <p>Number of completed orders:</p>
           </div>
           <div className="information__name col-2">
             <p>{currentUser.profile.firstName}</p>
             <p>{currentUser.profile.secondName}</p>
-            <p>0</p>
-            {/* <p>{currentUser.profile.ageAdvertising}</p> */}
+            <p>{currentUser.profile.ageAdvertising}</p>
             <a href={currentUser.profile.linkChannel}>link to channel/page</a>
             <p>{currentUser.profile.ordersCompleted}</p>
           </div>
@@ -74,7 +73,7 @@ const MediaPersonProfile = ({
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(MediaPersonProfile);

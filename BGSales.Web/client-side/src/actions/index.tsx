@@ -7,6 +7,10 @@ import UserProfileInterface from "../interfaces/UserProfileInterface";
 import AdvertiserProfileInterface from "../interfaces/AdvertiserProfileInterface";
 import PartialProfileInterface from "../interfaces/PartialProfileInterface";
 import MediaProfileInterface from "../interfaces/MediaProfileInterface";
+import jwt from "jwt-decode";
+import InitialStateInterfaceOrders from "../interfaces/InitialStateInterfaceOrders";
+import OrderInterface from "../interfaces/OrderInterface";
+import AddOrderInterface from "../interfaces/AddOrderInterface";
 
 const addCheckUser = (checkUser: boolean) => {
   return {
@@ -32,11 +36,176 @@ const addRole = (role: string) => {
     payload: role,
   };
 };
-
+const addOrdersAdvertiser = (ordersAdvertiser: InitialStateInterfaceOrders) => {
+  return {
+    type: ActionType.ADD_ORDERS_ADVERTISER,
+    payload: ordersAdvertiser,
+  };
+};
+const addOrder = (order: OrderInterface) => {
+  return {
+    type: ActionType.ADD_ORDER,
+    payload: order,
+  };
+};
 const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
+const getOrder = (idOrder:string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `https://localhost:5001/api/Order/${idOrder}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((data: any) => {
+      dispatch(addOrder(data.data));
+    })
+    .catch((data: any) => {
+      refreshToken()
+        .then((data: any) => {
+          addToken(data.data);
+          dispatch(addOrder(data.data));
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          dispatch(addCheckUser(false));
+        });
+    });
+  };
+};
+interface PutOrderInterface{
+  orderId: string;
+  title: string;
+  audienceAge: number;
+  description: string;
+  budget: number;
+  updateDate: string;
+}
+const putOrder = (order:PutOrderInterface) => {
+  const token = localStorage.getItem("accessToken");
+  const formCheck = new FormData();
+  return (dispatch: Function) => {
+    formCheck.append("OrderId", order.orderId);
+    formCheck.append("Title", order.title);
+    formCheck.append("AudienceAge", String(order.audienceAge));
+    formCheck.append("Description", order.description);
+    formCheck.append("Budget", String(order.budget));
+    formCheck.append("UpdateDate", String(order.updateDate));
+    axios({
+      method: "PUT",
+      url: `https://localhost:5001/api/Order/update`,
+      data: formCheck,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((data: any) => {
+      dispatch(getOrder(order.orderId));
+    })
+    .catch((data: any) => {
+      if (data.response.status === 401) {
+        refreshToken()
+        .then((data: any) => {
+          addToken(data.data);
+          dispatch(putOrder(order));
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          dispatch(addCheckUser(false));
+        });
+      }
+    });
+  };
+};
+
+
+const deleteOrder = (id: string, idOrder : string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "DELETE",
+      url: `https://localhost:5001/api/Order/remove/${idOrder}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((data: any) => {
+      dispatch(getAllAdvertiserOrders(id));
+    })
+    .catch((data: any) => {
+      refreshToken()
+        .then((data: any) => {
+          addToken(data.data);
+          dispatch(deleteOrder(idOrder, id));
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          dispatch(addCheckUser(false));
+        });
+    });
+  };
+};
+
+const postOrder = (order : AddOrderInterface) => {
+  const token = localStorage.getItem("accessToken");
+  const formCheck = new FormData();
+  return (dispatch: Function) => {
+    formCheck.append("Title", order.title);
+    formCheck.append("AudienceAge", String(order.audienceAge));
+    formCheck.append("Description", order.description);
+    formCheck.append("Budget", String(order.budget));
+    formCheck.append("CreateDate", String(order.createDate));
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Order/create",
+      data: formCheck,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .catch((data: any) => {
+      refreshToken()
+        .then((data: any) => {
+          addToken(data.data);
+          dispatch(postOrder(order));
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          dispatch(addCheckUser(false));
+        });
+    });
+  };
+};
+const getAllAdvertiserOrders = (id : string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `https://localhost:5001/api/Order/available/${id}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((data: any) => {
+      dispatch(addOrdersAdvertiser(data.data));
+    })
+    .catch((data: any) => {
+      refreshToken()
+        .then((data: any) => {
+          addToken(data.data);
+          dispatch(getAllAdvertiserOrders(id));
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          dispatch(addCheckUser(false));
+        });
+    });
+  };
+};
+
+
+
+
 
 const getProfileData = () => {
   const token = localStorage.getItem("accessToken");
@@ -53,8 +222,8 @@ const getProfileData = () => {
           nickname: data.data.nickname ? data.data.nickname : "",
           firstName: data.data.firstName,
           secondName: data.data.secondName,
-          ageAdvertising: data.data.ageAdvertising
-            ? data.data.ageAdvertising
+          ageAdvertising: data.data.bloggerExperience
+            ? data.data.bloggerExperience
             : "",
           linkChannel: data.data.urlYouTube ? data.data.urlYouTube : "",
           ordersCompleted: data.data.ordersCompleted
@@ -97,6 +266,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
     formCheck.append("Subjects", changedProfile.subjects);
     formCheck.append("Subscribers", String(changedProfile.numberSubscribers));
     formCheck.append("AgeAudience", String(changedProfile.ageAudience));
+    formCheck.append("BloggerExperience", String(changedProfile.ageAdvertising));
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/blogger",
@@ -200,6 +370,8 @@ const postData = (user: RegistrationUserInterface) => {
       data: formCheck,
     }).then((data: any) => {
       addToken(data.data);
+      const user = jwt(data.data.accessToken);
+      dispatch(addRole(Object(user).Role));
       dispatch(addCheckUser(true));
     });
   };
@@ -216,6 +388,8 @@ const postProfileData = (user: LogInUserInterface) => {
       data: formCheck,
     }).then((data: any) => {
       addToken(data.data);
+      const user = jwt(data.data.accessToken);
+      dispatch(addRole(Object(user).Role));
       dispatch(addCheckUser(true));
     });
   };
@@ -235,6 +409,11 @@ const refreshToken = () => {
   });
 };
 export {
+  putOrder,
+  getOrder,
+  deleteOrder,
+  postOrder,
+  getAllAdvertiserOrders,
   refreshToken,
   addCheckUser,
   postProfileData,

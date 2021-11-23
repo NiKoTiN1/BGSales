@@ -5,7 +5,7 @@ import "./app-header.scss";
 import UserMenu from "../user-menu";
 import AppHeaderInterface from "../../interfaces/AppHeaderInterface";
 import StateInterface from "../../interfaces/StateInterface";
-import { getPartialProfileData } from "../../actions";
+import { getPartialProfileData} from "../../actions";
 
 const AppHeader = ({
   checkUser,
@@ -60,8 +60,8 @@ const AppHeader = ({
 
 const mapStateToProps = (state: StateInterface) => {
   return {
-    checkUser: state.reducer.checkUser,
-    currentUser: state.reducer.currentUser,
+    checkUser: state.profile.checkUser,
+    currentUser: state.profile.currentUser,
   };
 };
 

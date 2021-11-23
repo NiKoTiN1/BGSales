@@ -6,6 +6,10 @@ import MediaPersonProfile from "../media-person-profile";
 import MediaPersonProfileEdit from "../media-person-profile-edit";
 import AdvertiserPersonProfile from "../advertiser-person-profile";
 import AdvertiserPersonProfileEdit from "../advertiser-person-profile-edit";
+import OrderEdit from "../order-edit";
+import Order from "../order";
+import CreateOrder from "../create-order";
+import AdvertiserOrders from "../advertiser-orders";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
 import AppHeader from "../app-header";
@@ -19,7 +23,7 @@ import { addRole } from "../../actions";
 const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    if(token!= null){
+    if(token != null){
       const user = jwt(String(token));
       dispatch(addRole(Object(user).Role));
     }
@@ -31,7 +35,7 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
         <Route path="/authorization" exact component={LoginForm} />
         <Route path="/registration" exact component={RegistrationForm} />
         <Route path="/" exact component={Main} />
-        <Route path="/profileMedia" exact>
+        <Route path="/profileMedia">
           {currentUser.role !== "Blogger" ? (
             <Redirect to="/authorization" />
           ) : (
@@ -59,6 +63,18 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
             <Route component={AdvertiserPersonProfileEdit} />
           )}
         </Route>
+        <Route path="/myProjects" exact>
+          {currentUser.role !== "Businessman" ? (
+            <Redirect to="/authorization" />
+          ) : (
+            <Route component={AdvertiserOrders} />
+          )}
+        </Route> 
+        <Route path='/myProjects/:id' render={({match}) => {
+                            const {id} = match.params;
+                        return <Order id={id}/>}}/>
+        <Route path="/project" exact component={Order} />
+        <Route path="/projectEdit" exact component={OrderEdit}/>
       </Switch>
       <AppFooter />
     </div>
@@ -66,7 +82,7 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(App);
