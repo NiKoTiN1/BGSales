@@ -6,6 +6,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Services.MapperProfiles;
 using BGSales.Services.Services;
+using BGSales.Web.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -105,9 +106,14 @@ namespace BGSales.Web
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IOrderService, Services.Services.OrderService>();
 
+            services.AddTransient<IChatRepository, ChatRepository>();
+            services.AddTransient<IChatService, ChatService>();
+
             services.AddSingleton<IConfiguration>(provider => Configuration);
 
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+
+            services.AddSignalR();
 
             services.AddSwaggerGen(c =>
             {
@@ -142,6 +148,7 @@ namespace BGSales.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chatsocket");
             });
         }
     }
