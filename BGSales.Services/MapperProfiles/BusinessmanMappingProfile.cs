@@ -14,7 +14,7 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<Businessman, BusinessmanViewModel>()
-                  .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
+                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
                  .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
                  .ForMember(dest => dest.SecondName, opt => opt.MapFrom(src => src.User.LastName))
                  .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.User.Avatar.Path))
