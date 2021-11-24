@@ -73,6 +73,7 @@ namespace BGSales.Web
                 mc.AddProfile(new BloggerMappingProfile());
                 mc.AddProfile(new ImageMappingProfile());
                 mc.AddProfile(new OrderMappingProfile());
+                mc.AddProfile(new ChatMappingProfile());
             });
 
             var mapper = mappingConfig.CreateMapper();
