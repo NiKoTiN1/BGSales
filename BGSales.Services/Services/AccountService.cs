@@ -111,7 +111,6 @@ namespace BGSales.Services.Services
 
             var userUpdateResult = await _userManager.UpdateAsync(user);
             var updatedModel = await _bloggerService.Update(model);
-            updatedModel = _mapper.Map(user, updatedModel);
 
             if (!userUpdateResult.Succeeded)
             {
@@ -140,7 +139,6 @@ namespace BGSales.Services.Services
 
             var userUpdateResult = await _userManager.UpdateAsync(user);
             var updatedModel = await _businessmanService.Update(model);
-            updatedModel = _mapper.Map(user, updatedModel);
 
             if (!userUpdateResult.Succeeded)
             {

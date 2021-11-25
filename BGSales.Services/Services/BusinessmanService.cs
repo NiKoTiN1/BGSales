@@ -36,8 +36,7 @@ namespace BGSales.Services.Services
             {
                 throw new System.Exception("Cannot find businessman with this Id!");
             }
-            var model = _mapper.Map<BusinessmanViewModel>(user);
-            model = _mapper.Map(businessman, model);
+            var model = _mapper.Map<BusinessmanViewModel>(businessman);
 
             return model;
         }

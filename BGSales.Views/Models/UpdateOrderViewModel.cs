@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BGSales.Views.Models
+﻿namespace BGSales.Views.Models
 {
     public class UpdateOrderViewModel
     {
@@ -9,6 +7,5 @@ namespace BGSales.Views.Models
         public int AudienceAge { get; set; }
         public string Description { get; set; }
         public double Budget { get; set; }
-        public DateTime UpdateDate { get; set; }
     }
 }

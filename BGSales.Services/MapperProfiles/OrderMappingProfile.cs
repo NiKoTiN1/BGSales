@@ -14,7 +14,7 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title))
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                  .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
-                 .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate));
+                 .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
             CreateMap<Order, OrderViewModel>()
                  .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
@@ -22,7 +22,11 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                  .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
                  .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
-                 .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate));
+                 .ForMember(dest => dest.Advitiser, opt => opt.MapFrom(src => src.Advertiser))
+                 .ForMember(dest => dest.BloggerRequests, opt => opt.MapFrom(src => src.BloggerRequests))
+                 .ForMember(dest => dest.Blogger, opt => opt.MapFrom(src => src.Blogger))
+                 .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate))
+                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Order, PartialOrderViewModel>()
                  .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
@@ -36,7 +40,7 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.AudienceAge, opt => opt.MapFrom(src => src.AudienceAge))
                  .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.Budget))
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => src.UpdateDate))
+                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

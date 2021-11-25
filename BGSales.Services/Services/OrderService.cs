@@ -64,29 +64,6 @@ namespace BGSales.Services.Services
             }
 
             var model = _mapper.Map<OrderViewModel>(order);
-            var businessman = _businessmanService.GetByBusinessmanId(order.AdvertiserId);
-            var businessmanModel = _mapper.Map<BusinessmanViewModel>(businessman.User);
-            businessmanModel = _mapper.Map(businessman, businessmanModel);
-
-            model.Advitiser = businessmanModel;
-
-            if (order.Blogger == null)
-            {
-                var requestedBloggers = new List<BloggerViewModel>();
-                foreach (var blogger in order.BloggerRequests)
-                {
-                    var userModel = _mapper.Map<BloggerViewModel>(blogger.User);
-                    var bloggerModel = _mapper.Map(blogger, userModel);
-                    requestedBloggers.Add(bloggerModel);
-                }
-                model.BloggerRequests = requestedBloggers;
-            }
-            else
-            {
-                var userModel = _mapper.Map<BloggerViewModel>(order.Blogger.User);
-                var bloggerModel = _mapper.Map(order.Blogger, userModel);
-                model.Blogger = bloggerModel;
-            }
 
             return model;
         }
@@ -134,10 +111,6 @@ namespace BGSales.Services.Services
             await _orderRepository.Update(updatedOrder);
 
             var updatedVeiwModel = _mapper.Map<OrderViewModel>(updatedOrder);
-
-            var businessmanModel = _mapper.Map<BusinessmanViewModel>(order.Advertiser.User);
-            businessmanModel = _mapper.Map(order.Advertiser, businessmanModel);
-            updatedVeiwModel.Advitiser = businessmanModel;
 
             return updatedVeiwModel;
         }
