@@ -8,6 +8,8 @@ namespace BGSales.Domain.Models
         public string Text { get; set; }
         public ApplicationUser Sender { get; set; }
         public string SenderId { get; set; }
+        public Chat Chat { get; set; }
+        public string ChatId { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }
