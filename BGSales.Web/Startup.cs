@@ -74,6 +74,7 @@ namespace BGSales.Web
                 mc.AddProfile(new ImageMappingProfile());
                 mc.AddProfile(new OrderMappingProfile());
                 mc.AddProfile(new ChatMappingProfile());
+                mc.AddProfile(new MessageMappingProfile());
             });
 
             var mapper = mappingConfig.CreateMapper();
@@ -109,6 +110,9 @@ namespace BGSales.Web
 
             services.AddTransient<IChatRepository, ChatRepository>();
             services.AddTransient<IChatService, ChatService>();
+
+            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IMessageService, MessageService>();
 
             services.AddSingleton<IConfiguration>(provider => Configuration);
 

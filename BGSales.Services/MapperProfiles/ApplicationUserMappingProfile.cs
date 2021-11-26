@@ -34,6 +34,12 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
                  .ForMember(dest => dest.UrlImage, opt => opt.MapFrom(src => src.Avatar.Path))
                  .ForMember(dest => dest.Money, opt => opt.MapFrom(src => src.StripeInfo.Balance));
+
+            CreateMap<ApplicationUser, UserViewModel>()
+                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                 .ForMember(dest => dest.SecondName, opt => opt.MapFrom(src => src.LastName))
+                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Avatar.Path));
         }
     }
 }
