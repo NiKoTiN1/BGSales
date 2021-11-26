@@ -23,6 +23,10 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Subscribers, opt => opt.MapFrom(src => src.Subscribers))
                  .ForMember(dest => dest.AgeAudience, opt => opt.MapFrom(src => src.AgeAudience))
                  .ForMember(dest => dest.BloggerExperience, opt => opt.MapFrom(src => src.BloggerExperience))
+                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+                 .ForMember(dest => dest.SecondName, opt => opt.MapFrom(src => src.User.LastName))
+                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.User.Avatar.Path))
                  .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname));
 
             CreateMap<UpdateBloggerViewModel, Blogger>()

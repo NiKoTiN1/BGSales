@@ -38,8 +38,7 @@ namespace BGSales.Services.Services
                 throw new System.Exception("Cannot find blogger with this Id!");
             }
 
-            var model = _mapper.Map<BloggerViewModel>(user);
-            model = _mapper.Map(blogger, model);
+            var model = _mapper.Map<BloggerViewModel>(blogger);
 
             return model;
         }
