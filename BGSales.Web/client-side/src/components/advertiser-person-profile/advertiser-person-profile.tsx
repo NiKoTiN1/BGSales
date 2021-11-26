@@ -17,15 +17,10 @@ const AdvertiserPersonProfile = ({
   }, []);
   return (
     <>
-      <div className="edit">
-        <Link className="edit__link" to="/profileAdvertiserEdit">
-          <Button variant="outlined">Edit</Button>
-        </Link>
-      </div>
-      <div className="media-profile">
-        <p>
+      <div className="advertise-profile">
+        <div className="advertise-profile__container-img">
           <img
-            className="media-profile__img"
+            className="advertise-profile__container-img__img"
             src={
               currentUser.profile.imageUrl
                 ? currentUser.profile.imageUrl
@@ -33,25 +28,40 @@ const AdvertiserPersonProfile = ({
             }
             alt=""
           />
-        </p>
-        <div className="information">
-          <div className="information__name col-1">
-            <p>First name:</p>
-            <p>Second name:</p>
-            <p>Name Company:</p>
-            <p>Number Offers:</p>
+        </div>
+        <div className="information-container">
+          <div className="information col-1">
+            <div className="information__name">
+              <p className="information__name__text">First name:</p>
+              <p className="information__name__text">Second name:</p>
+            </div>
+            <div className="information__name">
+              <p className="information__name__text">{currentUser.profile.firstName}</p>
+              <p className="information__name__text">{currentUser.profile.secondName}</p>
+            </div>
           </div>
-          <div className="information__name col-2">
-            <p>{currentUser.profile.firstName}</p>
-            <p>{currentUser.profile.secondName}</p>
-            <p>{currentUser.profile.nameCompany}</p>
-            <p>
-              {currentUser.profile.numberOffers
-                ? currentUser.profile.numberOffers
-                : 0}
-            </p>
+          <div className="information col-2">
+            <div className="information__name">
+              <p className="information__name__text">Name Company:</p>
+              <p className="information__name__text">Number Offers:</p>
+            </div>
+            <div className="information__name">
+              <p className="information__name__text">{currentUser.profile.nameCompany ? currentUser.profile.nameCompany : "empty"}</p>
+              <p className="information__name__text"> 
+                {currentUser.profile.numberOffers
+                  ? currentUser.profile.numberOffers
+                  : 0}
+              </p>
+            </div>
           </div>
         </div>
+        <div className="edit">
+          {currentUser.role === "Businessman"?<Link className="edit__link" to="/profileAdvertiserEdit">
+            <Button className="edit__link__btn" variant="outlined">Edit</Button>
+          </Link>:<Link className="edit__link" to="/chat">
+            <Button className="edit__link__btn" variant="outlined">Write message</Button>
+          </Link>}
+      </div>
       </div>
     </>
   );

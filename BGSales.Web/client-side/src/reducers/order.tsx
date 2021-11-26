@@ -5,7 +5,7 @@ import ActionInterfaceOrder from "../interfaces/ActionInterfaceOrder";
 
 
 const initialState: InitialStateInterfaceOrders = {
-    ordersAdvertiser: [],
+    orders: [],
     order: {
       orderId: "",
       bloggerRequests: [],
@@ -29,10 +29,10 @@ const initialState: InitialStateInterfaceOrders = {
 
 const reducer = (state = initialState, action: ActionInterfaceOrder) => {
   switch (action.type) {
-    case ActionType.ADD_ORDERS_ADVERTISER:
+    case ActionType.ADD_ORDERS:
       return {
         ...state,
-        ordersAdvertiser: action.payload,
+        orders: action.payload,
       };
     case ActionType.ADD_ORDER:
         return {

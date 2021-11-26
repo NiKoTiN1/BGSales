@@ -23,19 +23,19 @@ const AppHeader = ({
         <>
           {currentUser.role === "Blogger" ? (
             <>
-              <Link className="header__link projects" to="/allProjects">
+              <Link className="header__link projects" to="/projects/allProjects">
                 All Projects
               </Link>
-              <Link className="header__link projects" to="/selectedProjects">
+              <Link className="header__link projects" to="/projects/selectedProjects">
                 Selected Projects
               </Link>
             </>
           ) : (
             <>
-              <Link className="header__link projects" to="/bloggers">
+              <Link className="header__link projects" to="/mediaPersons">
                 Bloggers
               </Link>
-              <Link className="header__link projects" to="/myProjects">
+              <Link className="header__link projects" to="/projects/myProjects">
                 My Projects
               </Link>{" "}
             </>

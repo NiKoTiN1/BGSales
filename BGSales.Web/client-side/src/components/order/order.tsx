@@ -41,8 +41,8 @@ const Order = ({
           <div className="information__name col-2">
             <p>{order.title}</p>
             <p>{order.description}</p>
-            <p>{order.budget}</p>
-            <p>{order.audienceAge}</p>
+            <p>{order.budget?order.budget:"empty"}</p>
+            <p>{order.audienceAge?order.audienceAge:"empty"}</p>
           </div>
         </div>
       </div>

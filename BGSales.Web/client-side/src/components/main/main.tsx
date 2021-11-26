@@ -11,12 +11,11 @@ const Main = () => {
             <div className="data">
               <div className="content">
                 <h1 className="title">
-                  Boxing icon has the will for a couple more fights
+                  Our application was launched - the best application in the CIS
                 </h1>
                 <p className="text">
-                  The highly anticipated world championship fight will take
-                  place at 10am and is the second major boxing blockbuster in
-                  the nation after 43 years.
+                  This application will help to find income for bloggers, as well as help the customer with advertising.
+                  Using this app you can't go wrong with your choice!
                 </p>
               </div>
             </div>
@@ -27,12 +26,11 @@ const Main = () => {
             <div className="data">
               <div className="content">
                 <h1 className="title">
-                  Boxing icon has the will for a couple more fights
+                   Project forecast
                 </h1>
                 <p className="text">
-                  The highly anticipated world championship fight will take
-                  place at 10am and is the second major boxing blockbuster in
-                  the nation after 43 years.
+                Using this site you can find a large number of orders if you are a blogger, 
+                and quickly get advertising if you are a customer.
                 </p>
               </div>
             </div>

@@ -17,15 +17,14 @@ const MediaPersonProfile = ({
   }, []);
   return (
     <>
-      <div className="edit">
-        <Link className="edit__link" to="/profileMediaEdit">
-          <Button variant="outlined">Edit</Button>
-        </Link>
-      </div>
       <div className="media-profile">
-        <p>
+        <div className="media-profile__container-img">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
           <img
-            className="media-profile__img"
+            className="media-profile__container-img__img"
             src={
               currentUser.profile.imageUrl
                 ? currentUser.profile.imageUrl
@@ -33,7 +32,7 @@ const MediaPersonProfile = ({
             }
             alt=""
           />
-        </p>
+        </div>
         <div className="information">
           <div className="information__name col-1">
             <p>First name:</p>
@@ -45,9 +44,9 @@ const MediaPersonProfile = ({
           <div className="information__name col-2">
             <p>{currentUser.profile.firstName}</p>
             <p>{currentUser.profile.secondName}</p>
-            <p>{currentUser.profile.ageAdvertising}</p>
-            <a href={currentUser.profile.linkChannel}>link to channel/page</a>
-            <p>{currentUser.profile.ordersCompleted}</p>
+            <p>{currentUser.profile.ageAdvertising?currentUser.profile.ageAdvertising:"empty"}</p>
+            <a href={currentUser.profile.linkChannel?currentUser.profile.linkChannel:"empty"}>link to channel/page</a>
+            <p>{currentUser.profile.ordersCompleted?currentUser.profile.ordersCompleted:"empty"}</p>
           </div>
         </div>
       </div>
@@ -62,11 +61,19 @@ const MediaPersonProfile = ({
           <p>Average age of the audience:</p>
         </div>
         <div className="information-activity__name col-2">
-          <p>{currentUser.profile.activity}</p>
-          <p>{currentUser.profile.subjects}</p>
-          <p>{currentUser.profile.numberSubscribers}</p>
-          <p>{currentUser.profile.ageAudience}</p>
+          <p>{currentUser.profile.activity?currentUser.profile.activity:"empty"}</p>
+          <p>{currentUser.profile.subjects?currentUser.profile.subjects:"empty"}</p>
+          <p>{currentUser.profile.numberSubscribers?currentUser.profile.numberSubscribers:"empty"}</p>
+          <p>{currentUser.profile.ageAudience?currentUser.profile.ageAudience:"empty"}</p>
         </div>
+      </div>
+      <div className="edit">
+        {currentUser.role === "Blogger"? <Link className="edit__link" to="/profileMediaEdit">
+          <Button variant="outlined">Edit</Button>
+        </Link>: <Link className="edit__link" to="/chat">
+          <Button variant="outlined">Write message</Button>
+        </Link>}
+       
       </div>
     </>
   );

@@ -44,13 +44,13 @@ const OrderEdit = ({
   };
   return (
     <>
-      <form onSubmit={submitForm}>
-        <div className="media-profile-form">
-          <div className="media-profile-form__col-1">
-            <h2>Project create</h2>
-            <div>
+       <form onSubmit={submitForm}>
+        <div className="order-create-form">
+          <div className="order-create-form__col-1">
+            <h2>Project adit</h2>
+            <div className="container">
+            <label className="container__label">Title</label>
               <TextField
-                label="Title"
                 defaultValue={form.title}
                 variant="outlined"
                 error={form.title === ""}
@@ -60,8 +60,8 @@ const OrderEdit = ({
               />
             </div>
             <div className="container">
+              <label className="container__label">Audience Age</label>
               <TextField
-                label="Audience Age"
                 defaultValue={form.audienceAge}
                 variant="outlined"
                 error={form.audienceAge === ""}
@@ -71,19 +71,8 @@ const OrderEdit = ({
               />
             </div>
             <div className="container">
+              <label className="container__label">Budget</label>
               <TextField
-                label="Description"
-                defaultValue={form.description}
-                variant="outlined"
-                error={form.description === ""}
-                onChange={(e: any) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
-            </div>
-            <div className="container">
-              <TextField
-                label="Budget"
                 defaultValue={form.budget}
                 variant="outlined"
                 error={form.budget === ""}
@@ -92,11 +81,20 @@ const OrderEdit = ({
                 }
               />
             </div>
+            <div className="container">
+              <label className="container__label">Description</label>
+              <textarea className="container__text" name="message" value={String(form.description)} onChange={(e: any) =>
+                  setForm({ ...form, description: e.target.value })
+                }>
+              </textarea>
+            </div>
           </div>
         </div>
-        <Button className="button-save" type="submit" variant="contained">
-          Apply changes
-        </Button>
+        <div className="button-save">
+          <Button type="submit" variant="contained">
+            Apply changes
+          </Button>
+        </div>
       </form>
     </>
   );

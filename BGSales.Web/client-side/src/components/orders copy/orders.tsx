@@ -1,35 +1,42 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { connect } from "react-redux";
 import { Route} from "react-router-dom";
-import "./advertiser-orders.scss";
+import "./orders.scss";
 import { Button } from "@material-ui/core";
 import AdvertiserOrdersInterface from "../../interfaces/AdvertiserOrdersInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
 import { getAllAdvertiserOrders } from "../../actions";
-import PartialAdvertiserOrder from "../partial-advertiser-order";
+import PartialAdvertiserOrder from "../partial-order";
 import PartialOrderInformationInterface from "../../interfaces/PartialOrderInformationInterface";
 
-const AdvertiserOrders = ({
-  ordersAdvertiser,
+const Orders = ({
+  orders,
   currentUser,
   dispatch,
   history,
 }: AdvertiserOrdersInterface) => {
+  const [ordersSelectName, setOrdersSelectName] = useState(window.location.href.slice(window.location.href.lastIndexOf('/') + 1));
   useEffect(() => {
     dispatch(getAllAdvertiserOrders(currentUser.profile.userId));
-  }, []);
-  const elements = ordersAdvertiser.map((item:PartialOrderInformationInterface) => {
+  }, [currentUser.profile.userId, dispatch]);
+
+  const elements = orders.map((item:PartialOrderInformationInterface) => {
     return(        
     <li  key={item.orderId} className='list-orders__item-order'>
         <PartialAdvertiserOrder
             id={currentUser.profile.userId}
             {...item}
             onItemSelected={(orderId:string) => {
-              history.push(`myProjects/${orderId}`)
+              console.log(window.location.href);
+              history.push(`${ordersSelectName}/${orderId}`)
             }}
         />
+        {currentUser.role === "Businessman"? <p className='list-orders__item-order__notif'>{item.requests}</p>
+         : null
+         }
+       
     </li>
     )
   });
@@ -45,7 +52,7 @@ const AdvertiserOrders = ({
 const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.profile.currentUser,
-    ordersAdvertiser: state.order.ordersAdvertiser,
+    orders: state.order.orders,
   };
 };
-export default connect(mapStateToProps)(AdvertiserOrders);
+export default connect(mapStateToProps)(Orders);

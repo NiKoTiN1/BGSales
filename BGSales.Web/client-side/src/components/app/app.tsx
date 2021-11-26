@@ -9,7 +9,8 @@ import AdvertiserPersonProfileEdit from "../advertiser-person-profile-edit";
 import OrderEdit from "../order-edit";
 import Order from "../order";
 import CreateOrder from "../create-order";
-import AdvertiserOrders from "../advertiser-orders";
+import Orders from "../orders";
+import MediaPersons from "../media-persons";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
 import AppHeader from "../app-header";
@@ -31,50 +32,23 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   return (
     <div className="main-content">
       <AppHeader />
-      <Switch>
+      <Switch >
         <Route path="/authorization" exact component={LoginForm} />
         <Route path="/registration" exact component={RegistrationForm} />
         <Route path="/" exact component={Main} />
-        <Route path="/profileMedia">
-          {currentUser.role !== "Blogger" ? (
-            <Redirect to="/authorization" />
-          ) : (
-            <MediaPersonProfile />
-          )}
-        </Route>
-        <Route path="/profileMediaEdit" exact>
-          {currentUser.role !== "Blogger" ? (
-            <Redirect to="/authorization" />
-          ) : (
-            <Route component={MediaPersonProfileEdit} />
-          )}
-        </Route>
-        <Route path="/profileAdvertiser" exact>
-          {currentUser.role !== "Businessman" ? (
-            <Redirect to="/authorization" />
-          ) : (
-            <AdvertiserPersonProfile />
-          )}
-        </Route>
-        <Route path="/profileAdvertiserEdit" exact>
-          {currentUser.role !== "Businessman" ? (
-            <Redirect to="/authorization" />
-          ) : (
-            <Route component={AdvertiserPersonProfileEdit} />
-          )}
-        </Route>
-        <Route path="/myProjects" exact>
-          {currentUser.role !== "Businessman" ? (
-            <Redirect to="/authorization" />
-          ) : (
-            <Route component={AdvertiserOrders} />
-          )}
-        </Route> 
-        <Route path='/myProjects/:id' render={({match}) => {
+        <Route path="/profileMedia" exact component={MediaPersonProfile} />
+
+        <Route path="/profileMediaEdit" exact component={MediaPersonProfileEdit} />
+        <Route path="/profileAdvertiser" exact component={AdvertiserPersonProfile} />
+        <Route path="/profileAdvertiserEdit" exact component={AdvertiserPersonProfileEdit} />
+        <Route path="/projects/:selectProjects" exact component={Orders} />
+        <Route path='/projects/:selectProjects/:id' render={({match}) => {
                             const {id} = match.params;
                         return <Order id={id}/>}}/>
         <Route path="/project" exact component={Order} />
         <Route path="/projectEdit" exact component={OrderEdit}/>
+        <Route path="/createProjects" exact component={CreateOrder}/>
+        <Route path="/mediaPersons" exact component={MediaPersons}/>
       </Switch>
       <AppFooter />
     </div>

@@ -8,6 +8,7 @@ import "./create-order.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import CreateOrderInterface from "../../interfaces/CreateOrderInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import { TextareaAutosize } from "@material-ui/core";
 
 const CreateOrder = ({
   dispatch,
@@ -38,18 +39,18 @@ const CreateOrder = ({
     };
     if (!errorFlag) {
       dispatch(postOrder(userProfile));
-      history.push("/myProjects");
+      history.goBack();
     }
   };
   return (
     <>
       <form onSubmit={submitForm}>
-        <div className="media-profile-form">
-          <div className="media-profile-form__col-1">
+        <div className="order-create-form">
+          <div className="order-create-form__col-1">
             <h2>Project create</h2>
-            <div>
+            <div className="container">
+            <label className="container__label">Title</label>
               <TextField
-                label="Title"
                 defaultValue={form.title}
                 variant="outlined"
                 error={form.title === ""}
@@ -59,8 +60,8 @@ const CreateOrder = ({
               />
             </div>
             <div className="container">
+              <label className="container__label">Audience Age</label>
               <TextField
-                label="Audience Age"
                 defaultValue={form.audienceAge}
                 variant="outlined"
                 error={form.audienceAge === ""}
@@ -70,19 +71,8 @@ const CreateOrder = ({
               />
             </div>
             <div className="container">
+              <label className="container__label">Budget</label>
               <TextField
-                label="Description"
-                defaultValue={form.description}
-                variant="outlined"
-                error={form.description === ""}
-                onChange={(e: any) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
-            </div>
-            <div className="container">
-              <TextField
-                label="Budget"
                 defaultValue={form.budget}
                 variant="outlined"
                 error={form.budget === ""}
@@ -91,11 +81,20 @@ const CreateOrder = ({
                 }
               />
             </div>
+            <div className="container">
+              <label className="container__label">Description</label>
+              <textarea className="container__text" name="message" onChange={(e: any) =>
+                  setForm({ ...form, description: e.target.value })
+                }>
+              </textarea>
+            </div>
           </div>
         </div>
-        <Button className="button-save" type="submit" variant="contained">
-          Apply changes
-        </Button>
+        <div className="button-save">
+          <Button type="submit" variant="contained">
+            Save
+          </Button>
+        </div>
       </form>
     </>
   );

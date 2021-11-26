@@ -36,10 +36,10 @@ const addRole = (role: string) => {
     payload: role,
   };
 };
-const addOrdersAdvertiser = (ordersAdvertiser: InitialStateInterfaceOrders) => {
+const addOrdersAdvertiser = (orders: InitialStateInterfaceOrders) => {
   return {
-    type: ActionType.ADD_ORDERS_ADVERTISER,
-    payload: ordersAdvertiser,
+    type: ActionType.ADD_ORDERS,
+    payload: orders,
   };
 };
 const addOrder = (order: OrderInterface) => {
@@ -48,10 +48,64 @@ const addOrder = (order: OrderInterface) => {
     payload: order,
   };
 };
+const addMediaPersons = (mediaPersons: OrderInterface) => {
+  return {
+    type: ActionType.ADD_MEDIA_PERSONS,
+    payload: mediaPersons,
+  };
+};
+const deleteMediaPersons = () => {
+  return {
+    type: ActionType.DELETE_MEDIA_PERSONS,
+    payload: [],
+  };
+};
 const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
+
+const getMediaPersons = () => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: "https://localhost:5001/api/Blogger/all",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+          let allMediaPersons:any = [];
+          data.data.map((item:any)=>{
+            const userInfo = {
+              userId: item.userId,
+              imageUrl: item.imageUrl,
+              nickname: item.nickname ? item.nickname : "",
+              firstName: item.firstName,
+              secondName: item.secondName,
+              activity: item.activity ? item.activity : "",
+              numberSubscribers: item.subscribers ?item.subscribers : "",
+            };
+            allMediaPersons.push(userInfo);
+          })
+          dispatch(addMediaPersons(allMediaPersons))
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+        refreshToken()
+          .then((data: any) => {
+            addToken(data.data);
+            dispatch(getMediaPersons());
+          })
+          .catch(() => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            dispatch(addCheckUser(false));
+          });
+        }
+      });
+  };
+};
+
 const getOrder = (idOrder:string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
@@ -64,6 +118,7 @@ const getOrder = (idOrder:string) => {
       dispatch(addOrder(data.data));
     })
     .catch((data: any) => {
+      if (data.response.status === 401) {
       refreshToken()
         .then((data: any) => {
           addToken(data.data);
@@ -74,6 +129,7 @@ const getOrder = (idOrder:string) => {
           localStorage.removeItem("refreshToken");
           dispatch(addCheckUser(false));
         });
+      }
     });
   };
 };
@@ -131,9 +187,10 @@ const deleteOrder = (id: string, idOrder : string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((data: any) => {
-      dispatch(getAllAdvertiserOrders(id));
+      dispatch(getOrders(id, "all"));
     })
     .catch((data: any) => {
+      if (data.response.status === 401) {
       refreshToken()
         .then((data: any) => {
           addToken(data.data);
@@ -144,6 +201,7 @@ const deleteOrder = (id: string, idOrder : string) => {
           localStorage.removeItem("refreshToken");
           dispatch(addCheckUser(false));
         });
+      }
     });
   };
 };
@@ -164,6 +222,7 @@ const postOrder = (order : AddOrderInterface) => {
       headers: { Authorization: `Bearer ${token}` },
     })
     .catch((data: any) => {
+      if (data.response.status === 401) {
       refreshToken()
         .then((data: any) => {
           addToken(data.data);
@@ -174,31 +233,35 @@ const postOrder = (order : AddOrderInterface) => {
           localStorage.removeItem("refreshToken");
           dispatch(addCheckUser(false));
         });
+      }
     });
   };
 };
-const getAllAdvertiserOrders = (id : string) => {
+const getOrders = (id : string, name:string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `https://localhost:5001/api/Order/available/${id}`,
+      url: `https://localhost:5001/api/Order/${name}/${id}`,
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((data: any) => {
       dispatch(addOrdersAdvertiser(data.data));
     })
     .catch((data: any) => {
+      dispatch(deleteMediaPersons());
+      if (data.response.status === 401) {
       refreshToken()
         .then((data: any) => {
           addToken(data.data);
-          dispatch(getAllAdvertiserOrders(id));
+          dispatch(getOrders(id, name));
         })
         .catch(() => {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           dispatch(addCheckUser(false));
         });
+      }
     });
   };
 };
@@ -239,6 +302,7 @@ const getProfileData = () => {
         dispatch(changeProfile(userInfo));
       })
       .catch((data: any) => {
+        if (data.response.status === 401) {
         refreshToken()
           .then((data: any) => {
             addToken(data.data);
@@ -249,6 +313,7 @@ const getProfileData = () => {
             localStorage.removeItem("refreshToken");
             dispatch(addCheckUser(false));
           });
+        }
       });
   };
 };
@@ -277,6 +342,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
         dispatch(getProfileData());
       })
       .catch((data: any) => {
+        if (data.response.status === 401) {
         refreshToken()
           .then((data: any) => {
             addToken(data.data);
@@ -287,6 +353,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
             localStorage.removeItem("refreshToken");
             dispatch(addCheckUser(false));
           });
+        }
       });
   };
 };
@@ -301,6 +368,7 @@ const putAdvertiserProfileData = (
     formCheck.append("SecondName", changedProfileAdvertiser.secondName);
     formCheck.append("NameCompany", changedProfileAdvertiser.nameCompany);
     formCheck.append("ImageFile", String(changedProfileAdvertiser.imageUrl));
+    console.log(String(changedProfileAdvertiser.imageUrl));
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/businessman",
@@ -311,6 +379,7 @@ const putAdvertiserProfileData = (
         dispatch(getProfileData());
       })
       .catch((data: any) => {
+        if (data.response.status === 401) {
         refreshToken()
           .then((data: any) => {
             addToken(data.data);
@@ -321,6 +390,7 @@ const putAdvertiserProfileData = (
             localStorage.removeItem("refreshToken");
             dispatch(addCheckUser(false));
           });
+        }
       });
   };
 };
@@ -342,6 +412,7 @@ const getPartialProfileData = () => {
         dispatch(addCheckUser(true));
       })
       .catch((data: any) => {
+        if (data.response.status === 401) {
         refreshToken()
           .then((data: any) => {
             addToken(data.data);
@@ -352,6 +423,7 @@ const getPartialProfileData = () => {
             localStorage.removeItem("refreshToken");
             dispatch(addCheckUser(false));
           });
+        }
       });
   };
 };
@@ -409,11 +481,12 @@ const refreshToken = () => {
   });
 };
 export {
+  getMediaPersons,
   putOrder,
   getOrder,
   deleteOrder,
   postOrder,
-  getAllAdvertiserOrders,
+  getOrders,
   refreshToken,
   addCheckUser,
   postProfileData,

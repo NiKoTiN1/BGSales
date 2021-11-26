@@ -26,6 +26,7 @@ const initialState: InitialStateInterface = {
     orders: [],
   },
   checkUser: false,
+  allMediaPersons: [],
 };
 
 const reducer = (state = initialState, action: ActionInterface) => {
@@ -58,6 +59,16 @@ const reducer = (state = initialState, action: ActionInterface) => {
         ...state,
         currentUser: { ...state.currentUser, role: action.payload },
       };
+    case ActionType.ADD_MEDIA_PERSONS:
+      return {
+        ...state,
+        allMediaPersons: action.payload,
+      };  
+    case ActionType.DELETE_MEDIA_PERSONS:
+      return {
+        ...state,
+        allMediaPersons: [],
+    };    
     default:
       return state;
   }
