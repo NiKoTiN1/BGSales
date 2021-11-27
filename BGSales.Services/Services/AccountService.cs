@@ -153,6 +153,12 @@ namespace BGSales.Services.Services
             return await _userManager.IsInRoleAsync(user, role.ToString());
         }
 
+        public async Task<bool> IsAdmin(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return await _userManager.IsInRoleAsync(user, Roles.Admin.ToString());
+        }
+
         private async Task AddRoleToUser(ApplicationUser user, Roles role)
         {
             var result = await _userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);

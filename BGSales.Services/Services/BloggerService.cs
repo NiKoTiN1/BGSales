@@ -55,7 +55,7 @@ namespace BGSales.Services.Services
             return blogger;
         }
 
-        public List<BloggerViewModel> GetAllBloggers()
+        public List<BloggerPartialViewModel> GetAllBloggers()
         {
             var bloggers = _bloggerRepository.Get(b => true).ToList();
             if (bloggers.Count == 0)
@@ -63,14 +63,7 @@ namespace BGSales.Services.Services
                 throw new System.Exception("There is no bloggers");
             }
 
-            var bloggerModels = new List<BloggerViewModel>();
-
-            foreach (var blogger in bloggers)
-            {
-                var model = _mapper.Map<BloggerViewModel>(blogger.User);
-                model = _mapper.Map(blogger, model);
-                bloggerModels.Add(model);
-            }
+            var bloggerModels = _mapper.Map<List<BloggerPartialViewModel>>(bloggers);
 
             return bloggerModels;
         }
