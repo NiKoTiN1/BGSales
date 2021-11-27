@@ -3,5 +3,4 @@ export default interface AddOrderInterface{
     description: string;
     budget: number;
     audienceAge: number;
-    createDate: string;
 }

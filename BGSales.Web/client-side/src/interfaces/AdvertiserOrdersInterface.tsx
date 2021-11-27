@@ -7,4 +7,5 @@ export default interface OrdersInterface{
     dispatch: Function;
     currentUser: CurrentUserInterface;
     history: HistoryPropsInterface;
+    nameOrderUrl: string;
 }

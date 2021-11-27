@@ -190,9 +190,11 @@ const MediaPersonProfileEdit = ({
             </div>
           </div>
         </div>
-        <Button className="button-save" type="submit" variant="contained">
-          Apply changes
-        </Button>
+        <div className="button-save">
+          <Button type="submit" variant="contained">
+            Apply changes
+          </Button>
+        </div>
       </form>
     </>
   );

@@ -36,7 +36,7 @@ const addRole = (role: string) => {
     payload: role,
   };
 };
-const addOrdersAdvertiser = (orders: InitialStateInterfaceOrders) => {
+const addOrders = (orders: InitialStateInterfaceOrders) => {
   return {
     type: ActionType.ADD_ORDERS,
     payload: orders,
@@ -54,17 +54,84 @@ const addMediaPersons = (mediaPersons: OrderInterface) => {
     payload: mediaPersons,
   };
 };
-const deleteMediaPersons = () => {
+const deleteOrders = () => {
   return {
-    type: ActionType.DELETE_MEDIA_PERSONS,
+    type: ActionType.DELETE_ORDERS,
     payload: [],
   };
 };
+const addNameOrderUrl = (nameOrderUrl:string) => {
+  return {
+    type: ActionType.ADD_NAME_ORDER_URL,
+    payload: nameOrderUrl,
+  };
+};
+
 const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
-
+const postOrderAccept = (orderId:string, bloggerUserId:string, businessmanUserId:string) => {
+  return (dispatch: Function) => {
+    const token = localStorage.getItem("accessToken");
+    const formCheck = new FormData();
+    formCheck.append("OrderId", orderId);
+    formCheck.append("BloggerUserId", bloggerUserId);
+    formCheck.append("BusinessmanUserId", businessmanUserId);
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Order/accept",
+      headers: { Authorization: `Bearer ${token}` },
+      data: formCheck,
+    })
+      .then((data: any) => {
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+        refreshToken()
+          .then((data: any) => {
+            addToken(data.data);
+            dispatch(postOrderAccept(orderId, bloggerUserId, businessmanUserId));
+          })
+          .catch(() => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            dispatch(addCheckUser(false));
+          });
+        }
+      });
+  };
+};
+const postOrderReqest = (userId:string, orderId:string) => {
+  return (dispatch: Function) => {
+    const token = localStorage.getItem("accessToken");
+    const formCheck = new FormData();
+    formCheck.append("UserId", userId);
+    formCheck.append("OrderId", orderId);
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Order/request",
+      headers: { Authorization: `Bearer ${token}` },
+      data: formCheck,
+    })
+      .then((data: any) => {
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+        refreshToken()
+          .then((data: any) => {
+            addToken(data.data);
+            dispatch(postOrderReqest(userId, orderId));
+          })
+          .catch(() => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            dispatch(addCheckUser(false));
+          });
+        }
+      });
+  };
+};
 const getMediaPersons = () => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
@@ -150,7 +217,6 @@ const putOrder = (order:PutOrderInterface) => {
     formCheck.append("AudienceAge", String(order.audienceAge));
     formCheck.append("Description", order.description);
     formCheck.append("Budget", String(order.budget));
-    formCheck.append("UpdateDate", String(order.updateDate));
     axios({
       method: "PUT",
       url: `https://localhost:5001/api/Order/update`,
@@ -206,7 +272,7 @@ const deleteOrder = (id: string, idOrder : string) => {
   };
 };
 
-const postOrder = (order : AddOrderInterface) => {
+const postOrder = (order : AddOrderInterface, id: string, name: string) => {
   const token = localStorage.getItem("accessToken");
   const formCheck = new FormData();
   return (dispatch: Function) => {
@@ -214,19 +280,21 @@ const postOrder = (order : AddOrderInterface) => {
     formCheck.append("AudienceAge", String(order.audienceAge));
     formCheck.append("Description", order.description);
     formCheck.append("Budget", String(order.budget));
-    formCheck.append("CreateDate", String(order.createDate));
     axios({
       method: "POST",
       url: "https://localhost:5001/api/Order/create",
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
+    .then((data: any) => {
+      dispatch(getOrders(id, name));
+    })
     .catch((data: any) => {
       if (data.response.status === 401) {
       refreshToken()
         .then((data: any) => {
           addToken(data.data);
-          dispatch(postOrder(order));
+          dispatch(postOrder(order, id, name));
         })
         .catch(() => {
           localStorage.removeItem("accessToken");
@@ -246,10 +314,10 @@ const getOrders = (id : string, name:string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((data: any) => {
-      dispatch(addOrdersAdvertiser(data.data));
+      console.log(data.data);
+      dispatch(addOrders(data.data));
     })
     .catch((data: any) => {
-      dispatch(deleteMediaPersons());
       if (data.response.status === 401) {
       refreshToken()
         .then((data: any) => {
@@ -368,7 +436,6 @@ const putAdvertiserProfileData = (
     formCheck.append("SecondName", changedProfileAdvertiser.secondName);
     formCheck.append("NameCompany", changedProfileAdvertiser.nameCompany);
     formCheck.append("ImageFile", String(changedProfileAdvertiser.imageUrl));
-    console.log(String(changedProfileAdvertiser.imageUrl));
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/businessman",
@@ -441,6 +508,7 @@ const postData = (user: RegistrationUserInterface) => {
       url: "https://localhost:5001/api/Account/register",
       data: formCheck,
     }).then((data: any) => {
+      dispatch(getPartialProfileData());
       addToken(data.data);
       const user = jwt(data.data.accessToken);
       dispatch(addRole(Object(user).Role));
@@ -459,6 +527,7 @@ const postProfileData = (user: LogInUserInterface) => {
       url: "https://localhost:5001/api/Account/login",
       data: formCheck,
     }).then((data: any) => {
+      dispatch(getPartialProfileData());
       addToken(data.data);
       const user = jwt(data.data.accessToken);
       dispatch(addRole(Object(user).Role));
@@ -481,6 +550,10 @@ const refreshToken = () => {
   });
 };
 export {
+  postOrderAccept,
+  postOrderReqest,
+  deleteOrders,
+  addNameOrderUrl,
   getMediaPersons,
   putOrder,
   getOrder,

@@ -24,6 +24,7 @@ const initialState: InitialStateInterfaceOrders = {
         ordersCount: 0,
       }
     },
+    nameOrderUrl: "",
 
 };
 
@@ -39,6 +40,16 @@ const reducer = (state = initialState, action: ActionInterfaceOrder) => {
           ...state,
           order: action.payload,
         };  
+    case ActionType.ADD_NAME_ORDER_URL:
+        return {
+          ...state,
+          nameOrderUrl: action.payload,
+        };  
+    case ActionType.DELETE_ORDERS:
+        return {
+          ...state,
+          orders: [],
+        };           
     default:
       return state;
   }

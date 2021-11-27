@@ -63,12 +63,7 @@ const reducer = (state = initialState, action: ActionInterface) => {
       return {
         ...state,
         allMediaPersons: action.payload,
-      };  
-    case ActionType.DELETE_MEDIA_PERSONS:
-      return {
-        ...state,
-        allMediaPersons: [],
-    };    
+      };    
     default:
       return state;
   }

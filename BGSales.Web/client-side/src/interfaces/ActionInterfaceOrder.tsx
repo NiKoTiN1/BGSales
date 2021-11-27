@@ -3,5 +3,5 @@ import PartialOrderInformationInterface from "./PartialOrderInformationInterface
 
 export default interface ActionInterfaceOrder {
     type: string;
-    payload: PartialOrderInformationInterface | OrderInterface;
+    payload: PartialOrderInformationInterface | OrderInterface | string;
 }

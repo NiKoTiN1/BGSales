@@ -14,13 +14,14 @@ const CreateOrder = ({
   dispatch,
   order,
   history,
+  userId,
+  nameOrderUrl,
 }: CreateOrderInterface) => {
   const [form, setForm] = useState<FormInterface>({
     title: order.title,
     audienceAge:  `${order.audienceAge}`,
     description:  order.description,
     budget:  `${order.budget}`,
-    createDate: order.createDate? order.createDate: String(new Date()),
   });
   const submitForm = (e: any) => {
     e.preventDefault();
@@ -30,15 +31,14 @@ const CreateOrder = ({
         errorFlag = true;
       }
     }
-    const userProfile = {
+    const newOrder = {
       title: String(form.title),
       audienceAge:  Number(form.audienceAge),
       description:  String(form.description),
       budget:  Number(form.budget),
-      createDate:  String(form.createDate),
     };
     if (!errorFlag) {
-      dispatch(postOrder(userProfile));
+      dispatch(postOrder(newOrder, userId, nameOrderUrl));
       history.goBack();
     }
   };
@@ -102,6 +102,8 @@ const CreateOrder = ({
 const mapStateToProps = (state: StateInterface) => {
   return {
     order: state.order.order,
+    nameOrderUrl: state.order.nameOrderUrl,
+    userId: state.profile.currentUser.profile.userId,
   };
 };
 export default connect(mapStateToProps)(CreateOrder);

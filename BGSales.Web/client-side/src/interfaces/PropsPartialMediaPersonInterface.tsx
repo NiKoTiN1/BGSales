@@ -1,3 +1,4 @@
+
 export default interface PropsPartialMediaPersonInterface{
     userId: string;
     imageUrl: string | ArrayBuffer | null;

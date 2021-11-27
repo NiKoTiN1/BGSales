@@ -7,7 +7,7 @@ import { Button } from "@material-ui/core";
 import AdvertiserOrdersInterface from "../../interfaces/AdvertiserOrdersInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getOrders } from "../../actions";
+import { deleteOrders, getOrders, addNameOrderUrl } from "../../actions";
 import PartialOrder from "../partial-order";
 import PartialOrderInformationInterface from "../../interfaces/PartialOrderInformationInterface";
 
@@ -16,19 +16,24 @@ const Orders = ({
   currentUser,
   dispatch,
   history,
+  nameOrderUrl,
 }: AdvertiserOrdersInterface) => {
-  const [ordersSelectName, setOrdersSelectName] = useState(window.location.href.slice(window.location.href.lastIndexOf('/') + 1));
+  const [ordersSelectName, setOrdersSelectName] = useState(nameOrderUrl);
   useEffect(() => {
-    let nameReqest = "";
-    if(ordersSelectName === "myProjects"){
-      nameReqest = "all";
-    } else if(ordersSelectName === "allProjects"){
-      nameReqest = "available";
-    } else if(ordersSelectName === "selectedProjects"){
-      nameReqest = "reqested";
+    if(!nameOrderUrl){
+      dispatch(addNameOrderUrl(window.location.href.slice(window.location.href.lastIndexOf('/') + 1)));
     }
+    let nameReqest = "";
+    if(nameOrderUrl === "myProjects"){
+      nameReqest = "all";
+    } else if(nameOrderUrl === "allProjects"){
+      nameReqest = "available";
+    } else if(nameOrderUrl === "selectedProjects"){
+      nameReqest = "requested";
+    }
+    dispatch(deleteOrders());
     dispatch(getOrders(currentUser.profile.userId, nameReqest));
-  }, [currentUser.profile.userId, dispatch, ordersSelectName]);
+  }, [currentUser.profile.userId, dispatch, nameOrderUrl, ordersSelectName]);
   const elements = orders.map((item:PartialOrderInformationInterface) => {
     return(        
     <li  key={item.orderId} className='list-orders__item-order'>
@@ -36,14 +41,12 @@ const Orders = ({
             id={currentUser.profile.userId}
             {...item}
             onItemSelected={(orderId:string) => {
-              console.log(window.location.href);
-              history.push(`${ordersSelectName}/${orderId}`)
+              history.push(`${nameOrderUrl}/${orderId}`)
             }}
         />
         {currentUser.role === "Businessman"? <p className='list-orders__item-order__notif'>{item.requests}</p>
          : null
          }
-       
     </li>
     )
   });
@@ -52,7 +55,7 @@ const Orders = ({
       <ul className="list-orders">
         {elements}
       </ul>
-      <Link className="button-gradient" to="/createProjects" >Add project</Link>
+      {currentUser.role === "Businessman"? <Link className="button-gradient" to="/createProjects" >Add project</Link>: null}
     </>
   )
 };
@@ -60,6 +63,7 @@ const mapStateToProps = (state: StateInterface) => {
   return {
     currentUser: state.profile.currentUser,
     orders: state.order.orders,
+    nameOrderUrl: state.order.nameOrderUrl,
   };
 };
 export default connect(mapStateToProps)(Orders);
