@@ -41,6 +41,14 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
                  .ForMember(dest => dest.BloggerExperience, opt => opt.MapFrom(src => src.BloggerExperience))
                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Blogger, BloggerPartialViewModel>()
+                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+                 .ForMember(dest => dest.SecondName, opt => opt.MapFrom(src => src.User.LastName))
+                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.User.Avatar.Path))
+                 .ForMember(dest => dest.NumberSubscribers, opt => opt.MapFrom(src => src.Subscribers))
+                 .ForMember(dest => dest.Activity, opt => opt.MapFrom(src => src.Activity));
         }
     }
 }
