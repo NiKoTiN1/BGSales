@@ -12,7 +12,7 @@ namespace BGSales.Views.Models
         public double Budget { get; set; }
         public DateTime CreateDate { get; set; }
         public BusinessmanViewModel Advitiser { get; set; }
-        public BloggerViewModel Blogger { get; set; }
-        public virtual List<BloggerViewModel> BloggerRequests { get; set; }
+        public BloggerPartialViewModel Blogger { get; set; }
+        public virtual List<BloggerPartialViewModel> BloggerRequests { get; set; }
     }
 }
