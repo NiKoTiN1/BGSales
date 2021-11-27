@@ -94,8 +94,8 @@ namespace BGSales.Web.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("profile")]
-        public async Task<IActionResult> Profile()
+        [Route("profile/{userId?}")]
+        public async Task<IActionResult> Profile([FromRoute] string userId = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -104,7 +104,20 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            var user = await _accountService.GetById(userIdClaim.Value);
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = userIdClaim.Value;
+            }
+            else
+            {
+                var isAdmin = await _accountService.IsAdmin(userId);
+                if (isAdmin)
+                {
+                    throw new Exception("You cannot see this user");
+                }
+            }
+
+            var user = await _accountService.GetById(userId);
 
             if (user == null)
             {
