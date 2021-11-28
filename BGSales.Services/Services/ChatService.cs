@@ -54,5 +54,19 @@ namespace BGSales.Services.Services
 
             return chatModel;
         }
+
+        public string GetChatId(string bloggerId, string businessmanId)
+        {
+            var chatId = _chatRepository.Get(ch => ch.BloggerId == bloggerId &&
+                ch.BusinessmanId == businessmanId).Select(ch => ch.Id)
+                .SingleOrDefault();
+
+            if (string.IsNullOrEmpty(chatId))
+            {
+                return null;
+            }
+
+            return chatId;
+        }
     }
 }

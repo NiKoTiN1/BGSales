@@ -7,5 +7,6 @@ namespace BGSales.Services.Interfaces
     {
         public Task<string> CreateChat(CreateChatViewModel model);
         public ChatViewModel GetChat(string chatId);
+        public string GetChatId(string bloggerId, string businessmanId);
     }
 }

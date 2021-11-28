@@ -7,7 +7,7 @@ namespace BGSales.Services.Interfaces
     public interface IOrderService
     {
         public Task CreateOrder(CreateOrderViewModel viewModel, string userId);
-        public OrderViewModel GetOrderInfo(string orderId);
+        public OrderViewModel GetOrderInfo(string orderId, string currentUserId);
         public List<PartialOrderViewModel> GetAllBusinessmanOrders(string userId);
         public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId);
         public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId);
