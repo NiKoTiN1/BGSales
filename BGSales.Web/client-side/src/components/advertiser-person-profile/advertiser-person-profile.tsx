@@ -6,51 +6,83 @@ import { Button } from "@material-ui/core";
 import { imageSrc } from "../../imageRequire";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import StateInterface from "../../interfaces/StateInterface";
-import { getProfileData } from "../../actions";
+import { getProfileData, getNewProfileData } from "../../actions";
 
 const AdvertiserPersonProfile = ({
-  currentUser,
+  profile,
   dispatch,
+  selectedProfile,
+  role,
+  id,
 }: PersonProfileInterface) => {
   useEffect(() => {
-    dispatch(getProfileData());
+    if (id) {
+      dispatch(getNewProfileData(id));
+    } else {
+      dispatch(getProfileData());
+    }
   }, []);
+  if (role === "") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
-      <div className="edit">
-        <Link className="edit__link" to="/profileAdvertiserEdit">
-          <Button variant="outlined">Edit</Button>
-        </Link>
-      </div>
-      <div className="media-profile">
-        <p>
+      <div className="advertise-profile">
+        <div className="advertise-profile__container-img">
           <img
-            className="media-profile__img"
-            src={
-              currentUser.profile.imageUrl
-                ? currentUser.profile.imageUrl
-                : imageSrc
-            }
+            className="advertise-profile__container-img__img"
+            src={selectedProfile.imageUrl ? selectedProfile.imageUrl : imageSrc}
             alt=""
           />
-        </p>
-        <div className="information">
-          <div className="information__name col-1">
-            <p>First name:</p>
-            <p>Second name:</p>
-            <p>Name Company:</p>
-            <p>Number Offers:</p>
+        </div>
+        <div className="information-container">
+          <div className="information col-1">
+            <div className="information__name">
+              <p className="information__name__text">First name:</p>
+              <p className="information__name__text">Second name:</p>
+            </div>
+            <div className="information__name">
+              <p className="information__name__text">
+                {selectedProfile.firstName}
+              </p>
+              <p className="information__name__text">
+                {selectedProfile.secondName}
+              </p>
+            </div>
           </div>
-          <div className="information__name col-2">
-            <p>{currentUser.profile.firstName}</p>
-            <p>{currentUser.profile.secondName}</p>
-            <p>{currentUser.profile.nameCompany}</p>
-            <p>
-              {currentUser.profile.numberOffers
-                ? currentUser.profile.numberOffers
-                : 0}
-            </p>
+          <div className="information col-2">
+            <div className="information__name">
+              <p className="information__name__text">Name Company:</p>
+              <p className="information__name__text">Number Offers:</p>
+            </div>
+            <div className="information__name">
+              <p className="information__name__text">
+                {selectedProfile.nameCompany
+                  ? selectedProfile.nameCompany
+                  : "empty"}
+              </p>
+              <p className="information__name__text">
+                {selectedProfile.numberOffers
+                  ? selectedProfile.numberOffers
+                  : 0}
+              </p>
+            </div>
           </div>
+        </div>
+        <div className="edit">
+          {role === "Businessman" ? (
+            <Link className="edit__link" to="/profileAdvertiserEdit">
+              <Button className="edit__link__btn" variant="outlined">
+                Edit
+              </Button>
+            </Link>
+          ) : (
+            <Link className="edit__link" to="/chat">
+              <Button className="edit__link__btn" variant="outlined">
+                Write message
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </>
@@ -58,7 +90,9 @@ const AdvertiserPersonProfile = ({
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    profile: state.profile.currentUser.profile,
+    selectedProfile: state.profile.selectedProfile,
+    role: state.profile.currentUser.role,
   };
 };
 export default connect(mapStateToProps)(AdvertiserPersonProfile);

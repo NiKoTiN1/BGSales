@@ -5,7 +5,7 @@ import "./app-header.scss";
 import UserMenu from "../user-menu";
 import AppHeaderInterface from "../../interfaces/AppHeaderInterface";
 import StateInterface from "../../interfaces/StateInterface";
-import { getPartialProfileData } from "../../actions";
+import { getPartialProfileData, addNameOrderUrl } from "../../actions";
 
 const AppHeader = ({
   checkUser,
@@ -14,6 +14,7 @@ const AppHeader = ({
 }: AppHeaderInterface) => {
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
+      console.log("It's profile");
       dispatch(getPartialProfileData());
     }
   }, []);
@@ -23,19 +24,31 @@ const AppHeader = ({
         <>
           {currentUser.role === "Blogger" ? (
             <>
-              <Link className="header__link projects" to="/allProjects">
+              <Link
+                className="header__link projects"
+                to="/projects/allProjects"
+                onClick={() => dispatch(addNameOrderUrl("allProjects"))}
+              >
                 All Projects
               </Link>
-              <Link className="header__link projects" to="/selectedProjects">
+              <Link
+                className="header__link projects"
+                to="/projects/selectedProjects"
+                onClick={() => dispatch(addNameOrderUrl("selectedProjects"))}
+              >
                 Selected Projects
               </Link>
             </>
           ) : (
             <>
-              <Link className="header__link projects" to="/bloggers">
+              <Link className="header__link projects" to="/mediaPersons">
                 Bloggers
               </Link>
-              <Link className="header__link projects" to="/myProjects">
+              <Link
+                className="header__link projects"
+                to="/projects/myProjects"
+                onClick={() => dispatch(addNameOrderUrl("myProjects"))}
+              >
                 My Projects
               </Link>{" "}
             </>
@@ -60,8 +73,8 @@ const AppHeader = ({
 
 const mapStateToProps = (state: StateInterface) => {
   return {
-    checkUser: state.reducer.checkUser,
-    currentUser: state.reducer.currentUser,
+    checkUser: state.profile.checkUser,
+    currentUser: state.profile.currentUser,
   };
 };
 

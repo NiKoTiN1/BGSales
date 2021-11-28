@@ -1,6 +1,10 @@
 import CurrentUserInterface from "./CurrentUserInterface";
+import UserProfileInterface from "./UserProfileInterface";
 
 export default interface PersonProfileInterface {
   dispatch: Function;
-  currentUser: CurrentUserInterface;
+  profile: UserProfileInterface;
+  selectedProfile: UserProfileInterface;
+  id: string;
+  role: string;
 }

@@ -1,0 +1,13 @@
+.order-partial-info {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  &__container {
+    .btn {
+      margin-right: 30px;
+      width: 300px;
+      height: 100px;
+    }
+  }
+}
