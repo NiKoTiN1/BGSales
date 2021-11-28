@@ -21,6 +21,9 @@ const AdvertiserPersonProfileEdit = ({
     secondName: currentUser.profile.secondName,
     nameCompany: currentUser.profile.nameCompany,
   });
+  const [formImg, setFormImg] = useState({
+    imageUrl: currentUser.profile.imageUrl,
+  });
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -31,7 +34,7 @@ const AdvertiserPersonProfileEdit = ({
     }
     const userProfile = {
       userId: currentUser.profile.userId,
-      imageUrl: form.imageUrl,
+      imageUrl: formImg.imageUrl,
       firstName: String(form.firstName),
       secondName: String(form.secondName),
       nameCompany: String(form.nameCompany),
@@ -45,28 +48,30 @@ const AdvertiserPersonProfileEdit = ({
     let reader = new FileReader();
     let file = e.target.files[0];
     reader.onloadend = () => {
-      setForm({ ...form, imageUrl: reader.result });
+      setFormImg({ imageUrl: reader.result });
     };
-
     reader.readAsDataURL(file);
   };
+  if (currentUser.role !== "Businessman") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
       <form onSubmit={submitForm}>
-        <div className="media-profile-form">
-          <div className="media-profile-form__file">
+        <div className="advertiser-profile-form">
+          <div className="advertiser-profile-form__file">
             <img
-              className="media-profile-form__file__img"
+              className="advertiser-profile-form__file__img"
               src={form.imageUrl ? form.imageUrl : imageSrc}
               alt=""
             />
             <input
-              className="media-profile-form__file__input"
+              className="advertiser-profile-form__file__input"
               type="file"
               onChange={(e) => imageChange(e)}
             />
           </div>
-          <div className="media-profile-form__col-1">
+          <div className="advertiser-profile-form__col-1">
             <h2>Personal information</h2>
             <div>
               <TextField
@@ -103,16 +108,18 @@ const AdvertiserPersonProfileEdit = ({
             </div>
           </div>
         </div>
-        <Button className="button-save" type="submit" variant="contained">
-          Apply changes
-        </Button>
+        <div className="button-save">
+          <Button type="submit" variant="contained">
+            Apply changes
+          </Button>
+        </div>
       </form>
     </>
   );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(AdvertiserPersonProfileEdit);

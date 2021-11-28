@@ -65,6 +65,9 @@ const MediaPersonProfileEdit = ({
 
     reader.readAsDataURL(file);
   };
+  if (currentUser.role !== "Blogger") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
       <form onSubmit={submitForm}>
@@ -190,16 +193,18 @@ const MediaPersonProfileEdit = ({
             </div>
           </div>
         </div>
-        <Button className="button-save" type="submit" variant="contained">
-          Apply changes
-        </Button>
+        <div className="button-save">
+          <Button type="submit" variant="contained">
+            Apply changes
+          </Button>
+        </div>
       </form>
     </>
   );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.reducer.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 export default connect(mapStateToProps)(MediaPersonProfileEdit);

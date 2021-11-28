@@ -1,5 +1,7 @@
 import InitialStateInterface from "./InitialStateInterface";
+import InitialStateInterfaceOrders from "./InitialStateInterfaceOrders";
 
 export default interface StateInterface {
-  reducer: InitialStateInterface;
+  profile: InitialStateInterface;
+  order: InitialStateInterfaceOrders;
 }
