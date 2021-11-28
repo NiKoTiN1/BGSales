@@ -16,12 +16,13 @@ const CreateOrder = ({
   history,
   userId,
   nameOrderUrl,
+  role,
 }: CreateOrderInterface) => {
   const [form, setForm] = useState<FormInterface>({
     title: order.title,
-    audienceAge:  `${order.audienceAge}`,
-    description:  order.description,
-    budget:  `${order.budget}`,
+    audienceAge: `${order.audienceAge}`,
+    description: order.description,
+    budget: `${order.budget}`,
   });
   const submitForm = (e: any) => {
     e.preventDefault();
@@ -33,15 +34,18 @@ const CreateOrder = ({
     }
     const newOrder = {
       title: String(form.title),
-      audienceAge:  Number(form.audienceAge),
-      description:  String(form.description),
-      budget:  Number(form.budget),
+      audienceAge: Number(form.audienceAge),
+      description: String(form.description),
+      budget: Number(form.budget),
     };
     if (!errorFlag) {
       dispatch(postOrder(newOrder, userId, nameOrderUrl));
       history.goBack();
     }
   };
+  if (role !== "Businessman") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
       <form onSubmit={submitForm}>
@@ -49,7 +53,7 @@ const CreateOrder = ({
           <div className="order-create-form__col-1">
             <h2>Project create</h2>
             <div className="container">
-            <label className="container__label">Title</label>
+              <label className="container__label">Title</label>
               <TextField
                 defaultValue={form.title}
                 variant="outlined"
@@ -83,10 +87,13 @@ const CreateOrder = ({
             </div>
             <div className="container">
               <label className="container__label">Description</label>
-              <textarea className="container__text" name="message" onChange={(e: any) =>
+              <textarea
+                className="container__text"
+                name="message"
+                onChange={(e: any) =>
                   setForm({ ...form, description: e.target.value })
-                }>
-              </textarea>
+                }
+              ></textarea>
             </div>
           </div>
         </div>
@@ -104,6 +111,7 @@ const mapStateToProps = (state: StateInterface) => {
     order: state.order.order,
     nameOrderUrl: state.order.nameOrderUrl,
     userId: state.profile.currentUser.profile.userId,
+    role: state.profile.currentUser.role,
   };
 };
 export default connect(mapStateToProps)(CreateOrder);

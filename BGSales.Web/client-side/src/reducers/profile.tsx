@@ -25,6 +25,22 @@ const initialState: InitialStateInterface = {
     money: 0,
     orders: [],
   },
+  selectedProfile: {
+    userId: "",
+    imageUrl: "",
+    nickname: "",
+    firstName: "",
+    secondName: "",
+    ageAdvertising: "",
+    linkChannel: "",
+    ordersCompleted: 0,
+    activity: "",
+    subjects: "",
+    numberSubscribers: 0,
+    ageAudience: 0,
+    nameCompany: "",
+    numberOffers: 0,
+  },
   checkUser: false,
   allMediaPersons: [],
 };
@@ -63,7 +79,12 @@ const reducer = (state = initialState, action: ActionInterface) => {
       return {
         ...state,
         allMediaPersons: action.payload,
-      };    
+      };
+    case ActionType.ADD_SELECTED_PROFILE:
+      return {
+        ...state,
+        selectedProfile: action.payload,
+      };
     default:
       return state;
   }

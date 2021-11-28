@@ -7,9 +7,9 @@ import { connect } from "react-redux";
 import { deleteOrder } from "../../actions";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import {postOrderAccept} from "../../actions";
+import { postOrderAccept } from "../../actions";
 import CurrentUserInterface from "../../interfaces/CurrentUserInterface";
-interface PropsPartialMediaPersonOrderInterface{
+interface PropsPartialMediaPersonOrderInterface {
   orderId: string;
   userId: string;
   imageUrl: string | ArrayBuffer | null;
@@ -18,8 +18,8 @@ interface PropsPartialMediaPersonOrderInterface{
   secondName: string;
   activity: string;
   numberSubscribers: number | string;
-  onItemSelected:Function;
-  checked: number;
+  onItemSelected: Function;
+  checked: boolean;
   dispatch: Function;
   currentUserId: string;
 }
@@ -36,24 +36,41 @@ const PartialMediaPerson = ({
   dispatch,
   currentUserId,
 }: PropsPartialMediaPersonOrderInterface) => {
-  return(  
+  return (
     <>
       <div className="partial-media-person-order-info">
         <div className="partial-media-person-order-info__container col-1">
-            <p>{firstName}</p> 
-            <p>{secondName}</p>  
+          <p>{firstName}</p>
+          <p>{secondName}</p>
         </div>
         <div className="partial-media-person-order-info__container col-2">
-            <p>Activity:  {activity?activity:"empty"}</p> 
-            <p>Subscribers:  {numberSubscribers?numberSubscribers:"empty"}</p> 
+          <p>Activity: {activity ? activity : "empty"}</p>
+          <p>Subscribers: {numberSubscribers ? numberSubscribers : "empty"}</p>
         </div>
         <div className="partial-media-person-order-info__container col-3">
-            <Button className="partial-media-person-order-info__container__btn-look btn" variant="outlined" onClick={()=>onItemSelected(userId)}>Look</Button>
-            {!checked?<Button className="partial-media-person-order-info__container__btn-look btn" variant="outlined" onClick={()=>dispatch(postOrderAccept(orderId, userId, currentUserId))}>Approve</Button>:null}
+          <Link className="edit__link" to={`profileMedia/${userId}`}>
+            <Button
+              className="partial-media-person-order-info__container__btn-look btn"
+              variant="outlined"
+            >
+              Look
+            </Button>{" "}
+          </Link>
+          {checked ? (
+            <Button
+              className="partial-media-person-order-info__container__btn-look btn"
+              variant="outlined"
+              onClick={() =>
+                dispatch(postOrderAccept(orderId, userId, currentUserId))
+              }
+            >
+              Approve
+            </Button>
+          ) : null}
         </div>
       </div>
-   </>
-  )
+    </>
+  );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {

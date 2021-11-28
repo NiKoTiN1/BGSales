@@ -1,11 +1,11 @@
-.partial-media-person-info{
+.partial-media-person-info {
   position: relative;
   display: flex;
   flex-direction: row;
-  justify-content:space-between;
+  justify-content: space-between;
   margin-left: 200px;
-  &__container{
-    .btn{
+  &__container {
+    .btn {
       display: flex;
       margin-top: 30px;
       margin-right: 20px;
@@ -14,11 +14,11 @@
     }
   }
 }
-.partial-media-person-img{
+.partial-media-person-img {
   position: absolute;
-  left:0px;
+  left: 0px;
   top: 0px;
-  &__img{
+  &__img {
     border-top-left-radius: 100px;
     border-bottom-left-radius: 100px;
     width: 170px;

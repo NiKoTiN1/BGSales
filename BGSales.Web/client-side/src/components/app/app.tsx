@@ -24,7 +24,7 @@ import { addRole } from "../../actions";
 const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    if(token != null){
+    if (token != null) {
       const user = jwt(String(token));
       dispatch(addRole(Object(user).Role));
     }
@@ -32,23 +32,60 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   return (
     <div className="main-content">
       <AppHeader />
-      <Switch >
+      <Switch>
         <Route path="/authorization" exact component={LoginForm} />
         <Route path="/registration" exact component={RegistrationForm} />
         <Route path="/" exact component={Main} />
         <Route path="/profileMedia" exact component={MediaPersonProfile} />
-
-        <Route path="/profileMediaEdit" exact component={MediaPersonProfileEdit} />
-        <Route path="/profileAdvertiser" exact component={AdvertiserPersonProfile} />
-        <Route path="/profileAdvertiserEdit" exact component={AdvertiserPersonProfileEdit} />
+        <Route
+          path="/profileMedia/:id"
+          render={({ match }) => {
+            const { id } = match.params;
+            return <MediaPersonProfile id={id} />;
+          }}
+        />
+        <Route
+          path="/projects/myProjects/profileMedia/:id"
+          render={({ match }) => {
+            const { id } = match.params;
+            return <MediaPersonProfile id={id} />;
+          }}
+        />
+        <Route
+          path="/projects/:nameBloggerPage/profileAdvertiser/:id"
+          render={({ match }) => {
+            const { id } = match.params;
+            return <AdvertiserPersonProfile id={id} />;
+          }}
+        />
+        <Route
+          path="/profileMediaEdit"
+          exact
+          component={MediaPersonProfileEdit}
+        />
+        <Route
+          path="/profileAdvertiser"
+          exact
+          component={AdvertiserPersonProfile}
+        />
+        <Route
+          path="/profileAdvertiserEdit"
+          exact
+          component={AdvertiserPersonProfileEdit}
+        />
         <Route path="/projects/:selectProjects" exact component={Orders} />
-        <Route path='/projects/:selectProjects/:id' render={({match}) => {
-                            const {id} = match.params;
-                        return <Order id={id}/>}}/>
+        <Route
+          path="/projects/:selectProjects/:id"
+          exact
+          render={({ match }) => {
+            const { id } = match.params;
+            return <Order id={id} />;
+          }}
+        />
         <Route path="/project" exact component={Order} />
-        <Route path="/projectEdit" exact component={OrderEdit}/>
-        <Route path="/createProjects" exact component={CreateOrder}/>
-        <Route path="/mediaPersons" exact component={MediaPersons}/>
+        <Route path="/projectEdit" exact component={OrderEdit} />
+        <Route path="/createProjects" exact component={CreateOrder} />
+        <Route path="/mediaPersons" exact component={MediaPersons} />
       </Switch>
       <AppFooter />
     </div>

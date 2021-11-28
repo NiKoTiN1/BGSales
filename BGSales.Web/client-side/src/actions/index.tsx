@@ -60,18 +60,27 @@ const deleteOrders = () => {
     payload: [],
   };
 };
-const addNameOrderUrl = (nameOrderUrl:string) => {
+const addNameOrderUrl = (nameOrderUrl: string) => {
   return {
     type: ActionType.ADD_NAME_ORDER_URL,
     payload: nameOrderUrl,
   };
 };
-
+const addSelectedProfile = (selectedProfile: UserProfileInterface) => {
+  return {
+    type: ActionType.ADD_SELECTED_PROFILE,
+    payload: selectedProfile,
+  };
+};
 const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
-const postOrderAccept = (orderId:string, bloggerUserId:string, businessmanUserId:string) => {
+const postOrderAccept = (
+  orderId: string,
+  bloggerUserId: string,
+  businessmanUserId: string
+) => {
   return (dispatch: Function) => {
     const token = localStorage.getItem("accessToken");
     const formCheck = new FormData();
@@ -84,25 +93,26 @@ const postOrderAccept = (orderId:string, bloggerUserId:string, businessmanUserId
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {
-      })
+      .then((data: any) => {})
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(postOrderAccept(orderId, bloggerUserId, businessmanUserId));
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(
+                postOrderAccept(orderId, bloggerUserId, businessmanUserId)
+              );
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
 };
-const postOrderReqest = (userId:string, orderId:string) => {
+const postOrderReqest = (userId: string, orderId: string) => {
   return (dispatch: Function) => {
     const token = localStorage.getItem("accessToken");
     const formCheck = new FormData();
@@ -114,20 +124,19 @@ const postOrderReqest = (userId:string, orderId:string) => {
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {
-      })
+      .then((data: any) => {})
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(postOrderReqest(userId, orderId));
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(postOrderReqest(userId, orderId));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
@@ -141,39 +150,39 @@ const getMediaPersons = () => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-          let allMediaPersons:any = [];
-          data.data.map((item:any)=>{
-            const userInfo = {
-              userId: item.userId,
-              imageUrl: item.imageUrl,
-              nickname: item.nickname ? item.nickname : "",
-              firstName: item.firstName,
-              secondName: item.secondName,
-              activity: item.activity ? item.activity : "",
-              numberSubscribers: item.subscribers ?item.subscribers : "",
-            };
-            allMediaPersons.push(userInfo);
-          })
-          dispatch(addMediaPersons(allMediaPersons))
+        let allMediaPersons: any = [];
+        data.data.map((item: any) => {
+          const userInfo = {
+            userId: item.userId,
+            imageUrl: item.imageUrl,
+            nickname: item.nickname ? item.nickname : "",
+            firstName: item.firstName,
+            secondName: item.secondName,
+            activity: item.activity ? item.activity : "",
+            numberSubscribers: item.subscribers ? item.subscribers : "",
+          };
+          allMediaPersons.push(userInfo);
+        });
+        dispatch(addMediaPersons(allMediaPersons));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(getMediaPersons());
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getMediaPersons());
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
 };
 
-const getOrder = (idOrder:string) => {
+const getOrder = (idOrder: string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
     axios({
@@ -181,26 +190,26 @@ const getOrder = (idOrder:string) => {
       url: `https://localhost:5001/api/Order/${idOrder}`,
       headers: { Authorization: `Bearer ${token}` },
     })
-    .then((data: any) => {
-      dispatch(addOrder(data.data));
-    })
-    .catch((data: any) => {
-      if (data.response.status === 401) {
-      refreshToken()
-        .then((data: any) => {
-          addToken(data.data);
-          dispatch(addOrder(data.data));
-        })
-        .catch(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch(addCheckUser(false));
-        });
-      }
-    });
+      .then((data: any) => {
+        dispatch(addOrder(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(addOrder(data.data));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
   };
 };
-interface PutOrderInterface{
+interface PutOrderInterface {
   orderId: string;
   title: string;
   audienceAge: number;
@@ -208,7 +217,7 @@ interface PutOrderInterface{
   budget: number;
   updateDate: string;
 }
-const putOrder = (order:PutOrderInterface) => {
+const putOrder = (order: PutOrderInterface) => {
   const token = localStorage.getItem("accessToken");
   const formCheck = new FormData();
   return (dispatch: Function) => {
@@ -223,28 +232,27 @@ const putOrder = (order:PutOrderInterface) => {
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
-    .then((data: any) => {
-      dispatch(getOrder(order.orderId));
-    })
-    .catch((data: any) => {
-      if (data.response.status === 401) {
-        refreshToken()
-        .then((data: any) => {
-          addToken(data.data);
-          dispatch(putOrder(order));
-        })
-        .catch(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch(addCheckUser(false));
-        });
-      }
-    });
+      .then((data: any) => {
+        dispatch(getOrder(order.orderId));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(putOrder(order));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
   };
 };
 
-
-const deleteOrder = (id: string, idOrder : string) => {
+const deleteOrder = (id: string, idOrder: string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
     axios({
@@ -252,27 +260,27 @@ const deleteOrder = (id: string, idOrder : string) => {
       url: `https://localhost:5001/api/Order/remove/${idOrder}`,
       headers: { Authorization: `Bearer ${token}` },
     })
-    .then((data: any) => {
-      dispatch(getOrders(id, "all"));
-    })
-    .catch((data: any) => {
-      if (data.response.status === 401) {
-      refreshToken()
-        .then((data: any) => {
-          addToken(data.data);
-          dispatch(deleteOrder(idOrder, id));
-        })
-        .catch(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch(addCheckUser(false));
-        });
-      }
-    });
+      .then((data: any) => {
+        dispatch(getOrders(id, "all"));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(deleteOrder(idOrder, id));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
   };
 };
 
-const postOrder = (order : AddOrderInterface, id: string, name: string) => {
+const postOrder = (order: AddOrderInterface, id: string, name: string) => {
   const token = localStorage.getItem("accessToken");
   const formCheck = new FormData();
   return (dispatch: Function) => {
@@ -286,26 +294,26 @@ const postOrder = (order : AddOrderInterface, id: string, name: string) => {
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
-    .then((data: any) => {
-      dispatch(getOrders(id, name));
-    })
-    .catch((data: any) => {
-      if (data.response.status === 401) {
-      refreshToken()
-        .then((data: any) => {
-          addToken(data.data);
-          dispatch(postOrder(order, id, name));
-        })
-        .catch(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch(addCheckUser(false));
-        });
-      }
-    });
+      .then((data: any) => {
+        dispatch(getOrders(id, name));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(postOrder(order, id, name));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
   };
 };
-const getOrders = (id : string, name:string) => {
+const getOrders = (id: string, name: string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
     axios({
@@ -313,30 +321,26 @@ const getOrders = (id : string, name:string) => {
       url: `https://localhost:5001/api/Order/${name}/${id}`,
       headers: { Authorization: `Bearer ${token}` },
     })
-    .then((data: any) => {
-      console.log(data.data);
-      dispatch(addOrders(data.data));
-    })
-    .catch((data: any) => {
-      if (data.response.status === 401) {
-      refreshToken()
-        .then((data: any) => {
-          addToken(data.data);
-          dispatch(getOrders(id, name));
-        })
-        .catch(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch(addCheckUser(false));
-        });
-      }
-    });
+      .then((data: any) => {
+        console.log(data.data);
+        dispatch(addOrders(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getOrders(id, name));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
   };
 };
-
-
-
-
 
 const getProfileData = () => {
   const token = localStorage.getItem("accessToken");
@@ -368,19 +372,67 @@ const getProfileData = () => {
           numberOffers: data.data.numberOffers ? data.data.numberOffers : "",
         };
         dispatch(changeProfile(userInfo));
+        dispatch(addSelectedProfile(userInfo));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(getProfileData());
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getProfileData());
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+const getNewProfileData = (id: string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `https://localhost:5001/api/Account/profile/${id}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        const userInfo = {
+          userId: data.data.userId,
+          imageUrl: data.data.imageUrl,
+          nickname: data.data.nickname ? data.data.nickname : "",
+          firstName: data.data.firstName,
+          secondName: data.data.secondName,
+          ageAdvertising: data.data.bloggerExperience
+            ? data.data.bloggerExperience
+            : "",
+          linkChannel: data.data.urlYouTube ? data.data.urlYouTube : "",
+          ordersCompleted: data.data.ordersCompleted
+            ? data.data.ordersCompleted
+            : "",
+          activity: data.data.activity ? data.data.activity : "",
+          subjects: data.data.subjects ? data.data.subjects : "",
+          numberSubscribers: data.data.subscribers ? data.data.subscribers : "",
+          ageAudience: data.data.ageAudience ? data.data.ageAudience : "",
+          nameCompany: data.data.nameCompany ? data.data.nameCompany : "",
+          numberOffers: data.data.numberOffers ? data.data.numberOffers : "",
+        };
+        dispatch(addSelectedProfile(userInfo));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getNewProfileData(id));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
@@ -399,7 +451,10 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
     formCheck.append("Subjects", changedProfile.subjects);
     formCheck.append("Subscribers", String(changedProfile.numberSubscribers));
     formCheck.append("AgeAudience", String(changedProfile.ageAudience));
-    formCheck.append("BloggerExperience", String(changedProfile.ageAdvertising));
+    formCheck.append(
+      "BloggerExperience",
+      String(changedProfile.ageAdvertising)
+    );
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/blogger",
@@ -411,16 +466,16 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(putMediaProfileData(changedProfile));
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(putMediaProfileData(changedProfile));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
@@ -447,16 +502,16 @@ const putAdvertiserProfileData = (
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(putAdvertiserProfileData(changedProfileAdvertiser));
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(putAdvertiserProfileData(changedProfileAdvertiser));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
@@ -480,16 +535,16 @@ const getPartialProfileData = () => {
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
-        refreshToken()
-          .then((data: any) => {
-            addToken(data.data);
-            dispatch(getPartialProfileData());
-          })
-          .catch(() => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            dispatch(addCheckUser(false));
-          });
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getPartialProfileData());
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
         }
       });
   };
@@ -550,6 +605,7 @@ const refreshToken = () => {
   });
 };
 export {
+  getNewProfileData,
   postOrderAccept,
   postOrderReqest,
   deleteOrders,

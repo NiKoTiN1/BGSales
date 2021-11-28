@@ -14,8 +14,9 @@ const Main = () => {
                   Our application was launched - the best application in the CIS
                 </h1>
                 <p className="text">
-                  This application will help to find income for bloggers, as well as help the customer with advertising.
-                  Using this app you can't go wrong with your choice!
+                  This application will help to find income for bloggers, as
+                  well as help the customer with advertising. Using this app you
+                  can't go wrong with your choice!
                 </p>
               </div>
             </div>
@@ -25,12 +26,11 @@ const Main = () => {
           <div className="card-2__image image">
             <div className="data">
               <div className="content">
-                <h1 className="title">
-                   Project forecast
-                </h1>
+                <h1 className="title">Project forecast</h1>
                 <p className="text">
-                Using this site you can find a large number of orders if you are a blogger, 
-                and quickly get advertising if you are a customer.
+                  Using this site you can find a large number of orders if you
+                  are a blogger, and quickly get advertising if you are a
+                  customer.
                 </p>
               </div>
             </div>

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "./user-menu.scss";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { addCheckUser, addRole} from "../../actions";
+import { addCheckUser, addRole } from "../../actions";
 import { imageSrc } from "../../imageRequire";
 import PropsUserMenuInterface from "../../interfaces/PropsUserMenuInterface";
 import StateInterface from "../../interfaces/StateInterface";

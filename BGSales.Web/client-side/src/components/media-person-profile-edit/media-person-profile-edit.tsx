@@ -65,6 +65,9 @@ const MediaPersonProfileEdit = ({
 
     reader.readAsDataURL(file);
   };
+  if (currentUser.role !== "Blogger") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
       <form onSubmit={submitForm}>

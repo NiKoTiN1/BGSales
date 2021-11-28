@@ -5,7 +5,7 @@ import "./app-header.scss";
 import UserMenu from "../user-menu";
 import AppHeaderInterface from "../../interfaces/AppHeaderInterface";
 import StateInterface from "../../interfaces/StateInterface";
-import { getPartialProfileData, addNameOrderUrl} from "../../actions";
+import { getPartialProfileData, addNameOrderUrl } from "../../actions";
 
 const AppHeader = ({
   checkUser,
@@ -24,10 +24,18 @@ const AppHeader = ({
         <>
           {currentUser.role === "Blogger" ? (
             <>
-              <Link className="header__link projects" to="/projects/allProjects" onClick={()=>dispatch(addNameOrderUrl("allProjects"))}>
+              <Link
+                className="header__link projects"
+                to="/projects/allProjects"
+                onClick={() => dispatch(addNameOrderUrl("allProjects"))}
+              >
                 All Projects
               </Link>
-              <Link className="header__link projects" to="/projects/selectedProjects" onClick={()=>dispatch(addNameOrderUrl("selectedProjects"))}>
+              <Link
+                className="header__link projects"
+                to="/projects/selectedProjects"
+                onClick={() => dispatch(addNameOrderUrl("selectedProjects"))}
+              >
                 Selected Projects
               </Link>
             </>
@@ -36,7 +44,11 @@ const AppHeader = ({
               <Link className="header__link projects" to="/mediaPersons">
                 Bloggers
               </Link>
-              <Link className="header__link projects" to="/projects/myProjects" onClick={()=>dispatch(addNameOrderUrl("myProjects"))}>
+              <Link
+                className="header__link projects"
+                to="/projects/myProjects"
+                onClick={() => dispatch(addNameOrderUrl("myProjects"))}
+              >
                 My Projects
               </Link>{" "}
             </>

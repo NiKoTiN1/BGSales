@@ -48,10 +48,13 @@ const AdvertiserPersonProfileEdit = ({
     let reader = new FileReader();
     let file = e.target.files[0];
     reader.onloadend = () => {
-      setFormImg({imageUrl: reader.result });
+      setFormImg({ imageUrl: reader.result });
     };
     reader.readAsDataURL(file);
   };
+  if (currentUser.role !== "Businessman") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
       <form onSubmit={submitForm}>

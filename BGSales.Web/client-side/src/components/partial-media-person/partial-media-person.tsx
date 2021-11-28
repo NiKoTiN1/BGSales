@@ -19,25 +19,34 @@ const PartialMediaPerson = ({
   numberSubscribers,
   onItemSelected,
 }: PropsPartialMediaPersonInterface) => {
-
-  return(  
+  return (
     <>
       <div className="partial-media-person-img">
-        <img className="partial-media-person-img__img" src={imageUrl?String(imageUrl): imageSrc} alt="" />
+        <img
+          className="partial-media-person-img__img"
+          src={imageUrl ? String(imageUrl) : imageSrc}
+          alt=""
+        />
       </div>
       <div className="partial-media-person-info">
         <div className="partial-media-person-info__container">
-            <p>{firstName}</p> 
-            <p>{secondName}</p>  
-            <p>Activity:  {activity?activity:"empty"}</p> 
-            <p>Subscribers:  {numberSubscribers?numberSubscribers:"empty"}</p> 
+          <p>{firstName}</p>
+          <p>{secondName}</p>
+          <p>Activity: {activity ? activity : "empty"}</p>
+          <p>Subscribers: {numberSubscribers ? numberSubscribers : "empty"}</p>
         </div>
         <div className="partial-media-person-info__container">
-            <Button className="partial-media-person-info__container__btn-look btn" variant="outlined" onClick={()=>onItemSelected(userId)}>Look</Button>
+          <Button
+            className="partial-media-person-info__container__btn-look btn"
+            variant="outlined"
+            onClick={() => onItemSelected(userId)}
+          >
+            Look
+          </Button>
         </div>
       </div>
-   </>
-  )
+    </>
+  );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {

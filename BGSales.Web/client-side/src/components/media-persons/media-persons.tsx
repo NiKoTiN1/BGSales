@@ -12,34 +12,40 @@ const MediaPersons = ({
   allMediaPersons,
   dispatch,
   history,
+  role,
 }: MediaPersonsIterface) => {
-  const [ordersSelectName, setOrdersSelectName] = useState(window.location.href.slice(window.location.href.lastIndexOf('/') + 1));
+  const [selectName, setSelectName] = useState(
+    window.location.href.slice(window.location.href.lastIndexOf("/") + 1)
+  );
   useEffect(() => {
     dispatch(getMediaPersons());
   }, []);
 
-  const elements = allMediaPersons.map((item:PartialMediaProfileInterface) => {
-    return(        
-    <li  key={item.userId} className='list-media-persons__person'>
-            <PartialMediaPerson
-            {...item}
-            onItemSelected={(orderId:string) => {
-              history.push(`${ordersSelectName}/${orderId}`)
-            }} />
-    </li>
-    )
+  const elements = allMediaPersons.map((item: PartialMediaProfileInterface) => {
+    return (
+      <li key={item.userId} className="list-media-persons__person">
+        <PartialMediaPerson
+          {...item}
+          onItemSelected={(id: string) => {
+            history.push(`profileMedia/${id}`);
+          }}
+        />
+      </li>
+    );
   });
-  return( 
+  if (role !== "Businessman") {
+    return <p>Error this page is not available</p>;
+  }
+  return (
     <>
-      <ul className="list-media-persons">
-        {elements}
-      </ul>
+      <ul className="list-media-persons">{elements}</ul>
     </>
-  )
+  );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
     allMediaPersons: state.profile.allMediaPersons,
+    role: state.profile.currentUser.role,
   };
 };
 export default connect(mapStateToProps)(MediaPersons);

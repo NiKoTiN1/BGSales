@@ -6,15 +6,25 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getProfileData } from "../../actions";
+import { getProfileData, getNewProfileData } from "../../actions";
 
 const MediaPersonProfile = ({
-  currentUser,
+  profile,
   dispatch,
+  id,
+  selectedProfile,
+  role,
 }: PersonProfileInterface) => {
   useEffect(() => {
-    dispatch(getProfileData());
+    if (id) {
+      dispatch(getNewProfileData(id));
+    } else {
+      dispatch(getProfileData());
+    }
   }, []);
+  if (role === "") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
       <div className="media-profile">
@@ -25,11 +35,7 @@ const MediaPersonProfile = ({
           <span></span>
           <img
             className="media-profile__container-img__img"
-            src={
-              currentUser.profile.imageUrl
-                ? currentUser.profile.imageUrl
-                : imageSrc
-            }
+            src={selectedProfile.imageUrl ? selectedProfile.imageUrl : imageSrc}
             alt=""
           />
         </div>
@@ -42,11 +48,27 @@ const MediaPersonProfile = ({
             <p>Number of completed orders:</p>
           </div>
           <div className="information__name col-2">
-            <p>{currentUser.profile.firstName}</p>
-            <p>{currentUser.profile.secondName}</p>
-            <p>{currentUser.profile.ageAdvertising?currentUser.profile.ageAdvertising:"empty"}</p>
-            <a href={currentUser.profile.linkChannel?currentUser.profile.linkChannel:"empty"}>link to channel/page</a>
-            <p>{currentUser.profile.ordersCompleted?currentUser.profile.ordersCompleted:"empty"}</p>
+            <p>{selectedProfile.firstName}</p>
+            <p>{selectedProfile.secondName}</p>
+            <p>
+              {selectedProfile.ageAdvertising
+                ? selectedProfile.ageAdvertising
+                : "empty"}
+            </p>
+            <a
+              href={
+                selectedProfile.linkChannel
+                  ? selectedProfile.linkChannel
+                  : "empty"
+              }
+            >
+              link to channel/page
+            </a>
+            <p>
+              {selectedProfile.ordersCompleted
+                ? selectedProfile.ordersCompleted
+                : "empty"}
+            </p>
           </div>
         </div>
       </div>
@@ -61,26 +83,39 @@ const MediaPersonProfile = ({
           <p>Average age of the audience:</p>
         </div>
         <div className="information-activity__name col-2">
-          <p>{currentUser.profile.activity?currentUser.profile.activity:"empty"}</p>
-          <p>{currentUser.profile.subjects?currentUser.profile.subjects:"empty"}</p>
-          <p>{currentUser.profile.numberSubscribers?currentUser.profile.numberSubscribers:"empty"}</p>
-          <p>{currentUser.profile.ageAudience?currentUser.profile.ageAudience:"empty"}</p>
+          <p>{selectedProfile.activity ? selectedProfile.activity : "empty"}</p>
+          <p>{selectedProfile.subjects ? selectedProfile.subjects : "empty"}</p>
+          <p>
+            {selectedProfile.numberSubscribers
+              ? selectedProfile.numberSubscribers
+              : "empty"}
+          </p>
+          <p>
+            {selectedProfile.ageAudience
+              ? selectedProfile.ageAudience
+              : "empty"}
+          </p>
         </div>
       </div>
       <div className="edit">
-        {currentUser.role === "Blogger"? <Link className="edit__link" to="/profileMediaEdit">
-          <Button variant="outlined">Edit</Button>
-        </Link>: <Link className="edit__link" to="/chat">
-          <Button variant="outlined">Write message</Button>
-        </Link>}
-       
+        {role === "Blogger" ? (
+          <Link className="edit__link" to="/profileMediaEdit">
+            <Button variant="outlined">Edit</Button>
+          </Link>
+        ) : (
+          <Link className="edit__link" to="/chat">
+            <Button variant="outlined">Write message</Button>
+          </Link>
+        )}
       </div>
     </>
   );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {
-    currentUser: state.profile.currentUser,
+    profile: state.profile.currentUser.profile,
+    selectedProfile: state.profile.selectedProfile,
+    role: state.profile.currentUser.role,
   };
 };
 export default connect(mapStateToProps)(MediaPersonProfile);

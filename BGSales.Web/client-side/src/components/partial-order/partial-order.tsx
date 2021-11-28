@@ -15,26 +15,51 @@ const PartialOrder = ({
   budget,
   currentUser,
   dispatch,
-  onItemSelected
+  onItemSelected,
 }: PartialAdvertiserOrderInterface) => {
   const removeOrder = () => {
     dispatch(deleteOrder(id, orderId));
-  }
-  return(  
-   <div className="order-partial-info">
-     <div className="order-partial-info__container">
-        <p>{title}</p> 
-        <p>{companyName}</p>  
-        <p>{budget}$</p> 
-     </div>
-     <div className="order-partial-info__container">
-        <Button className="order-partial-info__container__btn-look btn" variant="outlined" onClick={()=>onItemSelected(orderId)}>Look</Button>
-        {currentUser.role === "Businessman"?<Button className="order-partial-info__container__btn-delete btn" variant="contained" onClick={removeOrder}><p>Delete</p></Button>
-        : <Button className="order-partial-info__container__btn-delete btn" variant="contained" onClick={()=>dispatch(postOrderReqest(id, orderId))}><p>Respond</p></Button>}
-        
-     </div>
-   </div>
-  )
+  };
+  return (
+    <div className="order-partial-info">
+      <div className="order-partial-info__container">
+        <p>{title}</p>
+        <p>{companyName}</p>
+        <p>{budget}$</p>
+      </div>
+      {console.log(
+        window.location.href.slice(window.location.href.lastIndexOf("/") + 1)
+      )}
+      <div className="order-partial-info__container">
+        <Button
+          className="order-partial-info__container__btn-look btn"
+          variant="outlined"
+          onClick={() => onItemSelected(orderId)}
+        >
+          Look
+        </Button>
+        {currentUser.role === "Businessman" ? (
+          <Button
+            className="order-partial-info__container__btn-delete btn"
+            variant="contained"
+            onClick={removeOrder}
+          >
+            <p>Delete</p>
+          </Button>
+        ) : window.location.href.slice(
+            window.location.href.lastIndexOf("/") + 1
+          ) !== "selectedProjects" ? (
+          <Button
+            className="order-partial-info__container__btn-delete btn"
+            variant="contained"
+            onClick={() => dispatch(postOrderReqest(id, orderId))}
+          >
+            <p>Respond</p>
+          </Button>
+        ) : null}
+      </div>
+    </div>
+  );
 };
 const mapStateToProps = (state: StateInterface) => {
   return {

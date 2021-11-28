@@ -13,13 +13,14 @@ const OrderEdit = ({
   dispatch,
   order,
   history,
+  role,
 }: CreateOrderInterface) => {
   const [form, setForm] = useState<FormInterface>({
     title: order.title,
-    audienceAge:  `${order.audienceAge}`,
-    description:  order.description,
-    budget:  `${order.budget}`,
-    createDate: order.createDate? order.createDate: String(new Date()),
+    audienceAge: `${order.audienceAge}`,
+    description: order.description,
+    budget: `${order.budget}`,
+    createDate: order.createDate ? order.createDate : String(new Date()),
   });
   const submitForm = (e: any) => {
     e.preventDefault();
@@ -32,24 +33,27 @@ const OrderEdit = ({
     const orderNew = {
       orderId: order.orderId,
       title: String(form.title),
-      audienceAge:  Number(form.audienceAge),
-      description:  String(form.description),
-      budget:  Number(form.budget),
-      updateDate:  String(new Date()),
+      audienceAge: Number(form.audienceAge),
+      description: String(form.description),
+      budget: Number(form.budget),
+      updateDate: String(new Date()),
     };
     if (!errorFlag) {
       dispatch(putOrder(orderNew));
       history.goBack();
     }
   };
+  if (role !== "Businessman") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <>
-       <form onSubmit={submitForm}>
+      <form onSubmit={submitForm}>
         <div className="order-create-form">
           <div className="order-create-form__col-1">
             <h2>Project adit</h2>
             <div className="container">
-            <label className="container__label">Title</label>
+              <label className="container__label">Title</label>
               <TextField
                 defaultValue={form.title}
                 variant="outlined"
@@ -83,10 +87,14 @@ const OrderEdit = ({
             </div>
             <div className="container">
               <label className="container__label">Description</label>
-              <textarea className="container__text" name="message" value={String(form.description)} onChange={(e: any) =>
+              <textarea
+                className="container__text"
+                name="message"
+                value={String(form.description)}
+                onChange={(e: any) =>
                   setForm({ ...form, description: e.target.value })
-                }>
-              </textarea>
+                }
+              ></textarea>
             </div>
           </div>
         </div>
@@ -102,6 +110,7 @@ const OrderEdit = ({
 const mapStateToProps = (state: StateInterface) => {
   return {
     order: state.order.order,
+    role: state.profile.currentUser.role,
   };
 };
 export default connect(mapStateToProps)(OrderEdit);
