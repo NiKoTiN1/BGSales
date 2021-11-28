@@ -10,8 +10,8 @@ namespace BGSales.Services.MapperProfiles
         {
             CreateMap<Chat, ChatViewModel>()
                  .ForMember(dest => dest.ChatId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Businessman, opt => opt.MapFrom(src => src.Businessman))
-            .ForMember(dest => dest.Blogger, opt => opt.MapFrom(src => src.Blogger));
+                 .ForMember(dest => dest.Businessman, opt => opt.MapFrom(src => src.Businessman))
+                 .ForMember(dest => dest.Blogger, opt => opt.MapFrom(src => src.Blogger));
         }
     }
 }

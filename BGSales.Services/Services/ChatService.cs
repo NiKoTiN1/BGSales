@@ -4,6 +4,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -67,6 +68,50 @@ namespace BGSales.Services.Services
             }
 
             return chatId;
+        }
+
+        public List<PartialChatViewModel> GetAllChats(string userId)
+        {
+            var chatModels = new List<PartialChatViewModel>();
+
+            try
+            {
+                var blogger = _bloggerService.GetByUserId(userId);
+                var chats = _chatRepository.Get(ch => ch.BloggerId == blogger.Id, new[] { "Blogger", "Businessman" }).ToList();
+
+                foreach (var chat in chats)
+                {
+                    var model = new PartialChatViewModel()
+                    {
+                        ChatId = chat.Id,
+                        UserId = chat.Businessman.UserId,
+                        FirstName = chat.Businessman.User.FirstName,
+                        SecondName = chat.Businessman.User.LastName,
+                    };
+
+                    chatModels.Add(model);
+                }
+            }
+            catch
+            {
+                var businessman = _businessmanService.GetByUserId(userId);
+                var chats = _chatRepository.Get(ch => ch.BusinessmanId == businessman.Id, new[] { "Blogger", "Businessman" }).ToList();
+
+                foreach (var chat in chats)
+                {
+                    var model = new PartialChatViewModel()
+                    {
+                        ChatId = chat.Id,
+                        UserId = chat.Blogger.UserId,
+                        FirstName = chat.Blogger.User.FirstName,
+                        SecondName = chat.Blogger.User.LastName,
+                    };
+
+                    chatModels.Add(model);
+                }
+            }
+
+            return chatModels;
         }
     }
 }
