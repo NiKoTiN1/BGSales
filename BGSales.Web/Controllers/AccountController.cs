@@ -20,7 +20,8 @@ namespace BGSales.Web.Controllers
             IMapper mapper,
             IBloggerService bloggerService,
             IBusinessmanService businessmanService,
-            IWebHostEnvironment appEnvironment)
+            IWebHostEnvironment appEnvironment,
+            IChatService chatService)
         {
             _accountService = accountService;
             _tokenService = tokenService;
@@ -28,6 +29,7 @@ namespace BGSales.Web.Controllers
             _bloggerService = bloggerService;
             _businessmanService = businessmanService;
             _appEnvironment = appEnvironment;
+            _chatService = chatService;
         }
 
         private readonly IAccountService _accountService;
@@ -36,6 +38,7 @@ namespace BGSales.Web.Controllers
         private readonly IBloggerService _bloggerService;
         private readonly IBusinessmanService _businessmanService;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly IChatService _chatService;
 
         [HttpPost]
         [Route("register")]
@@ -127,6 +130,14 @@ namespace BGSales.Web.Controllers
             if (user.UserType == UserType.Blogger)
             {
                 var model = _bloggerService.Get(user);
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var blogger = _bloggerService.GetByUserId(userId);
+                    var businessman = _businessmanService.GetByUserId(userIdClaim.Value);
+                    model.ChatId = _chatService.GetChatId(blogger.Id, businessman.Id);
+                }
+
                 return Ok(model);
             }
             else
