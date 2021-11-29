@@ -80,5 +80,21 @@ namespace BGSales.Web.Controllers
             await _hubContext.Clients.User(sentToUserId).SendAsync("ReceiveOne", message);
             return Ok();
         }
+
+        [Route("all")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUserChats()
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            var chatModels = _chatService.GetAllChats(userIdClaim.Value);
+
+            return Ok(chatModels);
+        }
     }
 }

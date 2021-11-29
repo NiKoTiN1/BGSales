@@ -31,7 +31,7 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            var model = _orderService.GetOrderInfo(orderId);
+            var model = _orderService.GetOrderInfo(orderId, userIdClaim.Value);
 
             return Ok(model);
         }

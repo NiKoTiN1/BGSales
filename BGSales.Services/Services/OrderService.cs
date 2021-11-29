@@ -16,13 +16,15 @@ namespace BGSales.Services.Services
             IMapper mapper,
             IBusinessmanService businessmanService,
             IBloggerService bloggerService,
-            IAccountService accountService)
+            IAccountService accountService,
+            IChatService chatService)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _businessmanService = businessmanService;
             _accountService = accountService;
             _bloggerService = bloggerService;
+            _chatService = chatService;
         }
 
         private readonly IOrderRepository _orderRepository;
@@ -30,6 +32,7 @@ namespace BGSales.Services.Services
         private readonly IBusinessmanService _businessmanService;
         private readonly IAccountService _accountService;
         private readonly IBloggerService _bloggerService;
+        private readonly IChatService _chatService;
 
         public async Task CreateOrder(CreateOrderViewModel viewModel, string userId)
         {
@@ -54,7 +57,7 @@ namespace BGSales.Services.Services
             }
         }
 
-        public OrderViewModel GetOrderInfo(string orderId)
+        public OrderViewModel GetOrderInfo(string orderId, string currentUserId)
         {
             var order = _orderRepository.Get(o => o.Id == orderId, new[] { "Blogger", "BloggerRequests", "Advertiser" }).SingleOrDefault();
 
@@ -64,6 +67,26 @@ namespace BGSales.Services.Services
             }
 
             var model = _mapper.Map<OrderViewModel>(order);
+
+            if (currentUserId == order.Advertiser.UserId)
+            {
+                if (order.Blogger != null)
+                {
+                    model.ChatId = _chatService.GetChatId(order.BloggerId, order.AdvertiserId);
+                }
+            }
+            else
+            {
+                try
+                {
+                    var blogger = _bloggerService.GetByUserId(currentUserId);
+                    model.ChatId = _chatService.GetChatId(blogger.Id, order.AdvertiserId);
+                }
+                catch
+                {
+                    throw new Exception("You cannot see this order");
+                }
+            }
 
             return model;
         }
