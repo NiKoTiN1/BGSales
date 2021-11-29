@@ -17,5 +17,6 @@
         public int Subscribers { get; set; }
         public int AgeAudience { get; set; }
         public int BloggerExperience { get; set; }
+        public string ChatId { get; set; }
     }
 }
