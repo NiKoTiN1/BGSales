@@ -7,6 +7,6 @@
         public string Title { get; set; }
         public double Budget { get; set; }
         public int Requests { get; set; }
-        public bool IsAccepted { get; set; }
+        public string AcceptedUserId { get; set; }
     }
 }
