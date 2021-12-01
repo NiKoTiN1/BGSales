@@ -17,7 +17,8 @@ namespace BGSales.Services.Services
             IBusinessmanService businessmanService,
             IBloggerService bloggerService,
             IAccountService accountService,
-            IChatService chatService)
+            IChatService chatService,
+            IStripeService stripeService)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
@@ -25,6 +26,7 @@ namespace BGSales.Services.Services
             _accountService = accountService;
             _bloggerService = bloggerService;
             _chatService = chatService;
+            _stripeService = stripeService;
         }
 
         private readonly IOrderRepository _orderRepository;
@@ -33,6 +35,7 @@ namespace BGSales.Services.Services
         private readonly IAccountService _accountService;
         private readonly IBloggerService _bloggerService;
         private readonly IChatService _chatService;
+        private readonly IStripeService _stripeService;
 
         public async Task CreateOrder(CreateOrderViewModel viewModel, string userId)
         {
@@ -166,6 +169,11 @@ namespace BGSales.Services.Services
 
             order.BloggerRequests = new List<Blogger>();
             order.BloggerId = blogger.Id;
+
+            var productId = _stripeService.CreateProduct(order.Id);
+            var priceId = _stripeService.CreatePrice(productId, Convert.ToInt64(order.Budget));
+
+            order.StripeId = priceId;
 
             await _orderRepository.Update(order);
         }

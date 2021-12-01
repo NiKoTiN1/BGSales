@@ -93,6 +93,8 @@ namespace BGSales.Web
 
             services.AddTransient<IAccountService, Services.Services.AccountService>();
 
+            services.AddTransient<IStripeService, StripeService>();
+
             services.AddTransient<ITokenService, Services.Services.TokenService>();
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
 

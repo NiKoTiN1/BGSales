@@ -2,7 +2,9 @@
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -140,6 +142,32 @@ namespace BGSales.Web.Controllers
             await _orderService.AcceptOrder(viewModel);
 
             return Ok();
+        }
+
+        [Route("biba/{stripeId}")]
+        [HttpPost]
+        public ActionResult Create([FromRoute] string stripeId)
+        {
+            var domain = "http://localhost:8081/";
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                    Price = stripeId,
+                    Quantity = 1,
+                  },
+                },
+                Mode = "payment",
+                SuccessUrl = domain + "/success.html",
+                CancelUrl = domain + "/cancel.html",
+            };
+            var service = new SessionService();
+            var session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
         }
 
         [HttpPut]
