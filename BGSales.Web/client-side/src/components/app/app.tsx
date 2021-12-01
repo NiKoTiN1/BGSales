@@ -16,6 +16,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import AppHeader from "../app-header";
 import AppFooter from "../app-footer";
 import PropsAppInterface from "../../interfaces/PropsAppInterface";
+import Stripe from "../../components/stripe";
 import jwt from "jwt-decode";
 import "./app.scss";
 import StateInterface from "../../interfaces/StateInterface";
@@ -83,6 +84,7 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
           }}
         />
         <Route path="/project" exact component={Order} />
+        <Route path="/pay" exact component={Stripe} />
         <Route path="/projectEdit" exact component={OrderEdit} />
         <Route path="/createProjects" exact component={CreateOrder} />
         <Route path="/mediaPersons" exact component={MediaPersons} />

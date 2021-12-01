@@ -57,7 +57,7 @@ const AppHeader = ({
             <span>Inbox</span>
             <span className="notification__badge">1</span>
           </Link>
-          <Link className="header__link wallet" to="/wallet">
+          <Link className="header__link wallet" to="/pay">
             0.00 $
           </Link>
           <UserMenu />

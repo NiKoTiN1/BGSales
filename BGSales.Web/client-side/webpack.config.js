@@ -11,7 +11,7 @@ module.exports = {
   devtool: "source-map",
 
   resolve: {
-    extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
+    extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js", '.jsx'],
   },
   devServer: {
     historyApiFallback: true,
@@ -20,6 +20,11 @@ module.exports = {
     rules: [
       { test: /\.tsx?$/, use: "ts-loader" },
       { test: /\.js$/, use: "source-map-loader" },
+      {
+        test: /\.jsx$/,
+        loader: "babel-loader",
+        exclude: [/node_modules/, /public/]
+      },
       { test: /\.css$/, use: ["style-loader", "css-loader"] },
       {
         test: /\.html$/,
