@@ -76,35 +76,6 @@ const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
-const payOrder = () => {
-  return (dispatch: Function) => {
-    const token = localStorage.getItem("accessToken");
-    axios({
-      method: "POST",
-      url: "https://localhost:5001/api/Order/biba/price_1K1bDJLcHA91DcRNstGFobys",
-      headers: { "Authorization": `Bearer ${token}`,
-                  "Access-Control-Allow-Origin":"*",
-                },
-      //data: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
-    })
-      .then((data: any) => {console.log(data);})
-      .catch((data: any) => {
-        console.log(data.response);
-        if (data.response.status === 401) {
-          refreshToken()
-            .then((data: any) => {
-              addToken(data.data);
-              dispatch(payOrder());
-            })
-            .catch(() => {
-              localStorage.removeItem("accessToken");
-              localStorage.removeItem("refreshToken");
-              dispatch(addCheckUser(false));
-            });
-        }
-      });
-  };
-};
 const postOrderAccept = (
   orderId: string,
   bloggerUserId: string,
@@ -634,7 +605,6 @@ const refreshToken = () => {
   });
 };
 export {
-  payOrder,
   getNewProfileData,
   postOrderAccept,
   postOrderReqest,
