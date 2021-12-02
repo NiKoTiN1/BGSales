@@ -15,6 +15,7 @@ namespace BGSales.Views.Models
         public BusinessmanViewModel Advitiser { get; set; }
         public BloggerPartialViewModel Blogger { get; set; }
         public string StripeId { get; set; }
+        public bool IsPaid { get; set; }
         public virtual List<BloggerPartialViewModel> BloggerRequests { get; set; }
     }
 }

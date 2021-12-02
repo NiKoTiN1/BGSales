@@ -15,5 +15,7 @@ namespace BGSales.Services.Interfaces
         public Task AcceptOrder(AcceptOrderViewModel model);
         public Task DeleteOrder(string orderId, string userId);
         public Task RequestOrder(RequestOrderViewModel viewModel);
+        public Task SetOrderPaymentIntent(string orderId, string paymentIntentId);
+        public Task SetOrderPayed(string orderId);
     }
 }

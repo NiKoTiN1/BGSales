@@ -149,17 +149,17 @@ namespace BGSales.Web.Controllers
         [EnableCors("AllowAnyOriginPolicy")]
         [Route("purchse/{stripeId}")]
         [HttpPost]
-        public IActionResult Purchse([FromRoute] string stripeId)
+        public async Task<IActionResult> Purchse([FromForm] PaymentViewModel paymentModel)
         {
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
                 {
-                  new SessionLineItemOptions
-                  {
-                    Price = stripeId,
-                    Quantity = 1,
-                  },
+                    new SessionLineItemOptions
+                    {
+                        Price = paymentModel.StripeId,
+                        Quantity = 1,
+                    },
                 },
                 Mode = "payment",
                 SuccessUrl = domain + "/payment/success",
@@ -167,6 +167,8 @@ namespace BGSales.Web.Controllers
             };
             var service = new SessionService();
             var session = service.Create(options);
+
+            await _orderService.SetOrderPaymentIntent(paymentModel.OrderId, session.PaymentIntent.Id);
 
             Response.Headers.Add("Location", session.Url);
             return Ok(session.Url);

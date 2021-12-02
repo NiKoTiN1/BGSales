@@ -222,5 +222,23 @@ namespace BGSales.Services.Services
 
             await _orderRepository.Update(order);
         }
+
+        public async Task SetOrderPaymentIntent(string orderId, string paymentIntentId)
+        {
+            var order = _orderRepository.Get(o => o.Id == orderId).SingleOrDefault();
+
+            order.PaymentIntentId = paymentIntentId;
+
+            await _orderRepository.Update(order);
+        }
+
+        public async Task SetOrderPayed(string paymentIntentId)
+        {
+            var order = _orderRepository.Get(o => o.PaymentIntentId == paymentIntentId).SingleOrDefault();
+
+            order.IsPaid = true;
+
+            await _orderRepository.Update(order);
+        }
     }
 }

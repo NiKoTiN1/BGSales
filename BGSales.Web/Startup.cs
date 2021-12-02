@@ -63,7 +63,8 @@ namespace BGSales.Web
                 };
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
