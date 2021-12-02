@@ -236,6 +236,11 @@ namespace BGSales.Services.Services
         {
             var order = _orderRepository.Get(o => o.PaymentIntentId == paymentIntentId).SingleOrDefault();
 
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
             order.IsPaid = true;
 
             await _orderRepository.Update(order);

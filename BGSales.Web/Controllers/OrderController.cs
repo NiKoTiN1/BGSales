@@ -147,7 +147,7 @@ namespace BGSales.Web.Controllers
         }
 
         [EnableCors("AllowAnyOriginPolicy")]
-        [Route("purchse/{stripeId}")]
+        [Route("purchase")]
         [HttpPost]
         public async Task<IActionResult> Purchse([FromForm] PaymentViewModel paymentModel)
         {
@@ -168,7 +168,7 @@ namespace BGSales.Web.Controllers
             var service = new SessionService();
             var session = service.Create(options);
 
-            await _orderService.SetOrderPaymentIntent(paymentModel.OrderId, session.PaymentIntent.Id);
+            await _orderService.SetOrderPaymentIntent(paymentModel.OrderId, session.PaymentIntentId);
 
             Response.Headers.Add("Location", session.Url);
             return Ok(session.Url);
