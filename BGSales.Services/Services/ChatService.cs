@@ -15,17 +15,20 @@ namespace BGSales.Services.Services
         public ChatService(IChatRepository chatRepository,
             IBloggerService bloggerService,
             IBusinessmanService businessmanService,
+            IMessageService messageService,
             IMapper mapper)
         {
             _chatRepository = chatRepository;
             _bloggerService = bloggerService;
             _businessmanService = businessmanService;
+            _messageService = messageService;
             _mapper = mapper;
         }
 
         private readonly IChatRepository _chatRepository;
         private readonly IBloggerService _bloggerService;
         private readonly IBusinessmanService _businessmanService;
+        private readonly IMessageService _messageService;
         private readonly IMapper _mapper;
 
         public async Task<string> CreateChat(CreateChatViewModel model)
@@ -42,7 +45,7 @@ namespace BGSales.Services.Services
             return chat.Id;
         }
 
-        public ChatViewModel GetChat(string chatId)
+        public ChatViewModel GetChat(string chatId, string currentUserId)
         {
             var chat = _chatRepository.Get(ch => ch.Id == chatId, new[] { "Blogger", "Businessman" })
                 .SingleOrDefault();
@@ -53,6 +56,8 @@ namespace BGSales.Services.Services
 
             var chatModel = _mapper.Map<ChatViewModel>(chat);
 
+            var messages = _messageService.GetChatMessages(chatId, currentUserId);
+            chatModel.Messages = messages;
             return chatModel;
         }
 

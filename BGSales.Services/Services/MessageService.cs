@@ -4,6 +4,7 @@ using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +35,15 @@ namespace BGSales.Services.Services
             }
 
             return _mapper.Map<MessageViewModel>(message);
+        }
+
+        public List<MessageViewModel> GetChatMessages(string chatId, string currentUserId)
+        {
+            var messages = _messageRepository.Get(m => m.ChatId == chatId)
+                .OrderBy(m => m.CreateDate)
+                .ToList();
+            var messageModels = _mapper.Map<List<MessageViewModel>>(messages);
+            return messageModels;
         }
     }
 }
