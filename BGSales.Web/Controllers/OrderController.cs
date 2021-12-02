@@ -1,6 +1,7 @@
 ﻿using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System;
@@ -19,6 +20,7 @@ namespace BGSales.Web.Controllers
         {
             _orderService = orderService;
         }
+        private const string domain = "http://localhost:8081/";
 
         private readonly IOrderService _orderService;
 
@@ -144,11 +146,11 @@ namespace BGSales.Web.Controllers
             return Ok();
         }
 
-        [Route("biba/{stripeId}")]
+        [EnableCors("AllowAnyOriginPolicy")]
+        [Route("purchse/{stripeId}")]
         [HttpPost]
-        public ActionResult Create([FromRoute] string stripeId)
+        public IActionResult Purchse([FromRoute] string stripeId)
         {
-            var domain = "http://localhost:8081/";
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
@@ -160,14 +162,14 @@ namespace BGSales.Web.Controllers
                   },
                 },
                 Mode = "payment",
-                SuccessUrl = domain + "/success.html",
-                CancelUrl = domain + "/cancel.html",
+                SuccessUrl = domain + "/payment/success",
+                CancelUrl = domain + "/payment/cancel",
             };
             var service = new SessionService();
             var session = service.Create(options);
 
             Response.Headers.Add("Location", session.Url);
-            return new StatusCodeResult(303);
+            return Ok(session.Url);
         }
 
         [HttpPut]
