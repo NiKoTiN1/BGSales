@@ -39,7 +39,7 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            var model = _chatService.GetChat(chatId);
+            var model = _chatService.GetChat(chatId, userIdClaim.Value);
             return Ok(model);
         }
 
@@ -59,7 +59,7 @@ namespace BGSales.Web.Controllers
 
         [Route("send")]
         [HttpPost]
-        public async Task<IActionResult> SendRequest([FromBody] SendMessageViewModel messageModel)
+        public async Task<IActionResult> SendRequest([FromForm] SendMessageViewModel messageModel)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -73,7 +73,7 @@ namespace BGSales.Web.Controllers
                 throw new Exception("You don't have permission to send this message");
             }
 
-            var chat = _chatService.GetChat(messageModel.ChatId);
+            var chat = _chatService.GetChat(messageModel.ChatId, userIdClaim.Value);
             var sentToUserId = chat.Blogger.UserId != messageModel.SenderUserId ? chat.Blogger.UserId :
                                                                                   chat.Businessman.UserId;
             var message = await _messageService.SendMessage(messageModel);
@@ -83,7 +83,7 @@ namespace BGSales.Web.Controllers
 
         [Route("all")]
         [HttpGet]
-        public async Task<IActionResult> GetAllUserChats()
+        public IActionResult GetAllUserChats()
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
