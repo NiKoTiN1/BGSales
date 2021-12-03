@@ -1,8 +1,11 @@
 ﻿using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,6 +20,7 @@ namespace BGSales.Web.Controllers
         {
             _orderService = orderService;
         }
+        private const string domain = "http://localhost:8081/";
 
         private readonly IOrderService _orderService;
 
@@ -140,6 +144,34 @@ namespace BGSales.Web.Controllers
             await _orderService.AcceptOrder(viewModel);
 
             return Ok();
+        }
+
+        [EnableCors("AllowAnyOriginPolicy")]
+        [Route("purchase")]
+        [HttpPost]
+        public async Task<IActionResult> Purchse([FromForm] PaymentViewModel paymentModel)
+        {
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        Price = paymentModel.StripeId,
+                        Quantity = 1,
+                    },
+                },
+                Mode = "payment",
+                SuccessUrl = domain + "/payment/success",
+                CancelUrl = domain + "/payment/cancel",
+            };
+            var service = new SessionService();
+            var session = service.Create(options);
+
+            await _orderService.SetOrderPaymentIntent(paymentModel.OrderId, session.PaymentIntentId);
+
+            Response.Headers.Add("Location", session.Url);
+            return Ok(session.Url);
         }
 
         [HttpPut]

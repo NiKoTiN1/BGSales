@@ -16,6 +16,9 @@ namespace BGSales.Domain.Models
         public DateTime UpdateDate { get; set; }
         public Blogger Blogger { get; set; }
         public string BloggerId { get; set; }
+        public string StripeId { get; set; }
+        public string PaymentIntentId { get; set; }
+        public bool IsPaid { get; set; }
         public virtual List<Blogger> BloggerRequests { get; set; }
     }
 }
