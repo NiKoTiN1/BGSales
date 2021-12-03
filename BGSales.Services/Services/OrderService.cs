@@ -84,6 +84,7 @@ namespace BGSales.Services.Services
                 {
                     var blogger = _bloggerService.GetByUserId(currentUserId);
                     model.ChatId = _chatService.GetChatId(blogger.Id, order.AdvertiserId);
+                    model.StripeId = string.Empty;
                 }
                 catch
                 {
