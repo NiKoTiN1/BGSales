@@ -7,6 +7,7 @@ import MediaPersonProfileEdit from "../media-person-profile-edit";
 import AdvertiserPersonProfile from "../advertiser-person-profile";
 import AdvertiserPersonProfileEdit from "../advertiser-person-profile-edit";
 import OrderEdit from "../order-edit";
+import Chat from "../chat";
 import Order from "../order";
 import CreateOrder from "../create-order";
 import Orders from "../orders";
@@ -20,6 +21,7 @@ import jwt from "jwt-decode";
 import "./app.scss";
 import StateInterface from "../../interfaces/StateInterface";
 import { addRole } from "../../actions";
+
 
 const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   useEffect(() => {
@@ -86,6 +88,7 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
         <Route path="/projectEdit" exact component={OrderEdit} />
         <Route path="/createProjects" exact component={CreateOrder} />
         <Route path="/mediaPersons" exact component={MediaPersons} />
+        <Route path="/chat" exact component={Chat} />
       </Switch>
       <AppFooter />
     </div>

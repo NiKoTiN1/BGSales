@@ -7,10 +7,12 @@ import UserProfileInterface from "../interfaces/UserProfileInterface";
 import AdvertiserProfileInterface from "../interfaces/AdvertiserProfileInterface";
 import PartialProfileInterface from "../interfaces/PartialProfileInterface";
 import MediaProfileInterface from "../interfaces/MediaProfileInterface";
+import PutOrderInterface from "../interfaces/PutOrderInterface";
 import jwt from "jwt-decode";
-import InitialStateInterfaceOrders from "../interfaces/InitialStateInterfaceOrders";
 import OrderInterface from "../interfaces/OrderInterface";
 import AddOrderInterface from "../interfaces/AddOrderInterface";
+import PartialOrderInformationInterface from "../interfaces/PartialOrderInformationInterface";
+import history from '../history';
 
 const addCheckUser = (checkUser: boolean) => {
   return {
@@ -36,7 +38,7 @@ const addRole = (role: string) => {
     payload: role,
   };
 };
-const addOrders = (orders: InitialStateInterfaceOrders) => {
+const addOrders = (orders: Array<PartialOrderInformationInterface>) => {
   return {
     type: ActionType.ADD_ORDERS,
     payload: orders,
@@ -76,6 +78,75 @@ const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
+
+
+const getChat = (chatId: string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `https://localhost:5001/api/Chat/${chatId}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        console.log(data.data);
+        //dispatch(addOrder(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getChat(chatId));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+
+const joinChat = (
+  bloggerUserId: string,
+  businessmanUserId: string
+) => {
+  return (dispatch: Function) => {
+    const token = localStorage.getItem("accessToken");
+    const formCheck = new FormData();
+    formCheck.append("BloggerUserId", bloggerUserId);
+    formCheck.append("BusinessmanUserId", businessmanUserId);
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Chat/join",
+      headers: { Authorization: `Bearer ${token}` },
+      data: formCheck,
+    })
+      .then((data: any) => {history.push(`/chat/${data.data}`);})
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(
+                joinChat(bloggerUserId, businessmanUserId)
+              );
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+
+
+
+
 const postOrderAccept = (
   orderId: string,
   bloggerUserId: string,
@@ -124,7 +195,7 @@ const postOrderReqest = (userId: string, orderId: string) => {
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {})
+      .then((data: any) => {getOrders(userId, "all")})
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
@@ -190,15 +261,15 @@ const getOrder = (idOrder: string) => {
       url: `https://localhost:5001/api/Order/${idOrder}`,
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((data: any) => {
-        dispatch(addOrder(data.data));
+      .then(async(data: any) => {
+        await dispatch(addOrder(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
             .then((data: any) => {
               addToken(data.data);
-              dispatch(addOrder(data.data));
+              dispatch(getOrder(idOrder));
             })
             .catch(() => {
               localStorage.removeItem("accessToken");
@@ -209,14 +280,7 @@ const getOrder = (idOrder: string) => {
       });
   };
 };
-interface PutOrderInterface {
-  orderId: string;
-  title: string;
-  audienceAge: number;
-  description: string;
-  budget: number;
-  updateDate: string;
-}
+
 const putOrder = (order: PutOrderInterface) => {
   const token = localStorage.getItem("accessToken");
   const formCheck = new FormData();
@@ -322,7 +386,6 @@ const getOrders = (id: string, name: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(addOrders(data.data));
       })
       .catch((data: any) => {
@@ -605,6 +668,8 @@ const refreshToken = () => {
   });
 };
 export {
+  getChat,
+  joinChat,
   getNewProfileData,
   postOrderAccept,
   postOrderReqest,
