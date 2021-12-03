@@ -17,7 +17,8 @@ namespace BGSales.Services.Services
             IBusinessmanService businessmanService,
             IBloggerService bloggerService,
             IAccountService accountService,
-            IChatService chatService)
+            IChatService chatService,
+            IStripeService stripeService)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
@@ -25,6 +26,7 @@ namespace BGSales.Services.Services
             _accountService = accountService;
             _bloggerService = bloggerService;
             _chatService = chatService;
+            _stripeService = stripeService;
         }
 
         private readonly IOrderRepository _orderRepository;
@@ -33,6 +35,7 @@ namespace BGSales.Services.Services
         private readonly IAccountService _accountService;
         private readonly IBloggerService _bloggerService;
         private readonly IChatService _chatService;
+        private readonly IStripeService _stripeService;
 
         public async Task CreateOrder(CreateOrderViewModel viewModel, string userId)
         {
@@ -81,6 +84,7 @@ namespace BGSales.Services.Services
                 {
                     var blogger = _bloggerService.GetByUserId(currentUserId);
                     model.ChatId = _chatService.GetChatId(blogger.Id, order.AdvertiserId);
+                    model.StripeId = string.Empty;
                 }
                 catch
                 {
@@ -167,6 +171,11 @@ namespace BGSales.Services.Services
             order.BloggerRequests = new List<Blogger>();
             order.BloggerId = blogger.Id;
 
+            var productId = _stripeService.CreateProduct(order.Id);
+            var priceId = _stripeService.CreatePrice(productId, Convert.ToInt64(order.Budget));
+
+            order.StripeId = priceId;
+
             await _orderRepository.Update(order);
         }
 
@@ -211,6 +220,29 @@ namespace BGSales.Services.Services
             var blogger = _bloggerService.GetByUserId(viewModel.UserId);
 
             order.BloggerRequests.Add(blogger);
+
+            await _orderRepository.Update(order);
+        }
+
+        public async Task SetOrderPaymentIntent(string orderId, string paymentIntentId)
+        {
+            var order = _orderRepository.Get(o => o.Id == orderId).SingleOrDefault();
+
+            order.PaymentIntentId = paymentIntentId;
+
+            await _orderRepository.Update(order);
+        }
+
+        public async Task SetOrderPayed(string paymentIntentId)
+        {
+            var order = _orderRepository.Get(o => o.PaymentIntentId == paymentIntentId).SingleOrDefault();
+
+            if (order == null)
+            {
+                throw new Exception("Cannot find order with this Id");
+            }
+
+            order.IsPaid = true;
 
             await _orderRepository.Update(order);
         }
