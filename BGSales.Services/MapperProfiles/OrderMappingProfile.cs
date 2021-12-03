@@ -26,6 +26,8 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.BloggerRequests, opt => opt.MapFrom(src => src.BloggerRequests))
                  .ForMember(dest => dest.Blogger, opt => opt.MapFrom(src => src.Blogger))
                  .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => src.CreateDate))
+                 .ForMember(dest => dest.StripeId, opt => opt.MapFrom(src => src.StripeId))
+                 .ForMember(dest => dest.IsPaid, opt => opt.MapFrom(src => src.IsPaid))
                  .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Order, PartialOrderViewModel>()
