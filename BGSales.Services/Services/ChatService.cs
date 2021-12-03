@@ -35,6 +35,15 @@ namespace BGSales.Services.Services
         {
             var blogger = _bloggerService.GetByUserId(model.BloggerUserId);
             var businessman = _businessmanService.GetByUserId(model.BusinessmanUserId);
+
+            var checkChat = _chatRepository.Get(ch => ch.BloggerId == blogger.Id && ch.BusinessmanId == businessman.Id)
+                .SingleOrDefault();
+
+            if (checkChat != null)
+            {
+                throw new Exception("The chat already created");
+            }
+
             var chat = new Chat()
             {
                 Id = Guid.NewGuid().ToString(),
