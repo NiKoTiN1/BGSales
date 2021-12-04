@@ -114,13 +114,14 @@ namespace BGSales.Services.Services
 
                 foreach (var chat in chats)
                 {
+                    var imageUrl = string.IsNullOrEmpty(chat.Businessman.User.AvatarId) ? chat.Businessman.User.Avatar.Path : null;
                     var model = new PartialChatViewModel()
                     {
                         ChatId = chat.Id,
                         UserId = chat.Businessman.UserId,
                         FirstName = chat.Businessman.User.FirstName,
                         SecondName = chat.Businessman.User.LastName,
-                        ImageUrl = chat.Businessman.User.Avatar.Path
+                        ImageUrl = imageUrl
                     };
 
                     chatModels.Add(model);
@@ -132,12 +133,14 @@ namespace BGSales.Services.Services
 
                 foreach (var chat in chats)
                 {
+                    var imageUrl = string.IsNullOrEmpty(chat.Blogger.User.AvatarId) ? chat.Blogger.User.Avatar.Path : null;
                     var model = new PartialChatViewModel()
                     {
                         ChatId = chat.Id,
                         UserId = chat.Blogger.UserId,
                         FirstName = chat.Blogger.User.FirstName,
                         SecondName = chat.Blogger.User.LastName,
+                        ImageUrl = imageUrl
                     };
 
                     chatModels.Add(model);
