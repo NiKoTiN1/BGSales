@@ -94,6 +94,24 @@ namespace BGSales.Web.Controllers
             return Ok(model);
         }
 
+        [HttpGet]
+        [Route("accepted/{bloggerUserId}")]
+        public async Task<IActionResult> GetBloggerAcceptedOrders([FromRoute] string bloggerUserId)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            CheckPermission(bloggerUserId, userIdClaim);
+
+            var model = await _orderService.GetAcceptedBloggerOrders(userIdClaim.Value);
+
+            return Ok(model);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel viewModel)
