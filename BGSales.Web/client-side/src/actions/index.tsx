@@ -14,6 +14,7 @@ import AddOrderInterface from "../interfaces/AddOrderInterface";
 import PartialOrderInformationInterface from "../interfaces/PartialOrderInformationInterface";
 import history from '../history';
 import ChatInterface from "../interfaces/ChatInterface";
+import FullChatInterface from "../interfaces/FullChatInterface";
 
 const addCheckUser = (checkUser: boolean) => {
   return {
@@ -85,7 +86,12 @@ const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
-
+const addChat = (chat: FullChatInterface) => {
+  return {
+    type: ActionType.ADD_CHAT,
+    payload: chat,
+  };
+};
 const sendMessage = (
   senderUserId: string,
   text: string,
@@ -159,8 +165,7 @@ const getChat = (chatId: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data);
-        //dispatch(addOrder(data.data));
+        dispatch(addChat(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {

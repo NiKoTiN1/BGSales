@@ -12,6 +12,7 @@ const Chat = ({
   chatId,
   chats,
   dispatch,
+  chat,
   userId,
 }: any) => {
   useEffect(() => {
@@ -23,7 +24,7 @@ const Chat = ({
   const elements = chats.map((item: ChatInterface) => {
     return (
       <Link to={`/chat/${item.chatId}`}>
-        <li key={item.userId+12}>
+        <li key={item.userId+"12"}>
           <p>{item.firstName}</p>
           <p>{item.secondName}</p>
         </li>
@@ -45,6 +46,7 @@ const Chat = ({
 const mapStateToProps = (state: StateInterface) => {
   return {
     chats: state.chat.chats,
+    chat: state.chat.chat,
     userId: state.profile.currentUser.profile.userId,
   };
 };

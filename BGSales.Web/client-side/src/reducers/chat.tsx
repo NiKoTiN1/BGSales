@@ -1,22 +1,8 @@
 import InitialStateInterfaceChat from "../interfaces/InitialStateInterfaceChat";
 import { ActionType } from "../interfaces/ActionType";
 import ActionInterfaceChat from "../interfaces/ActionInterfaceChat";
-interface PersonInterface{
-    userId: string;
-    imageUrl: string;
-    firstName: string;
-    secondName: string;
-}
-interface MessagesInterface{
-    userId: string;
-    messageId: string;
-    text: string;
-    sentTime: string;
-}
-export default interface FullChatInterface{
-    person: PersonInterface,
-    messages: Array<MessagesInterface>,
-}
+
+
 const initialState:  InitialStateInterfaceChat = {
   chats: [],
   chat: {
@@ -26,14 +12,7 @@ const initialState:  InitialStateInterfaceChat = {
         firstName: "",
         secondName: "",
     },
-    messages: [
-        {
-            userId: "",
-            messageId: "",
-            text: "",
-            sentTime: "",
-        }
-    ], 
+    messages: [], 
   },
 };
 
@@ -44,6 +23,11 @@ const reducer = (state = initialState, action: ActionInterfaceChat) => {
         ...state,
         chats: action.payload,
       };
+    case ActionType.ADD_CHAT:
+      return {
+        ...state,
+        chat: action.payload,
+      };  
     default:
       return state;
   }
