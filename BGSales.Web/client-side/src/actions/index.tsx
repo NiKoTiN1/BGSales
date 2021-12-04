@@ -266,17 +266,6 @@ const postOrderAccept = (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 const postOrderReqest = (userId: string, orderId: string) => {
   return (dispatch: Function) => {
     const token = localStorage.getItem("accessToken");
@@ -355,8 +344,9 @@ const getOrder = (idOrder: string) => {
       url: `https://localhost:5001/api/Order/${idOrder}`,
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(async(data: any) => {
-        await dispatch(addOrder(data.data));
+      .then((data: any) => {
+        console.log(data);
+        dispatch(addOrder(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
@@ -603,7 +593,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
     formCheck.append("SecondName", changedProfile.secondName);
     formCheck.append("Nickname", changedProfile.nickname);
     formCheck.append("UrlYouTube", changedProfile.linkChannel);
-    formCheck.append("ImageFile", String(changedProfile.imageUrl));
+    formCheck.append("ImageFile", changedProfile.imageUrl);
     formCheck.append("Activity", changedProfile.activity);
     formCheck.append("Subjects", changedProfile.subjects);
     formCheck.append("Subscribers", String(changedProfile.numberSubscribers));
@@ -612,6 +602,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
       "BloggerExperience",
       String(changedProfile.ageAdvertising)
     );
+    console.log(changedProfile.imageUrl);
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/blogger",

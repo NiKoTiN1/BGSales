@@ -76,13 +76,7 @@ const AdvertiserPersonProfile = ({
                 Edit
               </Button>
             </Link>
-          ) : (
-        
-              <Button className="edit__link__btn" variant="outlined" onClick={()=> dispatch(joinChat(profile.userId,selectedProfile.userId))}>
-                Write message
-              </Button>
-   
-          )}
+          ) : null}
         </div>
       </div>
     </>

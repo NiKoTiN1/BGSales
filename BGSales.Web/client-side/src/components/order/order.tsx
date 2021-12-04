@@ -6,20 +6,23 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getOrder } from "../../actions";
+import { getOrder, joinChat } from "../../actions";
 import OrderInterface from "../../interfaces/OrderInterface";
 import AdvertiserInterface from "../../interfaces/AdvertiserInterface";
 import MediaPersonsIterface from "../../interfaces/MediaPersonsIterface";
 import PartialMediaPersonOrder from "../partial-media-person-order";
 import HistoryPropsInterface from "../../interfaces/HistoryPropsInterface";
+import UserProfileInterface from "../../interfaces/UserProfileInterface";
 
-interface PropsOrderInterface {
+interface Props {
   id: string;
   dispatch: Function;
   order: OrderInterface;
   role: string;
+  profile: UserProfileInterface;
+  selectedProfile: UserProfileInterface;
 }
-const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
+const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) => {
   useEffect(() => {
     dispatch(getOrder(id));
   }, []);
@@ -69,12 +72,18 @@ const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
               <Button variant="outlined">Edit</Button>
             </Link>
           ) : (
-            <Link
-              className="edit__link"
-              to={`profileAdvertiser/${order.advitiser.userId}`}
-            >
-              <Button variant="outlined">Look the advertiser</Button>
-            </Link>
+            <div className="order__edit-media">
+              <Link
+                className="order__edit-media__link"
+                to={`profileAdvertiser/${order.advitiser.userId}`}
+              >
+                <Button variant="outlined">Look the advertiser</Button>
+              </Link>
+
+                <Button className="order__edit-media__btn" variant="outlined" onClick={()=> dispatch(joinChat(profile.userId,selectedProfile.userId))}>
+                  Write message
+                </Button>
+            </div>
           )}
         </div>
       </div>
@@ -102,6 +111,8 @@ const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
 const mapStateToProps = (state: StateInterface) => {
   return {
     order: state.order.order,
+    profile: state.profile.currentUser.profile,
+    selectedProfile: state.profile.selectedProfile,
     role: state.profile.currentUser.role,
   };
 };

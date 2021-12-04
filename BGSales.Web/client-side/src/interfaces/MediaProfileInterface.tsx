@@ -1,6 +1,6 @@
 export default interface MediaProfileInterface {
   userId: string;
-  imageUrl: string | ArrayBuffer | null;
+  imageUrl: any;
   nickname: string;
   firstName: string;
   secondName: string;

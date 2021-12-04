@@ -35,6 +35,9 @@ const Chat = ({
     <div className="chat-page">
       <ul className="chats">{elements}</ul>
       <div className="chat">
+         <div>
+           {/* <p>{chat.}</p> */}
+          </div>
         <div className="chat__message"></div>
         <MessageSendForm chatId={chatId} userId={userId}/>
       </div>
