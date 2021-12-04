@@ -11,6 +11,7 @@ namespace BGSales.Services.Interfaces
         public List<PartialOrderViewModel> GetAllBusinessmanOrders(string userId);
         public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId);
         public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId);
+        public Task<List<PartialOrderViewModel>> GetAcceptedBloggerOrders(string userId);
         public Task<OrderViewModel> UpdateOrder(UpdateOrderViewModel model, string userId);
         public Task AcceptOrder(AcceptOrderViewModel model);
         public Task DeleteOrder(string orderId, string userId);

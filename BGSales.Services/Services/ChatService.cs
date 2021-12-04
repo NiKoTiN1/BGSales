@@ -65,6 +65,15 @@ namespace BGSales.Services.Services
 
             var chatModel = _mapper.Map<ChatViewModel>(chat);
 
+            if (currentUserId == chat.Businessman.UserId)
+            {
+                chatModel.RecivierInfo = _mapper.Map<UserViewModel>(chat.Businessman.User);
+            }
+            else
+            {
+                chatModel.RecivierInfo = _mapper.Map<UserViewModel>(chat.Blogger.User);
+            }
+
             var messages = _messageService.GetChatMessages(chatId, currentUserId);
             chatModel.Messages = messages;
             return chatModel;
@@ -101,6 +110,7 @@ namespace BGSales.Services.Services
                         UserId = chat.Businessman.UserId,
                         FirstName = chat.Businessman.User.FirstName,
                         SecondName = chat.Businessman.User.LastName,
+                        ImageUrl = chat.Businessman.User.Avatar.Path
                     };
 
                     chatModels.Add(model);

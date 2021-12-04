@@ -74,10 +74,10 @@ namespace BGSales.Web.Controllers
             }
 
             var chat = _chatService.GetChat(messageModel.ChatId, userIdClaim.Value);
-            var sentToUserId = chat.Blogger.UserId != messageModel.SenderUserId ? chat.Blogger.UserId :
-                                                                                  chat.Businessman.UserId;
             var message = await _messageService.SendMessage(messageModel);
-            await _hubContext.Clients.User(sentToUserId).SendAsync("ReceiveOne", message);
+
+            await _hubContext.Clients.User(chat.RecivierInfo.UserId).SendAsync("ReceiveOne", message);
+
             return Ok();
         }
 
