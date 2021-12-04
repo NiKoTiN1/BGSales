@@ -110,6 +110,7 @@ namespace BGSales.Services.Services
                         UserId = chat.Businessman.UserId,
                         FirstName = chat.Businessman.User.FirstName,
                         SecondName = chat.Businessman.User.LastName,
+                        ImageUrl = chat.Businessman.User.Avatar.Path
                     };
 
                     chatModels.Add(model);
