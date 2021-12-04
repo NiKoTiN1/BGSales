@@ -96,10 +96,20 @@ namespace BGSales.Services.Services
         public List<PartialChatViewModel> GetAllChats(string userId)
         {
             var chatModels = new List<PartialChatViewModel>();
+            Blogger blogger = null;
+            Businessman businessman = null;
 
             try
             {
-                var blogger = _bloggerService.GetByUserId(userId);
+                blogger = _bloggerService.GetByUserId(userId);
+            }
+            catch
+            {
+                businessman = _businessmanService.GetByUserId(userId);
+            }
+
+            if (blogger != null)
+            {
                 var chats = _chatRepository.Get(ch => ch.BloggerId == blogger.Id, new[] { "Blogger", "Businessman" }).ToList();
 
                 foreach (var chat in chats)
@@ -116,9 +126,8 @@ namespace BGSales.Services.Services
                     chatModels.Add(model);
                 }
             }
-            catch
+            else
             {
-                var businessman = _businessmanService.GetByUserId(userId);
                 var chats = _chatRepository.Get(ch => ch.BusinessmanId == businessman.Id, new[] { "Blogger", "Businessman" }).ToList();
 
                 foreach (var chat in chats)
