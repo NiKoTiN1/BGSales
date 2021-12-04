@@ -109,7 +109,23 @@ namespace BGSales.Web.Controllers
 
             if (string.IsNullOrEmpty(userId))
             {
-                userId = userIdClaim.Value;
+                var user = await _accountService.GetById(userIdClaim.Value);
+
+                if (user == null)
+                {
+                    throw new Exception("User not found!");
+                }
+
+                if (user.UserType == UserType.Blogger)
+                {
+                    var model = _bloggerService.Get(user);
+                    return Ok(model);
+                }
+                else
+                {
+                    var model = _businessmanService.Get(user);
+                    return Ok(model);
+                }
             }
             else
             {
@@ -118,32 +134,29 @@ namespace BGSales.Web.Controllers
                 {
                     throw new Exception("You cannot see this user");
                 }
-            }
 
-            var user = await _accountService.GetById(userId);
+                var user = await _accountService.GetById(userId);
 
-            if (user == null)
-            {
-                throw new Exception("User not found!");
-            }
-
-            if (user.UserType == UserType.Blogger)
-            {
-                var model = _bloggerService.Get(user);
-
-                if (!string.IsNullOrEmpty(userId))
+                if (user == null)
                 {
+                    throw new Exception("User not found!");
+                }
+
+                if (user.UserType == UserType.Blogger)
+                {
+                    var model = _bloggerService.Get(user);
+
                     var blogger = _bloggerService.GetByUserId(userId);
                     var businessman = _businessmanService.GetByUserId(userIdClaim.Value);
                     model.ChatId = _chatService.GetChatId(blogger.Id, businessman.Id);
-                }
 
-                return Ok(model);
-            }
-            else
-            {
-                var model = _businessmanService.Get(user);
-                return Ok(model);
+                    return Ok(model);
+                }
+                else
+                {
+                    var model = _businessmanService.Get(user);
+                    return Ok(model);
+                }
             }
         }
 
