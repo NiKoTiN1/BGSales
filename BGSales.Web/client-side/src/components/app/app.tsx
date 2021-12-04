@@ -88,7 +88,13 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
         <Route path="/projectEdit" exact component={OrderEdit} />
         <Route path="/createProjects" exact component={CreateOrder} />
         <Route path="/mediaPersons" exact component={MediaPersons} />
-        <Route path="/chat" exact component={Chat} />
+        <Route path="/chat/:chatId"  exact
+          render={({ match }) => {
+            const { chatId } = match.params;
+            return <Chat chatId={chatId} />;
+          }}
+        />
+           <Route path="/chat" exact component={Chat} />
       </Switch>
       <AppFooter />
     </div>

@@ -13,6 +13,7 @@ import OrderInterface from "../interfaces/OrderInterface";
 import AddOrderInterface from "../interfaces/AddOrderInterface";
 import PartialOrderInformationInterface from "../interfaces/PartialOrderInformationInterface";
 import history from '../history';
+import ChatInterface from "../interfaces/ChatInterface";
 
 const addCheckUser = (checkUser: boolean) => {
   return {
@@ -74,12 +75,81 @@ const addSelectedProfile = (selectedProfile: UserProfileInterface) => {
     payload: selectedProfile,
   };
 };
+const addChats = (chats: Array<ChatInterface>) => {
+  return {
+    type: ActionType.ADD_CHATS,
+    payload: chats,
+  };
+};
 const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
 
+const sendMessage = (
+  senderUserId: string,
+  text: string,
+  chatId:string,
+) => {
+  return (dispatch: Function) => {
+    const token = localStorage.getItem("accessToken");
+    const formCheck = new FormData();
+    formCheck.append("SenderUserId", senderUserId);
+    formCheck.append("Text", text);
+    formCheck.append("ChatId", chatId);
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Chat/send",
+      headers: { Authorization: `Bearer ${token}` },
+      data: formCheck,
+    })
+      .then((data: any) => {dispatch(getChat(chatId));})
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(
+                sendMessage(senderUserId, text, chatId)
+              );
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
 
+const getAllChats = () => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: "https://localhost:5001/api/Chat/all",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        dispatch(addChats(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getAllChats());
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
 const getChat = (chatId: string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
@@ -89,7 +159,7 @@ const getChat = (chatId: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
+        console.log(data);
         //dispatch(addOrder(data.data));
       })
       .catch((data: any) => {
@@ -105,7 +175,11 @@ const getChat = (chatId: string) => {
               dispatch(addCheckUser(false));
             });
         }
-      });
+      })
+      .then((data: any) => {
+        console.log(data);
+        //dispatch(addOrder(data.data));
+      })
   };
 };
 
@@ -183,6 +257,21 @@ const postOrderAccept = (
       });
   };
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const postOrderReqest = (userId: string, orderId: string) => {
   return (dispatch: Function) => {
     const token = localStorage.getItem("accessToken");
@@ -668,6 +757,8 @@ const refreshToken = () => {
   });
 };
 export {
+  sendMessage,
+  getAllChats,
   getChat,
   joinChat,
   getNewProfileData,

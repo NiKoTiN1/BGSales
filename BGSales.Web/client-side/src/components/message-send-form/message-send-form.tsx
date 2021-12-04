@@ -1,12 +1,19 @@
 import React, {Component, useState} from 'react';
-
+import { connect } from 'react-redux';
+import {sendMessage} from "../../actions";
 import './message-send-form.scss'
 
-const MessageSendForm = () =>{
-    const [changeValue, setValueChange] = useState("");
+interface Props{
+    userId: string;
+    chatId:string;
+    dispatch:Function;
+}
+
+const MessageSendForm = ({userId, chatId, dispatch}: Props) =>{
+    const [value, setValue] = useState("");
     const onSubmit = (e:any) => {
         e.preventDefault();
-        
+        dispatch(sendMessage(userId, value, chatId,));
     }
    
         return (
@@ -17,8 +24,8 @@ const MessageSendForm = () =>{
                     type="text"
                     placeholder="Write now"
                     className="form-control new-post-label"
-                    onChange={(e)=>setValueChange(e.target.value)}
-                    value={changeValue}
+                    onChange={(e)=>setValue(e.target.value)}
+                    value={value}
                 />
                 <button
                     type="submit"
@@ -29,4 +36,4 @@ const MessageSendForm = () =>{
         )
     
 }
-export default MessageSendForm;
+export default connect()(MessageSendForm);

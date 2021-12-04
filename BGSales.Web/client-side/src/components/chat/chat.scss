@@ -1,0 +1,12 @@
+.chat-page{
+    .chat{
+        &__message{
+         overflow: hidden;
+         min-height: 75vh;
+        }
+    }
+    .chats{
+        width: 400px;
+    }
+}
+
