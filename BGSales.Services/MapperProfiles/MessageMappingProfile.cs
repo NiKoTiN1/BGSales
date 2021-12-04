@@ -17,7 +17,6 @@ namespace BGSales.Services.MapperProfiles
                  .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text));
 
             CreateMap<Message, MessageViewModel>()
-                 .ForMember(dest => dest.ChatId, opt => opt.MapFrom(src => src.ChatId))
                  .ForMember(dest => dest.SenderUserId, opt => opt.MapFrom(src => src.SenderId))
                  .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
                  .ForMember(dest => dest.SentTime, opt => opt.MapFrom(src => src.CreateDate))
