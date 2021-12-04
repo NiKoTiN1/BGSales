@@ -115,7 +115,7 @@ namespace BGSales.Services.Services
         {
             var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
-            var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId == userId));
+            var availableOrders = orders.Where(o => o.BloggerRequests.Any(b => b.UserId == userId));
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
