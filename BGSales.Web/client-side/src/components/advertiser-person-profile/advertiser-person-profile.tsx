@@ -62,8 +62,8 @@ const AdvertiserPersonProfile = ({
                   : "empty"}
               </p>
               <p className="information__name__text">
-                {selectedProfile.numberOffers
-                  ? selectedProfile.numberOffers
+                {selectedProfile.ordersCount
+                  ? selectedProfile.ordersCount
                   : 0}
               </p>
             </div>

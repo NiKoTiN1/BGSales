@@ -26,7 +26,7 @@ const MediaPersonProfileEdit = ({
     numberSubscribers: `${currentUser.profile.numberSubscribers}`,
     ageAudience: `${currentUser.profile.ageAudience}`,
   });
-  const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
+  // const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -75,7 +75,7 @@ const MediaPersonProfileEdit = ({
           <div className="media-profile-form__file">
             <img
               className="media-profile-form__file__img"
-              src={form.imageUrl ? form.imageUrl : imageSrc}
+              src={form.imageUrl ? `${form.imageUrl}.jpg` : imageSrc}
               alt=""
             />
             <input

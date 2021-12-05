@@ -7,6 +7,9 @@ const initialState: InitialStateInterfaceOrders = {
   orders: [],
   order: {
     orderId: "",
+    chatId: "",
+    isPaid: false,
+    stripeId: "",
     bloggerRequests: [],
     blogger: {
       userId: "",

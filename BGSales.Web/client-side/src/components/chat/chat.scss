@@ -1,8 +1,20 @@
 .chat-page{
+    display: flex;
+    flex-direction: row;
     .chat{
         &__message{
          overflow: hidden;
          min-height: 75vh;
+         &__right-message{
+            display: flex;
+            justify-content: end;
+            align-items: flex-end;
+         }
+         &__left-message{
+            display: flex;
+            justify-content: start;
+            align-items: flex-start;
+         }
         }
     }
     .chats{

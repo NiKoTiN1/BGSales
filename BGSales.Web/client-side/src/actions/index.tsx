@@ -15,6 +15,7 @@ import PartialOrderInformationInterface from "../interfaces/PartialOrderInformat
 import history from '../history';
 import ChatInterface from "../interfaces/ChatInterface";
 import FullChatInterface from "../interfaces/FullChatInterface";
+import MessagesInterface from "../interfaces/MessagesInterface";
 
 const addCheckUser = (checkUser: boolean) => {
   return {
@@ -90,6 +91,43 @@ const addChat = (chat: FullChatInterface) => {
   return {
     type: ActionType.ADD_CHAT,
     payload: chat,
+  };
+};
+const addMessage = (message: MessagesInterface) => {
+  return {
+    type: ActionType.ADD_MESSAGE,
+    payload: message,
+  };
+};
+const payOrder = (stripeId:string, orderId:string) => {
+  const formCheck = new FormData();
+  return (dispatch: Function) => {
+    formCheck.append("StripeId", stripeId);
+    formCheck.append("OrderId", orderId);
+    const token = localStorage.getItem("accessToken");
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Order/purchase",
+      headers: { "Authorization": `Bearer ${token}`,
+                  "Access-Control-Allow-Origin":"*",
+                },
+      data: formCheck,          
+    })
+      .then((data: any) => {window.location.href= data.data; })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(payOrder(stripeId, orderId));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
   };
 };
 const sendMessage = (
@@ -180,10 +218,6 @@ const getChat = (chatId: string) => {
               dispatch(addCheckUser(false));
             });
         }
-      })
-      .then((data: any) => {
-        console.log(data);
-        //dispatch(addOrder(data.data));
       })
   };
 };
@@ -345,7 +379,6 @@ const getOrder = (idOrder: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data);
         dispatch(addOrder(data.data));
       })
       .catch((data: any) => {
@@ -498,28 +531,8 @@ const getProfileData = () => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        const userInfo = {
-          userId: data.data.userId,
-          imageUrl: data.data.imageUrl,
-          nickname: data.data.nickname ? data.data.nickname : "",
-          firstName: data.data.firstName,
-          secondName: data.data.secondName,
-          ageAdvertising: data.data.bloggerExperience
-            ? data.data.bloggerExperience
-            : "",
-          linkChannel: data.data.urlYouTube ? data.data.urlYouTube : "",
-          ordersCompleted: data.data.ordersCompleted
-            ? data.data.ordersCompleted
-            : "",
-          activity: data.data.activity ? data.data.activity : "",
-          subjects: data.data.subjects ? data.data.subjects : "",
-          numberSubscribers: data.data.subscribers ? data.data.subscribers : "",
-          ageAudience: data.data.ageAudience ? data.data.ageAudience : "",
-          nameCompany: data.data.nameCompany ? data.data.nameCompany : "",
-          numberOffers: data.data.numberOffers ? data.data.numberOffers : "",
-        };
-        dispatch(changeProfile(userInfo));
-        dispatch(addSelectedProfile(userInfo));
+        dispatch(changeProfile(data.data));
+        dispatch(addSelectedProfile(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
@@ -546,27 +559,8 @@ const getNewProfileData = (id: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        const userInfo = {
-          userId: data.data.userId,
-          imageUrl: data.data.imageUrl,
-          nickname: data.data.nickname ? data.data.nickname : "",
-          firstName: data.data.firstName,
-          secondName: data.data.secondName,
-          ageAdvertising: data.data.bloggerExperience
-            ? data.data.bloggerExperience
-            : "",
-          linkChannel: data.data.urlYouTube ? data.data.urlYouTube : "",
-          ordersCompleted: data.data.ordersCompleted
-            ? data.data.ordersCompleted
-            : "",
-          activity: data.data.activity ? data.data.activity : "",
-          subjects: data.data.subjects ? data.data.subjects : "",
-          numberSubscribers: data.data.subscribers ? data.data.subscribers : "",
-          ageAudience: data.data.ageAudience ? data.data.ageAudience : "",
-          nameCompany: data.data.nameCompany ? data.data.nameCompany : "",
-          numberOffers: data.data.numberOffers ? data.data.numberOffers : "",
-        };
-        dispatch(addSelectedProfile(userInfo));
+        console.log(data.data);
+        dispatch(addSelectedProfile(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
@@ -638,7 +632,7 @@ const putAdvertiserProfileData = (
     formCheck.append("FirstName", changedProfileAdvertiser.firstName);
     formCheck.append("SecondName", changedProfileAdvertiser.secondName);
     formCheck.append("NameCompany", changedProfileAdvertiser.nameCompany);
-    formCheck.append("ImageFile", String(changedProfileAdvertiser.imageUrl));
+    formCheck.append("ImageFile", changedProfileAdvertiser.imageUrl);
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/businessman",
@@ -753,6 +747,9 @@ const refreshToken = () => {
   });
 };
 export {
+  payOrder,
+  addMessage,
+  addChat,
   sendMessage,
   getAllChats,
   getChat,

@@ -6,7 +6,8 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getProfileData, getNewProfileData } from "../../actions";
+import { getProfileData, getNewProfileData, joinChat } from "../../actions";
+import history from '../../history';
 
 const MediaPersonProfile = ({
   profile,
@@ -24,6 +25,13 @@ const MediaPersonProfile = ({
   }, []);
   if (role === "") {
     return <p>Error this page is not available</p>;
+  }
+  const chekedChatId = () => {
+    if(!selectedProfile.chatId){
+      dispatch(joinChat(profile.userId,selectedProfile.userId))
+    }else{
+      history.push(`/chat/${selectedProfile.chatId}`);
+    }
   }
   return (
     <>
@@ -103,9 +111,9 @@ const MediaPersonProfile = ({
             <Button variant="outlined">Edit</Button>
           </Link>
         ) : (
-          <Link className="edit__link" to="/chat">
-            <Button variant="outlined">Write message</Button>
-          </Link>
+         
+            <Button className="edit__link" variant="outlined" onClick={chekedChatId}>Write message</Button>
+         
         )}
       </div>
     </>

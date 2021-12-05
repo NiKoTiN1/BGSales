@@ -1,5 +1,5 @@
 export default interface MessagesInterface{
-    userId: string;
+    senderUserId: string;
     messageId: string;
     text: string;
     sentTime: string;

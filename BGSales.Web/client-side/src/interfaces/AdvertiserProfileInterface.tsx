@@ -1,6 +1,6 @@
 export default interface AdvertiserProfileInterface {
   userId: string;
-  imageUrl: string | ArrayBuffer | null;
+  imageUrl: any;
   firstName: string;
   secondName: string;
   nameCompany: string;

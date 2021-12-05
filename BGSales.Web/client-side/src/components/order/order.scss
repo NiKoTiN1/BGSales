@@ -2,6 +2,15 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  .div-accept-text{
+    display:flex;
+    font-size: 20px;
+    justify-content: center;
+  }
+  .div-accept{
+    padding: 10px;
+    border: 4px double rgba(103, 195, 238, 0.699);
+  }
   .order {
     display: flex;
     justify-content: center;
@@ -31,6 +40,7 @@
       }
     }
     &__edit {
+      margin-top: 10px;
       &__link {
         text-decoration: none;
         color: black;
@@ -44,6 +54,9 @@
         margin-bottom: 20px;
         text-decoration: none;
         color: black;
+      }
+      &__btn {
+        width: 200px;
       }
     }
   }

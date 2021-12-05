@@ -94,7 +94,7 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
             return <Chat chatId={chatId} />;
           }}
         />
-           <Route path="/chat" exact component={Chat} />
+        <Route path="/chat" exact component={Chat} />
       </Switch>
       <AppFooter />
     </div>

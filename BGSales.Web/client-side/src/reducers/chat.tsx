@@ -28,6 +28,11 @@ const reducer = (state = initialState, action: ActionInterfaceChat) => {
         ...state,
         chat: action.payload,
       };  
+    case ActionType.ADD_MESSAGE:
+      return {
+        ...state,
+        chat: {...state.chat, messages: [...state.chat.messages, action.payload]},
+      };    
     default:
       return state;
   }
