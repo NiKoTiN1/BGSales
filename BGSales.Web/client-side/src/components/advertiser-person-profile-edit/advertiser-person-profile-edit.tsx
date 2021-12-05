@@ -21,9 +21,9 @@ const AdvertiserPersonProfileEdit = ({
     secondName: currentUser.profile.secondName,
     nameCompany: currentUser.profile.nameCompany,
   });
-  const [formImg, setFormImg] = useState({
-    imageUrl: currentUser.profile.imageUrl,
-  });
+  // const [formImg, setFormImg] = useState({
+  //   imageUrl: currentUser.profile.imageUrl,
+  // });
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -34,7 +34,7 @@ const AdvertiserPersonProfileEdit = ({
     }
     const userProfile = {
       userId: currentUser.profile.userId,
-      imageUrl: formImg.imageUrl,
+      imageUrl: form.imageUrl,
       firstName: String(form.firstName),
       secondName: String(form.secondName),
       nameCompany: String(form.nameCompany),
@@ -47,9 +47,10 @@ const AdvertiserPersonProfileEdit = ({
   const imageChange = (e: any) => {
     let reader = new FileReader();
     let file = e.target.files[0];
-    reader.onloadend = () => {
-      setFormImg({ imageUrl: reader.result });
-    };
+    setForm({ ...form, imageUrl: file });
+    // reader.onloadend = () => {
+    //   setFormImg({ imageUrl: reader.result });
+    // };
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Businessman") {

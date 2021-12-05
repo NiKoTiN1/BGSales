@@ -7,10 +7,15 @@ import UserProfileInterface from "../interfaces/UserProfileInterface";
 import AdvertiserProfileInterface from "../interfaces/AdvertiserProfileInterface";
 import PartialProfileInterface from "../interfaces/PartialProfileInterface";
 import MediaProfileInterface from "../interfaces/MediaProfileInterface";
+import PutOrderInterface from "../interfaces/PutOrderInterface";
 import jwt from "jwt-decode";
-import InitialStateInterfaceOrders from "../interfaces/InitialStateInterfaceOrders";
 import OrderInterface from "../interfaces/OrderInterface";
 import AddOrderInterface from "../interfaces/AddOrderInterface";
+import PartialOrderInformationInterface from "../interfaces/PartialOrderInformationInterface";
+import history from '../history';
+import ChatInterface from "../interfaces/ChatInterface";
+import FullChatInterface from "../interfaces/FullChatInterface";
+import MessagesInterface from "../interfaces/MessagesInterface";
 
 const addCheckUser = (checkUser: boolean) => {
   return {
@@ -36,7 +41,7 @@ const addRole = (role: string) => {
     payload: role,
   };
 };
-const addOrders = (orders: InitialStateInterfaceOrders) => {
+const addOrders = (orders: Array<PartialOrderInformationInterface>) => {
   return {
     type: ActionType.ADD_ORDERS,
     payload: orders,
@@ -72,10 +77,189 @@ const addSelectedProfile = (selectedProfile: UserProfileInterface) => {
     payload: selectedProfile,
   };
 };
+const addChats = (chats: Array<ChatInterface>) => {
+  return {
+    type: ActionType.ADD_CHATS,
+    payload: chats,
+  };
+};
 const addToken = (data: TokenDataInterface) => {
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("refreshToken", data.refreshToken);
 };
+const addChat = (chat: FullChatInterface) => {
+  return {
+    type: ActionType.ADD_CHAT,
+    payload: chat,
+  };
+};
+const addMessage = (message: MessagesInterface) => {
+  return {
+    type: ActionType.ADD_MESSAGE,
+    payload: message,
+  };
+};
+const payOrder = (stripeId:string, orderId:string) => {
+  const formCheck = new FormData();
+  return (dispatch: Function) => {
+    formCheck.append("StripeId", stripeId);
+    formCheck.append("OrderId", orderId);
+    const token = localStorage.getItem("accessToken");
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Order/purchase",
+      headers: { "Authorization": `Bearer ${token}`,
+                  "Access-Control-Allow-Origin":"*",
+                },
+      data: formCheck,          
+    })
+      .then((data: any) => {window.location.href= data.data; })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(payOrder(stripeId, orderId));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+const sendMessage = (
+  senderUserId: string,
+  text: string,
+  chatId:string,
+) => {
+  return (dispatch: Function) => {
+    const token = localStorage.getItem("accessToken");
+    const formCheck = new FormData();
+    formCheck.append("SenderUserId", senderUserId);
+    formCheck.append("Text", text);
+    formCheck.append("ChatId", chatId);
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Chat/send",
+      headers: { Authorization: `Bearer ${token}` },
+      data: formCheck,
+    })
+      .then((data: any) => {dispatch(getChat(chatId));})
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(
+                sendMessage(senderUserId, text, chatId)
+              );
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+
+const getAllChats = () => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: "https://localhost:5001/api/Chat/all",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        dispatch(addChats(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getAllChats());
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+const getChat = (chatId: string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `https://localhost:5001/api/Chat/${chatId}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        dispatch(addChat(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getChat(chatId));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      })
+  };
+};
+
+const joinChat = (
+  bloggerUserId: string,
+  businessmanUserId: string
+) => {
+  return (dispatch: Function) => {
+    const token = localStorage.getItem("accessToken");
+    const formCheck = new FormData();
+    formCheck.append("BloggerUserId", bloggerUserId);
+    formCheck.append("BusinessmanUserId", businessmanUserId);
+    axios({
+      method: "POST",
+      url: "https://localhost:5001/api/Chat/join",
+      headers: { Authorization: `Bearer ${token}` },
+      data: formCheck,
+    })
+      .then((data: any) => {history.push(`/chat/${data.data}`);})
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(
+                joinChat(bloggerUserId, businessmanUserId)
+              );
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
+
+
+
+
 const postOrderAccept = (
   orderId: string,
   bloggerUserId: string,
@@ -112,6 +296,10 @@ const postOrderAccept = (
       });
   };
 };
+
+
+
+
 const postOrderReqest = (userId: string, orderId: string) => {
   return (dispatch: Function) => {
     const token = localStorage.getItem("accessToken");
@@ -124,7 +312,7 @@ const postOrderReqest = (userId: string, orderId: string) => {
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {})
+      .then((data: any) => {getOrders(userId, "all")})
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
@@ -198,7 +386,7 @@ const getOrder = (idOrder: string) => {
           refreshToken()
             .then((data: any) => {
               addToken(data.data);
-              dispatch(addOrder(data.data));
+              dispatch(getOrder(idOrder));
             })
             .catch(() => {
               localStorage.removeItem("accessToken");
@@ -209,14 +397,7 @@ const getOrder = (idOrder: string) => {
       });
   };
 };
-interface PutOrderInterface {
-  orderId: string;
-  title: string;
-  audienceAge: number;
-  description: string;
-  budget: number;
-  updateDate: string;
-}
+
 const putOrder = (order: PutOrderInterface) => {
   const token = localStorage.getItem("accessToken");
   const formCheck = new FormData();
@@ -322,7 +503,6 @@ const getOrders = (id: string, name: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(addOrders(data.data));
       })
       .catch((data: any) => {
@@ -351,28 +531,8 @@ const getProfileData = () => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        const userInfo = {
-          userId: data.data.userId,
-          imageUrl: data.data.imageUrl,
-          nickname: data.data.nickname ? data.data.nickname : "",
-          firstName: data.data.firstName,
-          secondName: data.data.secondName,
-          ageAdvertising: data.data.bloggerExperience
-            ? data.data.bloggerExperience
-            : "",
-          linkChannel: data.data.urlYouTube ? data.data.urlYouTube : "",
-          ordersCompleted: data.data.ordersCompleted
-            ? data.data.ordersCompleted
-            : "",
-          activity: data.data.activity ? data.data.activity : "",
-          subjects: data.data.subjects ? data.data.subjects : "",
-          numberSubscribers: data.data.subscribers ? data.data.subscribers : "",
-          ageAudience: data.data.ageAudience ? data.data.ageAudience : "",
-          nameCompany: data.data.nameCompany ? data.data.nameCompany : "",
-          numberOffers: data.data.numberOffers ? data.data.numberOffers : "",
-        };
-        dispatch(changeProfile(userInfo));
-        dispatch(addSelectedProfile(userInfo));
+        dispatch(changeProfile(data.data));
+        dispatch(addSelectedProfile(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
@@ -399,27 +559,8 @@ const getNewProfileData = (id: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        const userInfo = {
-          userId: data.data.userId,
-          imageUrl: data.data.imageUrl,
-          nickname: data.data.nickname ? data.data.nickname : "",
-          firstName: data.data.firstName,
-          secondName: data.data.secondName,
-          ageAdvertising: data.data.bloggerExperience
-            ? data.data.bloggerExperience
-            : "",
-          linkChannel: data.data.urlYouTube ? data.data.urlYouTube : "",
-          ordersCompleted: data.data.ordersCompleted
-            ? data.data.ordersCompleted
-            : "",
-          activity: data.data.activity ? data.data.activity : "",
-          subjects: data.data.subjects ? data.data.subjects : "",
-          numberSubscribers: data.data.subscribers ? data.data.subscribers : "",
-          ageAudience: data.data.ageAudience ? data.data.ageAudience : "",
-          nameCompany: data.data.nameCompany ? data.data.nameCompany : "",
-          numberOffers: data.data.numberOffers ? data.data.numberOffers : "",
-        };
-        dispatch(addSelectedProfile(userInfo));
+        console.log(data.data);
+        dispatch(addSelectedProfile(data.data));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
@@ -446,7 +587,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
     formCheck.append("SecondName", changedProfile.secondName);
     formCheck.append("Nickname", changedProfile.nickname);
     formCheck.append("UrlYouTube", changedProfile.linkChannel);
-    formCheck.append("ImageFile", String(changedProfile.imageUrl));
+    formCheck.append("ImageFile", changedProfile.imageUrl);
     formCheck.append("Activity", changedProfile.activity);
     formCheck.append("Subjects", changedProfile.subjects);
     formCheck.append("Subscribers", String(changedProfile.numberSubscribers));
@@ -455,6 +596,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
       "BloggerExperience",
       String(changedProfile.ageAdvertising)
     );
+    console.log(changedProfile.imageUrl);
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/blogger",
@@ -490,7 +632,7 @@ const putAdvertiserProfileData = (
     formCheck.append("FirstName", changedProfileAdvertiser.firstName);
     formCheck.append("SecondName", changedProfileAdvertiser.secondName);
     formCheck.append("NameCompany", changedProfileAdvertiser.nameCompany);
-    formCheck.append("ImageFile", String(changedProfileAdvertiser.imageUrl));
+    formCheck.append("ImageFile", changedProfileAdvertiser.imageUrl);
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/businessman",
@@ -605,6 +747,13 @@ const refreshToken = () => {
   });
 };
 export {
+  payOrder,
+  addMessage,
+  addChat,
+  sendMessage,
+  getAllChats,
+  getChat,
+  joinChat,
   getNewProfileData,
   postOrderAccept,
   postOrderReqest,

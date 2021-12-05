@@ -7,6 +7,7 @@ export default interface PartialAdvertiserOrderInterface {
   title: string;
   currentUser: CurrentUserInterface;
   budget: number;
+  acceptedUserId: string;
   requests: number;
   dispatch: Function;
   onItemSelected: Function;

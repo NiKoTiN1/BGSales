@@ -50,13 +50,13 @@ const UserMenu = ({ dispatch, currentUser }: PropsUserMenuInterface) => {
             </Link>
           </div>
           <div>
-            <Button
+            <Link to="/authorization"><Button
               className="user-menu__select__button_exit"
               variant="contained"
               onClick={() => logOut()}
             >
               Exit
-            </Button>
+            </Button></Link>
           </div>
         </div>
       ) : null}

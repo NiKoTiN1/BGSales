@@ -1,6 +1,7 @@
 export default interface UserProfileInterface {
   userId: string;
-  imageUrl: string | ArrayBuffer | null;
+  chatId: string;
+  imageUrl: any;
   nickname: string;
   firstName: string;
   secondName: string;
@@ -12,5 +13,5 @@ export default interface UserProfileInterface {
   numberSubscribers: number | string;
   ageAudience: number | string;
   nameCompany: string;
-  numberOffers: number | string;
+  ordersCount: number | string;
 }

@@ -26,7 +26,7 @@ const MediaPersonProfileEdit = ({
     numberSubscribers: `${currentUser.profile.numberSubscribers}`,
     ageAudience: `${currentUser.profile.ageAudience}`,
   });
-
+  // const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -59,10 +59,10 @@ const MediaPersonProfileEdit = ({
   const imageChange = (e: any) => {
     let reader = new FileReader();
     let file = e.target.files[0];
-    reader.onloadend = () => {
-      setForm({ ...form, imageUrl: reader.result });
-    };
-
+    setForm({ ...form, imageUrl: file });
+    // reader.onloadend = () => {
+    //   setFormImg({ imageUrl: reader.result });
+    // };
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Blogger") {
@@ -75,7 +75,7 @@ const MediaPersonProfileEdit = ({
           <div className="media-profile-form__file">
             <img
               className="media-profile-form__file__img"
-              src={form.imageUrl ? form.imageUrl : imageSrc}
+              src={form.imageUrl ? `${form.imageUrl}.jpg` : imageSrc}
               alt=""
             />
             <input

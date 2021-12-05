@@ -6,8 +6,8 @@ import { Button } from "@material-ui/core";
 import { imageSrc } from "../../imageRequire";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import StateInterface from "../../interfaces/StateInterface";
-import { getProfileData, getNewProfileData } from "../../actions";
-
+import { getProfileData, getNewProfileData, joinChat } from "../../actions";
+import { createBrowserHistory } from 'history';
 const AdvertiserPersonProfile = ({
   profile,
   dispatch,
@@ -62,8 +62,8 @@ const AdvertiserPersonProfile = ({
                   : "empty"}
               </p>
               <p className="information__name__text">
-                {selectedProfile.numberOffers
-                  ? selectedProfile.numberOffers
+                {selectedProfile.ordersCount
+                  ? selectedProfile.ordersCount
                   : 0}
               </p>
             </div>
@@ -76,13 +76,7 @@ const AdvertiserPersonProfile = ({
                 Edit
               </Button>
             </Link>
-          ) : (
-            <Link className="edit__link" to="/chat">
-              <Button className="edit__link__btn" variant="outlined">
-                Write message
-              </Button>
-            </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </>

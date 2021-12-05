@@ -3,6 +3,7 @@ import PartialMediaProfileInterface from "./PartialMediaProfileInterface";
 
 export default interface OrderInterface {
   orderId: string;
+  chatId: string;
   bloggerRequests: Array<string>;
   blogger: PartialMediaProfileInterface;
   title: string;
@@ -11,4 +12,6 @@ export default interface OrderInterface {
   audienceAge: number;
   createDate: string;
   advitiser: AdvertiserInterface;
+  isPaid: boolean;
+  stripeId: string; 
 }

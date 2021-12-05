@@ -6,23 +6,27 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getOrder } from "../../actions";
+import { getOrder, joinChat, payOrder} from "../../actions";
 import OrderInterface from "../../interfaces/OrderInterface";
 import AdvertiserInterface from "../../interfaces/AdvertiserInterface";
 import MediaPersonsIterface from "../../interfaces/MediaPersonsIterface";
 import PartialMediaPersonOrder from "../partial-media-person-order";
 import HistoryPropsInterface from "../../interfaces/HistoryPropsInterface";
+import UserProfileInterface from "../../interfaces/UserProfileInterface";
+import history from '../../history';
 
-interface PropsOrderInterface {
+interface Props {
   id: string;
   dispatch: Function;
   order: OrderInterface;
   role: string;
+  profile: UserProfileInterface;
+  selectedProfile: UserProfileInterface;
 }
-const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
+const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) => {
   useEffect(() => {
     dispatch(getOrder(id));
-  }, []);
+  }, [order.isPaid]);
   const elements = order.bloggerRequests.map((item: any) => {
     return (
       <li key={item.userId} className="list-orders__item-order">
@@ -39,6 +43,13 @@ const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
   });
   if (role === "") {
     return <p>Error this page is not available</p>;
+  }
+  const chekedChatId = () => {
+    if(!order.chatId){
+      dispatch(joinChat(profile.userId,selectedProfile.userId))
+    }else{
+      history.push(`/chat/${order.chatId}`);
+    }
   }
   return (
     <div className="container">
@@ -69,12 +80,17 @@ const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
               <Button variant="outlined">Edit</Button>
             </Link>
           ) : (
-            <Link
-              className="edit__link"
-              to={`profileAdvertiser/${order.advitiser.userId}`}
-            >
-              <Button variant="outlined">Look the advertiser</Button>
-            </Link>
+            <div className="order__edit-media">
+              <Link
+                className="order__edit-media__link"
+                to={`profileAdvertiser/${order.advitiser.userId}`}
+              >
+                <Button className="order__edit-media__btn" variant="outlined">Look the advertiser</Button>
+              </Link>
+                <Button className="order__edit-media__btn" variant="outlined" onClick={chekedChatId}>
+                  Write message
+                </Button>
+            </div>
           )}
         </div>
       </div>
@@ -82,19 +98,28 @@ const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
         <div>
           <ul className="media-person-ul">
             {order.blogger ? (
-              <PartialMediaPersonOrder
-                checked={false}
-                orderId={order.orderId}
-                {...order.blogger}
-                onItemSelected={(orderId: string) => {
-                  //history.push(`${ordersSelectName}/${orderId}`)
-                }}
-              />
+                <div>
+                  <p className="div-accept-text">Working on an order</p>
+              <div className="div-accept">
+                <PartialMediaPersonOrder
+                  checked={false}
+                  orderId={order.orderId}
+                  {...order.blogger}
+                  onItemSelected={(orderId: string) => {
+                    //history.push(`${ordersSelectName}/${orderId}`)
+                  }}
+                />
+              </div> 
+              </div>
             ) : (
               elements
             )}
           </ul>
-        </div>
+          {!order.isPaid?<Button className="order__edit-media__btn" variant="outlined" onClick={()=>dispatch(payOrder(order.stripeId, order.orderId))}>
+                 Pay order
+          </Button> : null}
+          
+          </div>
       ) : null}
     </div>
   );
@@ -102,6 +127,8 @@ const Order = ({ id, order, dispatch, role }: PropsOrderInterface) => {
 const mapStateToProps = (state: StateInterface) => {
   return {
     order: state.order.order,
+    profile: state.profile.currentUser.profile,
+    selectedProfile: state.profile.selectedProfile,
     role: state.profile.currentUser.role,
   };
 };

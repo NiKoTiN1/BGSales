@@ -3,5 +3,6 @@ export default interface PartialOrderInformationInterface {
   companyName: string;
   title: string;
   budget: number;
+  acceptedUserId: string;
   requests: number;
 }

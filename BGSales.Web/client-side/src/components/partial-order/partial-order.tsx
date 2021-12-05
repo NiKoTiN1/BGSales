@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./partial-order.scss";
 import { Link } from "react-router-dom";
 import PartialAdvertiserOrderInterface from "../../interfaces/PartialAdvertiserOrderInterface";
@@ -14,12 +14,14 @@ const PartialOrder = ({
   title,
   budget,
   currentUser,
+  acceptedUserId,
   dispatch,
   onItemSelected,
 }: PartialAdvertiserOrderInterface) => {
   const removeOrder = () => {
     dispatch(deleteOrder(id, orderId));
   };
+  const [checkedAccept, setCheckedAccept] = useState(acceptedUserId);
   return (
     <div className="order-partial-info">
       <div className="order-partial-info__container">
@@ -27,9 +29,6 @@ const PartialOrder = ({
         <p>{companyName}</p>
         <p>{budget}$</p>
       </div>
-      {console.log(
-        window.location.href.slice(window.location.href.lastIndexOf("/") + 1)
-      )}
       <div className="order-partial-info__container">
         <Button
           className="order-partial-info__container__btn-look btn"
@@ -48,12 +47,11 @@ const PartialOrder = ({
           </Button>
         ) : window.location.href.slice(
             window.location.href.lastIndexOf("/") + 1
-          ) !== "selectedProjects" ? (
+          ) !== "selectedProjects" && checkedAccept === null ?(
           <Button
             className="order-partial-info__container__btn-delete btn"
             variant="contained"
-            onClick={() => dispatch(postOrderReqest(id, orderId))}
-          >
+            onClick={() => {dispatch(postOrderReqest(id, orderId)); setCheckedAccept("1");}}>
             <p>Respond</p>
           </Button>
         ) : null}
