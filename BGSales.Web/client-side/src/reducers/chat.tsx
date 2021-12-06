@@ -6,7 +6,7 @@ import ActionInterfaceChat from "../interfaces/ActionInterfaceChat";
 const initialState:  InitialStateInterfaceChat = {
   chats: [],
   chat: {
-    person: {
+    recivierInfo: {
         userId: "",
         imageUrl: "",
         firstName: "",
