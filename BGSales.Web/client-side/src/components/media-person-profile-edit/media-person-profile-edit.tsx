@@ -19,14 +19,13 @@ const MediaPersonProfileEdit = ({
     firstName: currentUser.profile.firstName,
     secondName: currentUser.profile.secondName,
     nickname: currentUser.profile.nickname,
-    ageAdvertising: currentUser.profile.ageAdvertising,
-    linkChannel: currentUser.profile.linkChannel,
+    urlYouTube: currentUser.profile.urlYouTube,
     activity: currentUser.profile.activity,
     subjects: currentUser.profile.subjects,
-    numberSubscribers: `${currentUser.profile.numberSubscribers}`,
+    subscribers: `${currentUser.profile.subscribers}`,
     ageAudience: `${currentUser.profile.ageAudience}`,
   });
-  // const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
+  const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -35,7 +34,7 @@ const MediaPersonProfileEdit = ({
         errorFlag = true;
       }
     }
-    if (!Number(form["numberSubscribers"])) {
+    if (!Number(form["subscribers"]) || !Number(form["subscribers"])) {
       errorFlag = true;
     }
     const userProfile = {
@@ -44,11 +43,10 @@ const MediaPersonProfileEdit = ({
       nickname: String(form.nickname),
       firstName: String(form.firstName),
       secondName: String(form.secondName),
-      ageAdvertising: String(form.ageAdvertising),
-      linkChannel: String(form.linkChannel),
+      urlYouTube: String(form.urlYouTube),
       activity: String(form.activity),
       subjects: String(form.subjects),
-      numberSubscribers: Number(form.numberSubscribers),
+      subscribers: Number(form.subscribers),
       ageAudience: Number(form.ageAudience),
     };
     if (!errorFlag) {
@@ -60,9 +58,9 @@ const MediaPersonProfileEdit = ({
     let reader = new FileReader();
     let file = e.target.files[0];
     setForm({ ...form, imageUrl: file });
-    // reader.onloadend = () => {
-    //   setFormImg({ imageUrl: reader.result });
-    // };
+    reader.onloadend = () => {
+      setImgResult(reader.result);
+    };
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Blogger") {
@@ -75,7 +73,7 @@ const MediaPersonProfileEdit = ({
           <div className="media-profile-form__file">
             <img
               className="media-profile-form__file__img"
-              src={form.imageUrl ? `${form.imageUrl}.jpg` : imageSrc}
+              src={form.imageUrl ? imgResult : imageSrc}
               alt=""
             />
             <input
@@ -91,7 +89,7 @@ const MediaPersonProfileEdit = ({
                 label="First name"
                 defaultValue={form.firstName}
                 variant="outlined"
-                error={form.firstName === ""}
+                error={!form.firstName}
                 onChange={(e: any) =>
                   setForm({ ...form, firstName: e.target.value })
                 }
@@ -102,7 +100,7 @@ const MediaPersonProfileEdit = ({
                 label="Second name"
                 defaultValue={form.secondName}
                 variant="outlined"
-                error={form.secondName === ""}
+                error={!form.secondName}
                 onChange={(e: any) =>
                   setForm({ ...form, secondName: e.target.value })
                 }
@@ -113,7 +111,7 @@ const MediaPersonProfileEdit = ({
                 label="Nickname"
                 defaultValue={form.nickname}
                 variant="outlined"
-                error={form.nickname === ""}
+                error={!form.nickname}
                 onChange={(e: any) =>
                   setForm({ ...form, nickname: e.target.value })
                 }
@@ -121,23 +119,12 @@ const MediaPersonProfileEdit = ({
             </div>
             <div className="container">
               <TextField
-                label="Age working with advertising"
-                defaultValue={form.ageAdvertising}
-                variant="outlined"
-                error={form.ageAdvertising === ""}
-                onChange={(e: any) =>
-                  setForm({ ...form, ageAdvertising: e.target.value })
-                }
-              />
-            </div>
-            <div className="container">
-              <TextField
                 label="Link to channel"
-                defaultValue={form.linkChannel}
+                defaultValue={form.urlYouTube}
                 variant="outlined"
-                error={form.linkChannel === ""}
+                error={!form.urlYouTube}
                 onChange={(e: any) =>
-                  setForm({ ...form, linkChannel: e.target.value })
+                  setForm({ ...form, urlYouTube: e.target.value })
                 }
               />
             </div>
@@ -149,7 +136,7 @@ const MediaPersonProfileEdit = ({
                 label="Activity"
                 defaultValue={form.activity}
                 variant="outlined"
-                error={form.activity === ""}
+                error={!form.activity}
                 onChange={(e: any) =>
                   setForm({ ...form, activity: e.target.value })
                 }
@@ -159,7 +146,7 @@ const MediaPersonProfileEdit = ({
                   label="Subjects"
                   defaultValue={form.subjects}
                   variant="outlined"
-                  error={form.subjects === ""}
+                  error={!form.subjects}
                   onChange={(e: any) =>
                     setForm({ ...form, subjects: e.target.value })
                   }
@@ -168,14 +155,14 @@ const MediaPersonProfileEdit = ({
               <div className="container">
                 <TextField
                   label="Number of subscribers"
-                  defaultValue={form.numberSubscribers}
+                  defaultValue={form.subscribers}
                   variant="outlined"
                   error={
-                    form.numberSubscribers === "" ||
-                    !Number(form.numberSubscribers)
+                    form.subscribers === "" ||
+                    !Number(form.subscribers)
                   }
                   onChange={(e: any) =>
-                    setForm({ ...form, numberSubscribers: e.target.value })
+                    setForm({ ...form, subscribers: e.target.value })
                   }
                 />
               </div>
@@ -184,7 +171,7 @@ const MediaPersonProfileEdit = ({
                   label="Average age of the audience"
                   defaultValue={form.ageAudience}
                   variant="outlined"
-                  error={form.ageAudience === ""}
+                  error={!form.ageAudience || !Number(form.ageAudience)}
                   onChange={(e: any) =>
                     setForm({ ...form, ageAudience: e.target.value })
                   }

@@ -4,10 +4,9 @@ export default interface MediaProfileInterface {
   nickname: string;
   firstName: string;
   secondName: string;
-  ageAdvertising: string;
-  linkChannel: string;
+  urlYouTube: string;
   activity: string;
   subjects: string;
-  numberSubscribers: number | string;
+  subscribers: number | string;
   ageAudience: number | string;
 }
