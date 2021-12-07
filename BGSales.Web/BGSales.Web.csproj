@@ -17,8 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="client-side\src\assets\Jpg\" />
-    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\Images\Jpg\" />
   </ItemGroup>
 
   <ItemGroup>
