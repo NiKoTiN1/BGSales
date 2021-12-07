@@ -18,6 +18,7 @@ const Chat = ({
   dispatch,
   chat,
   userId,
+  role,
 }: any) => {
   const [ connection, setConnection ] = useState<HubConnection>();
   const [ chated, setChat ] = useState<any>([]);
@@ -49,8 +50,7 @@ const Chat = ({
             .then(result => {
                 console.log('Connected!');
                 connection.on('ReceiveOne', message => {
-                    //setTimeout(()=>{},200);
-                    console.log(message);
+                    setTimeout(()=>{},200);
                     const updatedChat = [...latestChat.current];
                     updatedChat.push(message);
                     dispatch(addMessage(message));
@@ -81,7 +81,9 @@ const Chat = ({
         </li>
     );
   });
-  console.log(chat.recivierInfo);
+  if (role === "") {
+    return <p>Error this page is not available</p>;
+  }
   return (
     <div className="chat-page">
       <ul className="chats">{elements}</ul>
@@ -104,6 +106,7 @@ const mapStateToProps = (state: StateInterface) => {
     chats: state.chat.chats,
     chat: state.chat.chat,
     userId: state.profile.currentUser.profile.userId,
+    role:  state.profile.currentUser.role,
   };
 };
 export default connect(mapStateToProps)(Chat);

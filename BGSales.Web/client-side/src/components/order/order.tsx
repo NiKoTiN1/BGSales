@@ -115,7 +115,7 @@ const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) =>
               elements
             )}
           </ul>
-          {!order.isPaid?<Button className="order__edit-media__btn" variant="outlined" onClick={()=>dispatch(payOrder(order.stripeId, order.orderId))}>
+          {!order.isPaid && order.blogger?<Button className="order__edit-media__btn-pay" variant="outlined" onClick={()=>dispatch(payOrder(order.stripeId, order.orderId))}>
                  Pay order
           </Button> : null}
           

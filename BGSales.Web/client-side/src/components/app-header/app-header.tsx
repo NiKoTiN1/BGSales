@@ -38,6 +38,13 @@ const AppHeader = ({
               >
                 Selected Projects
               </Link>
+              <Link
+                className="header__link projects"
+                to="/projects/acceptedProjects"
+                onClick={() => dispatch(addNameOrderUrl("acceptedProjects"))}
+              >
+                Accepted Projects
+              </Link>
             </>
           ) : (
             <>
@@ -50,7 +57,7 @@ const AppHeader = ({
                 onClick={() => dispatch(addNameOrderUrl("myProjects"))}
               >
                 My Projects
-              </Link>{" "}
+              </Link>
             </>
           )}
           <Link className="header__link notification" to="/chat">

@@ -278,7 +278,7 @@ const postOrderAccept = (
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {})
+      .then((data: any) => {dispatch(getOrder(orderId))})
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
@@ -313,7 +313,7 @@ const postOrderReqest = (userId: string, orderId: string) => {
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {getOrders(userId, "all")})
+      .then((data: any) => {dispatch(getOrders(userId, "all"))})
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
@@ -462,7 +462,7 @@ const deleteOrder = (id: string, idOrder: string) => {
   };
 };
 
-const postOrder = (order: AddOrderInterface, id: string, name: string) => {
+const postOrder = (order: AddOrderInterface, id: string) => {
   const token = localStorage.getItem("accessToken");
   const formCheck = new FormData();
   return (dispatch: Function) => {
@@ -477,14 +477,14 @@ const postOrder = (order: AddOrderInterface, id: string, name: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        dispatch(getOrders(id, name));
+        dispatch(getOrders(id, "all"));
       })
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
             .then((data: any) => {
               addToken(data.data);
-              dispatch(postOrder(order, id, name));
+              dispatch(postOrder(order, id));
             })
             .catch(() => {
               localStorage.removeItem("accessToken");

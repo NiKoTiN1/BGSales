@@ -40,6 +40,11 @@ const Orders = ({
       currentUser.role === "Blogger"
     ) {
       nameReqest = "requested";
+    } else if (
+      nameOrderUrl === "acceptedProjects" &&
+      currentUser.role === "Blogger"
+    ) {
+      nameReqest = "accepted";
     }
     dispatch(deleteOrders());
     dispatch(getOrders(currentUser.profile.userId, nameReqest));
