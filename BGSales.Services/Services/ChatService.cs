@@ -67,11 +67,11 @@ namespace BGSales.Services.Services
 
             if (currentUserId == chat.Businessman.UserId)
             {
-                chatModel.RecivierInfo = _mapper.Map<UserViewModel>(chat.Businessman.User);
+                chatModel.RecivierInfo = _mapper.Map<UserViewModel>(chat.Blogger.User);
             }
             else
             {
-                chatModel.RecivierInfo = _mapper.Map<UserViewModel>(chat.Blogger.User);
+                chatModel.RecivierInfo = _mapper.Map<UserViewModel>(chat.Businessman.User);
             }
 
             var messages = _messageService.GetChatMessages(chatId, currentUserId);
@@ -114,7 +114,7 @@ namespace BGSales.Services.Services
 
                 foreach (var chat in chats)
                 {
-                    var imageUrl = string.IsNullOrEmpty(chat.Businessman.User.AvatarId) ? chat.Businessman.User.Avatar.Path : null;
+                    var imageUrl = !string.IsNullOrEmpty(chat.Businessman.User.AvatarId) ? chat.Businessman.User.Avatar.Path : null;
                     var model = new PartialChatViewModel()
                     {
                         ChatId = chat.Id,
@@ -133,7 +133,7 @@ namespace BGSales.Services.Services
 
                 foreach (var chat in chats)
                 {
-                    var imageUrl = string.IsNullOrEmpty(chat.Blogger.User.AvatarId) ? chat.Blogger.User.Avatar.Path : null;
+                    var imageUrl = !string.IsNullOrEmpty(chat.Blogger.User.AvatarId) ? chat.Blogger.User.Avatar.Path : null;
                     var model = new PartialChatViewModel()
                     {
                         ChatId = chat.Id,
