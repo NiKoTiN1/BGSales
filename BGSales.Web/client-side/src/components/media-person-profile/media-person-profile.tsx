@@ -28,7 +28,7 @@ const MediaPersonProfile = ({
   }
   const chekedChatId = () => {
     if(!selectedProfile.chatId){
-      dispatch(joinChat(profile.userId,selectedProfile.userId))
+      dispatch(joinChat(selectedProfile.userId, profile.userId))
     }else{
       history.push(`/chat/${selectedProfile.chatId}`);
     }

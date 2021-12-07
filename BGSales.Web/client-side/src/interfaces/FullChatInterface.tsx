@@ -2,6 +2,6 @@ import MessagesInterface from "./MessagesInterface";
 import PersonInterface from "./PersonInterface";
 
 export default interface FullChatInterface{
-    person: PersonInterface,
+    recivierInfo: PersonInterface,
     messages: Array<MessagesInterface>,
 }

@@ -46,7 +46,7 @@ const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) =>
   }
   const chekedChatId = () => {
     if(!order.chatId){
-      dispatch(joinChat(profile.userId,selectedProfile.userId))
+      dispatch(joinChat(profile.userId, order.advitiser.userId))
     }else{
       history.push(`/chat/${order.chatId}`);
     }

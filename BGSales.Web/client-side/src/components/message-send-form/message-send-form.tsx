@@ -14,22 +14,23 @@ const MessageSendForm = ({userId, chatId, dispatch}: Props) =>{
     const onSubmit = (e:any) => {
         e.preventDefault();
         dispatch(sendMessage(userId, value, chatId,));
+        setValue("");
     }
    
         return (
             <form 
-                className="bottom-panel d-flex"
+                className="input-form"
                 onSubmit={onSubmit}>
                 <input
                     type="text"
                     placeholder="Write now"
-                    className="form-control new-post-label"
+                    className="input-form__input"
                     onChange={(e)=>setValue(e.target.value)}
                     value={value}
                 />
                 <button
                     type="submit"
-                    className="btn btn-outline-secondary">
+                    className="input-form__btn">
                     Send
                     </button>
             </form>

@@ -10,6 +10,8 @@ import MessageSendForm from "../message-send-form";
 import ChatInterface from "../../interfaces/ChatInterface";
 import MessagesInterface from "../../interfaces/MessagesInterface";
 import { HttpTransportType, HubConnection, HubConnectionBuilder} from '@microsoft/signalr';
+import { imageSrc } from "../../imageRequire";
+
 const Chat = ({
   chatId,
   chats,
@@ -47,7 +49,8 @@ const Chat = ({
             .then(result => {
                 console.log('Connected!');
                 connection.on('ReceiveOne', message => {
-                    setTimeout(()=>{},20);
+                    //setTimeout(()=>{},200);
+                    console.log(message);
                     const updatedChat = [...latestChat.current];
                     updatedChat.push(message);
                     dispatch(addMessage(message));
@@ -56,13 +59,17 @@ const Chat = ({
             })
             .catch(e => console.log('Connection failed: ', e));
     }
+    else {
+      console.log("No");
+    }
 }, [connection]);
   const elements = chats.map((item: ChatInterface) => {
     return (
-      <Link to={`/chat/${item.chatId}`}>
-        <li key={item.userId+"12dfk;bdf"}>
-          <p>{item.firstName}</p>
-          <p>{item.secondName}</p>
+      <Link className="chats__person-link"to={`/chat/${item.chatId}`}>
+        <li className="chats__person"key={item.userId+"12dfk;bdf"}>
+          <img className="chats__person__img" src={item.imageUrl?item.imageUrl:imageSrc} alt=""/>
+          <p className="chats__person__name">{item.firstName}</p>
+          <p className="chats__person__name">{item.secondName}</p>
         </li>
       </Link>
     );
@@ -74,10 +81,16 @@ const Chat = ({
         </li>
     );
   });
+  console.log(chat.recivierInfo);
   return (
     <div className="chat-page">
       <ul className="chats">{elements}</ul>
       <div className="chat">
+        <div className="chat__header">
+          <img className="chat__header__img" src={chat.recivierInfo.imageUrl?chat.recivierInfo.imageUrl:imageSrc} alt=""/>
+          <p className="chat__header__name">{chat.recivierInfo.firstName}</p>
+          <p className="chat__header__name">{chat.recivierInfo.secondName}</p>
+        </div>
         <ul className="chat__message">  {messages}</ul>
         <MessageSendForm chatId={chatId} userId={userId}/>
       </div>
