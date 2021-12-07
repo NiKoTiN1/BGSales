@@ -180,8 +180,8 @@ namespace BGSales.Web.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = domain + "/projects/myProjects/" + paymentModel.OrderId,
-                CancelUrl = domain + "/projects/myProjects/" + paymentModel.OrderId,
+                SuccessUrl = domain + "projects/myProjects/" + paymentModel.OrderId,
+                CancelUrl = domain + "projects/myProjects/" + paymentModel.OrderId,
             };
             var service = new SessionService();
             var session = service.Create(options);
