@@ -44,7 +44,7 @@ namespace BGSales.Services.Services
                 }
             }
 
-            var imageModel = _mapper.Map<Image>(url);
+            var imageModel = _mapper.Map<Image>(imageName + ".jpg");
             await _imageRepository.Add(imageModel);
 
             return imageModel;
