@@ -19,10 +19,10 @@ const CreateOrder = ({
   role,
 }: CreateOrderInterface) => {
   const [form, setForm] = useState<FormInterface>({
-    title: order.title,
-    audienceAge: `${order.audienceAge}`,
-    description: order.description,
-    budget: `${order.budget}`,
+    title: "",
+    audienceAge: "0",
+    description: "",
+    budget: "0",
   });
   const submitForm = (e: any) => {
     e.preventDefault();
@@ -39,7 +39,8 @@ const CreateOrder = ({
       budget: Number(form.budget),
     };
     if (!errorFlag) {
-      dispatch(postOrder(newOrder, userId, nameOrderUrl));
+      dispatch(postOrder(newOrder, userId));
+      setForm({ ...form, title: "" });
       history.goBack();
     }
   };
