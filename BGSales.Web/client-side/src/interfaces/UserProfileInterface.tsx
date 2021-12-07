@@ -5,12 +5,11 @@ export default interface UserProfileInterface {
   nickname: string;
   firstName: string;
   secondName: string;
-  ageAdvertising: string;
-  linkChannel: string;
+  urlYouTube: string;
   ordersCompleted: number | string;
   activity: string;
   subjects: string;
-  numberSubscribers: number | string;
+  subscribers: number | string;
   ageAudience: number | string;
   nameCompany: string;
   ordersCount: number | string;

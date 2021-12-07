@@ -32,6 +32,9 @@ const CreateOrder = ({
         errorFlag = true;
       }
     }
+    if (!Number(form["audienceAge"]) || !Number(form["budget"])) {
+      errorFlag = true;
+    }
     const newOrder = {
       title: String(form.title),
       audienceAge: Number(form.audienceAge),
@@ -69,7 +72,8 @@ const CreateOrder = ({
               <TextField
                 defaultValue={form.audienceAge}
                 variant="outlined"
-                error={form.audienceAge === ""}
+                error={!form.audienceAge ||
+                  !Number(form.audienceAge)}
                 onChange={(e: any) =>
                   setForm({ ...form, audienceAge: e.target.value })
                 }
@@ -80,7 +84,8 @@ const CreateOrder = ({
               <TextField
                 defaultValue={form.budget}
                 variant="outlined"
-                error={form.budget === ""}
+                error={!form.budget ||
+                  !Number(form.budget)}
                 onChange={(e: any) =>
                   setForm({ ...form, budget: e.target.value })
                 }

@@ -313,7 +313,7 @@ const postOrderReqest = (userId: string, orderId: string) => {
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
-      .then((data: any) => {dispatch(getOrders(userId, "all"))})
+      .then((data: any) => {dispatch(getOrders(userId, "available"))})
       .catch((data: any) => {
         if (data.response.status === 401) {
           refreshToken()
@@ -532,6 +532,7 @@ const getProfileData = () => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
+        console.log(data.data);
         dispatch(changeProfile(data.data));
         dispatch(addSelectedProfile(data.data));
       })
@@ -587,17 +588,12 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
     formCheck.append("FirstName", changedProfile.firstName);
     formCheck.append("SecondName", changedProfile.secondName);
     formCheck.append("Nickname", changedProfile.nickname);
-    formCheck.append("UrlYouTube", changedProfile.linkChannel);
+    formCheck.append("UrlYouTube", changedProfile.urlYouTube);
     formCheck.append("ImageFile", changedProfile.imageUrl);
     formCheck.append("Activity", changedProfile.activity);
     formCheck.append("Subjects", changedProfile.subjects);
-    formCheck.append("Subscribers", String(changedProfile.numberSubscribers));
+    formCheck.append("Subscribers", String(changedProfile.subscribers));
     formCheck.append("AgeAudience", String(changedProfile.ageAudience));
-    formCheck.append(
-      "BloggerExperience",
-      String(changedProfile.ageAdvertising)
-    );
-    console.log(changedProfile.imageUrl);
     axios({
       method: "PUT",
       url: "https://localhost:5001/api/Account/update/blogger",

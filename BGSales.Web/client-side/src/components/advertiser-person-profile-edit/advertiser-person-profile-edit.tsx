@@ -21,9 +21,7 @@ const AdvertiserPersonProfileEdit = ({
     secondName: currentUser.profile.secondName,
     nameCompany: currentUser.profile.nameCompany,
   });
-  // const [formImg, setFormImg] = useState({
-  //   imageUrl: currentUser.profile.imageUrl,
-  // });
+  const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
     let errorFlag = false;
@@ -48,9 +46,9 @@ const AdvertiserPersonProfileEdit = ({
     let reader = new FileReader();
     let file = e.target.files[0];
     setForm({ ...form, imageUrl: file });
-    // reader.onloadend = () => {
-    //   setFormImg({ imageUrl: reader.result });
-    // };
+    reader.onloadend = () => {
+      setImgResult(reader.result);
+    };
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Businessman") {
@@ -63,7 +61,7 @@ const AdvertiserPersonProfileEdit = ({
           <div className="advertiser-profile-form__file">
             <img
               className="advertiser-profile-form__file__img"
-              src={form.imageUrl ? form.imageUrl : imageSrc}
+              src={form.imageUrl ? imgResult : imageSrc}
               alt=""
             />
             <input
@@ -79,7 +77,7 @@ const AdvertiserPersonProfileEdit = ({
                 label="First name"
                 defaultValue={form.firstName}
                 variant="outlined"
-                error={form.firstName === ""}
+                error={!form.firstName}
                 onChange={(e: any) =>
                   setForm({ ...form, firstName: e.target.value })
                 }
@@ -90,7 +88,7 @@ const AdvertiserPersonProfileEdit = ({
                 label="Second name"
                 defaultValue={form.secondName}
                 variant="outlined"
-                error={form.secondName === ""}
+                error={!form.secondName}
                 onChange={(e: any) =>
                   setForm({ ...form, secondName: e.target.value })
                 }
@@ -101,7 +99,7 @@ const AdvertiserPersonProfileEdit = ({
                 label="Name Company"
                 defaultValue={form.nameCompany}
                 variant="outlined"
-                error={form.nameCompany === ""}
+                error={!form.nameCompany}
                 onChange={(e: any) =>
                   setForm({ ...form, nameCompany: e.target.value })
                 }

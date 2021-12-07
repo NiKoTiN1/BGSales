@@ -51,31 +51,23 @@ const MediaPersonProfile = ({
           <div className="information__name col-1">
             <p>First name:</p>
             <p>Second name:</p>
-            <p>Age of working in media:</p>
             <p>Link to channel:</p>
             <p>Number of completed orders:</p>
           </div>
           <div className="information__name col-2">
             <p>{selectedProfile.firstName}</p>
             <p>{selectedProfile.secondName}</p>
-            <p>
-              {selectedProfile.ageAdvertising
-                ? selectedProfile.ageAdvertising
-                : "empty"}
-            </p>
             <a
               href={
-                selectedProfile.linkChannel
-                  ? selectedProfile.linkChannel
+                selectedProfile.urlYouTube
+                  ? selectedProfile.urlYouTube
                   : "empty"
               }
             >
               link to channel/page
             </a>
             <p>
-              {selectedProfile.ordersCompleted
-                ? selectedProfile.ordersCompleted
-                : "empty"}
+              {selectedProfile.ordersCompleted}
             </p>
           </div>
         </div>
@@ -94,8 +86,8 @@ const MediaPersonProfile = ({
           <p>{selectedProfile.activity ? selectedProfile.activity : "empty"}</p>
           <p>{selectedProfile.subjects ? selectedProfile.subjects : "empty"}</p>
           <p>
-            {selectedProfile.numberSubscribers
-              ? selectedProfile.numberSubscribers
+            {selectedProfile.subscribers
+              ? selectedProfile.subscribers
               : "empty"}
           </p>
           <p>
