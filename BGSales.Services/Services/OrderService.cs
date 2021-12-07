@@ -188,7 +188,7 @@ namespace BGSales.Services.Services
             order.BloggerId = blogger.Id;
 
             var productId = _stripeService.CreateProduct(order.Id);
-            var priceId = _stripeService.CreatePrice(productId, Convert.ToInt64(order.Budget));
+            var priceId = _stripeService.CreatePrice(productId, Convert.ToInt64(order.Budget * 100));
 
             order.StripeId = priceId;
 
