@@ -6,10 +6,10 @@ namespace BGSales.Services.Interfaces
 {
     public interface IBusinessmanService
     {
-        public Task CreateBusinessman(ApplicationUser user);
+        public Task CreateBusinessman(RegistrationViewModel model);
         public BusinessmanViewModel Get(ApplicationUser user);
         public Businessman GetByUserId(string userId);
         public Businessman GetByBusinessmanId(string id);
-        public Task<BusinessmanViewModel> Update(UpdateBusinessmanViewModel model);
+        public Task<BusinessmanViewModel> Update(UpdateBusinessmanViewModel model, string rootPath);
     }
 }

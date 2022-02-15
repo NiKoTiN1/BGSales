@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BGSales.Domain.Models;
+using BGSales.Services.Dtos.User;
 using BGSales.Services.Interfaces;
-using BGSales.Views.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -50,15 +50,10 @@ namespace BGSales.Services.Services
             return _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Success;
         }
 
-        public async Task<ApplicationUser> CreateUser(RegistrationViewModel model)
+        public async Task<ApplicationUser> CreateUser(RegistrationDto registrationDto)
         {
-            var user = _mapper.Map<ApplicationUser>(model);
-            var stripeInfo = _mapper.Map<StripeInfo>(user);
-
-            stripeInfo.UserId = user.Id;
-            user.StripeInfo = stripeInfo;
-
-            var creatingResult = await _userManager.CreateAsync(user, model.Password);
+            var user = _mapper.Map<ApplicationUser>(registrationDto);
+            var creatingResult = await _userManager.CreateAsync(user, registrationDto.Model.Password);
 
             if (!creatingResult.Succeeded)
             {
@@ -67,16 +62,11 @@ namespace BGSales.Services.Services
 
             try
             {
-                if (user.UserType == UserType.Blogger)
-                {
-                    await _bloggerService.CreateBlogger(user);
-                    await AddRoleToUser(user, Roles.Blogger);
-                }
-                else
-                {
-                    await _businessmanService.CreateBusinessman(user);
-                    await AddRoleToUser(user, Roles.Businessman);
-                }
+                var role = user.UserType == UserType.Blogger
+                    ? Roles.Blogger
+                    : Roles.Businessman;
+
+                await AddRoleToUser(user, role);
             }
             catch
             {
@@ -90,62 +80,6 @@ namespace BGSales.Services.Services
         {
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
-        }
-
-        public async Task<BloggerViewModel> UpdateBlogger(UpdateBloggerViewModel model, string rootPath)
-        {
-            var user = await GetById(model.UserId);
-
-            if (user == null)
-            {
-                throw new Exception("Cannot find user!");
-            }
-
-            var updatedUser = _mapper.Map(model, user);
-
-            if (model.ImageFile != null)
-            {
-                var image = await _imageService.CreateImage(rootPath, model.ImageFile);
-                updatedUser.AvatarId = image.Id;
-            }
-
-            var userUpdateResult = await _userManager.UpdateAsync(user);
-            var updatedModel = await _bloggerService.Update(model);
-
-            if (!userUpdateResult.Succeeded)
-            {
-                throw new Exception("Error during user update.");
-            }
-
-            return updatedModel;
-        }
-
-        public async Task<BusinessmanViewModel> UpdateBusinessman(UpdateBusinessmanViewModel model, string rootPath)
-        {
-            var user = await GetById(model.UserId);
-
-            if (user == null)
-            {
-                throw new Exception("Cannot find user!");
-            }
-
-            var updatedUser = _mapper.Map(model, user);
-
-            if (model.ImageFile != null)
-            {
-                var image = await _imageService.CreateImage(rootPath, model.ImageFile);
-                updatedUser.AvatarId = image.Id;
-            }
-
-            var userUpdateResult = await _userManager.UpdateAsync(user);
-            var updatedModel = await _businessmanService.Update(model);
-
-            if (!userUpdateResult.Succeeded)
-            {
-                throw new Exception("Error during user update.");
-            }
-
-            return updatedModel;
         }
 
         public async Task<bool> IsInRole(ApplicationUser user, Roles role)

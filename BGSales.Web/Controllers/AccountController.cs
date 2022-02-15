@@ -200,7 +200,7 @@ namespace BGSales.Web.Controllers
                 throw new Exception("You cannot update this profile.");
             }
 
-            var updatedModel = await _accountService.UpdateBlogger(viewModel, _appEnvironment.ContentRootPath);
+            var updatedModel = await _bloggerService.Update(viewModel, _appEnvironment.ContentRootPath);
 
             return Ok(updatedModel);
         }
@@ -222,7 +222,7 @@ namespace BGSales.Web.Controllers
                 throw new Exception("You cannot update this profile.");
             }
 
-            var updatedModel = await _accountService.UpdateBusinessman(viewModel, _appEnvironment.ContentRootPath);
+            var updatedModel = await _businessmanService.Update(viewModel, _appEnvironment.ContentRootPath);
 
             return Ok(updatedModel);
         }
