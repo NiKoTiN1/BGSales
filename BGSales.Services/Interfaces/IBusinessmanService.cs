@@ -6,7 +6,7 @@ namespace BGSales.Services.Interfaces
 {
     public interface IBusinessmanService
     {
-        public Task CreateBusinessman(RegistrationViewModel model);
+        public Task<ApplicationUser> CreateBusinessman(RegistrationViewModel model);
         public BusinessmanViewModel Get(ApplicationUser user);
         public Businessman GetByUserId(string userId);
         public Businessman GetByBusinessmanId(string id);

@@ -28,7 +28,7 @@ namespace BGSales.Services.Services
         private readonly IImageService _imageService;
         private readonly IMapper _mapper;
 
-        public async Task CreateBusinessman(RegistrationViewModel model)
+        public async Task<ApplicationUser> CreateBusinessman(RegistrationViewModel model)
         {
             var registrationDto = new RegistrationDto()
             {
@@ -40,6 +40,8 @@ namespace BGSales.Services.Services
             var businessman = _mapper.Map<Businessman>(user);
 
             await _businessmanRepository.Add(businessman);
+
+            return user;
         }
 
         public BusinessmanViewModel Get(ApplicationUser user)

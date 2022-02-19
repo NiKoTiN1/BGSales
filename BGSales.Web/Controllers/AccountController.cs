@@ -41,36 +41,6 @@ namespace BGSales.Web.Controllers
         private readonly IChatService _chatService;
 
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromForm] RegistrationViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model error!");
-            }
-
-            var user = await _accountService.CreateUser(model);
-
-            if (user == null)
-            {
-                return BadRequest("User with this username is already created!");
-            }
-
-            user.RefreshToken = _tokenService.GenerateRefreshToken();
-            var isUpdated = await _accountService.UpdateUser(user);
-
-            if (!isUpdated)
-            {
-                BadRequest("User cannot set refresh error!");
-            }
-
-            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
-            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
-
-            return Ok(tokenModel);
-        }
-
-        [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromForm] LoginViewModel model)
         {

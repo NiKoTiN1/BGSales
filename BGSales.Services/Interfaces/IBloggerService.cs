@@ -7,7 +7,7 @@ namespace BGSales.Services.Interfaces
 {
     public interface IBloggerService
     {
-        public Task CreateBlogger(RegistrationViewModel model);
+        public Task<ApplicationUser> CreateBlogger(RegistrationViewModel model);
         public BloggerViewModel Get(ApplicationUser user);
         public Blogger GetByUserId(string userId);
         public List<BloggerPartialViewModel> GetAllBloggers();

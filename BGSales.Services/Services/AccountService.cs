@@ -12,23 +12,14 @@ namespace BGSales.Services.Services
     {
         public AccountService(
             UserManager<ApplicationUser> userManager,
-            IMapper mapper,
-            IBusinessmanService businessmanService,
-            IBloggerService bloggerService,
-            IImageService imageService)
+            IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _businessmanService = businessmanService;
-            _bloggerService = bloggerService;
-            _imageService = imageService;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly IBusinessmanService _businessmanService;
-        private readonly IBloggerService _bloggerService;
-        private readonly IImageService _imageService;
 
         public async Task<ApplicationUser> GetByEmail(string email)
         {

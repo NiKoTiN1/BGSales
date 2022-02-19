@@ -29,7 +29,7 @@ namespace BGSales.Services.Services
         private readonly IImageService _imageService;
         private readonly IMapper _mapper;
 
-        public async Task CreateBlogger(RegistrationViewModel model)
+        public async Task<ApplicationUser> CreateBlogger(RegistrationViewModel model)
         {
             var registrationDto = new RegistrationDto()
             {
@@ -41,6 +41,8 @@ namespace BGSales.Services.Services
             var blogger = _mapper.Map<Blogger>(user);
 
             await _bloggerRepository.Add(blogger);
+
+            return user;
         }
 
         public BloggerViewModel Get(ApplicationUser user)

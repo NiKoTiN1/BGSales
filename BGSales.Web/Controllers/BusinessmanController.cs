@@ -3,25 +3,23 @@ using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BGSales.Web.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route("api/[controller]")]
-    public class BloggerController : Controller
+    public class BusinessmanController : Controller
     {
-        public BloggerController(IBloggerService bloggerService,
+        private readonly IBusinessmanService _businessmanService;
+        private readonly IMapper _mapper;
+        public BusinessmanController(IBusinessmanService businessmanService,
             IMapper mapper)
         {
-            _bloggerService = bloggerService;
+            _businessmanService = businessmanService;
             _mapper = mapper;
         }
-
-        private readonly IBloggerService _bloggerService;
-        private readonly IMapper _mapper;
 
         [AllowAnonymous]
         [HttpPost]
@@ -33,7 +31,7 @@ namespace BGSales.Web.Controllers
                 return BadRequest("Model error!");
             }
 
-            var user = await _bloggerService.CreateBlogger(model);
+            var user = await _businessmanService.CreateBusinessman(model);
 
             if (user == null)
             {
@@ -43,22 +41,6 @@ namespace BGSales.Web.Controllers
             var loginModel = _mapper.Map<LoginViewModel>(model);
 
             return RedirectToAction("Login", "Account", loginModel);
-        }
-
-        [HttpGet]
-        [Route("all")]
-        public IActionResult GetAllBloggers()
-        {
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
-
-            if (string.IsNullOrEmpty(userIdClaim.Value))
-            {
-                return Unauthorized();
-            }
-
-            var model = _bloggerService.GetAllBloggers();
-
-            return Ok(model);
         }
     }
 }
