@@ -13,15 +13,18 @@ namespace BGSales.Web.Controllers
     [Route("api/[controller]")]
     public class BloggerController : Controller
     {
+        private readonly IBloggerService _bloggerService;
+        private readonly IAccountService _accountService;
+        private readonly IMapper _mapper;
+
         public BloggerController(IBloggerService bloggerService,
+            IAccountService accountService,
             IMapper mapper)
         {
             _bloggerService = bloggerService;
             _mapper = mapper;
+            _accountService = accountService;
         }
-
-        private readonly IBloggerService _bloggerService;
-        private readonly IMapper _mapper;
 
         [AllowAnonymous]
         [HttpPost]
@@ -41,8 +44,9 @@ namespace BGSales.Web.Controllers
             }
 
             var loginModel = _mapper.Map<LoginViewModel>(model);
+            var tokenModel = await _accountService.GenerateToken(user);
 
-            return RedirectToAction("Login", "Account", loginModel);
+            return Ok(tokenModel);
         }
 
         [HttpGet]

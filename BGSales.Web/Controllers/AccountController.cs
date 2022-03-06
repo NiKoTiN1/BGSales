@@ -16,7 +16,6 @@ namespace BGSales.Web.Controllers
     public class AccountController : Controller
     {
         public AccountController(IAccountService accountService,
-            ITokenService tokenService,
             IMapper mapper,
             IBloggerService bloggerService,
             IBusinessmanService businessmanService,
@@ -24,7 +23,6 @@ namespace BGSales.Web.Controllers
             IChatService chatService)
         {
             _accountService = accountService;
-            _tokenService = tokenService;
             _mapper = mapper;
             _bloggerService = bloggerService;
             _businessmanService = businessmanService;
@@ -33,7 +31,6 @@ namespace BGSales.Web.Controllers
         }
 
         private readonly IAccountService _accountService;
-        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IBloggerService _bloggerService;
         private readonly IBusinessmanService _businessmanService;
@@ -51,16 +48,7 @@ namespace BGSales.Web.Controllers
                 return BadRequest("Invalid email or password.");
             }
 
-            user.RefreshToken = _tokenService.GenerateRefreshToken();
-            var isUpdated = await _accountService.UpdateUser(user);
-
-            if (!isUpdated)
-            {
-                BadRequest("User cannot set refresh error!");
-            }
-
-            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
-            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
+            var tokenModel = await _accountService.GenerateToken(user);
 
             return Ok(tokenModel);
         }

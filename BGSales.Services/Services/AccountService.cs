@@ -2,6 +2,7 @@
 using BGSales.Domain.Models;
 using BGSales.Services.Dtos.User;
 using BGSales.Services.Interfaces;
+using BGSales.Views.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -10,16 +11,34 @@ namespace BGSales.Services.Services
 {
     public class AccountService : IAccountService
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
+
         public AccountService(
             UserManager<ApplicationUser> userManager,
-            IMapper mapper)
+            IMapper mapper,
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
+        public async Task<TokenViewModel> GenerateToken(ApplicationUser user)
+        {
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+            var isUpdated = await UpdateUser(user);
+
+            if (!isUpdated)
+            {
+                throw new Exception("User cannot set refresh error!");
+            }
+
+            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
+            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
+            return tokenModel;
+        }
 
         public async Task<ApplicationUser> GetByEmail(string email)
         {
