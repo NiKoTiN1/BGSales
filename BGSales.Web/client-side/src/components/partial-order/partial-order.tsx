@@ -47,11 +47,15 @@ const PartialOrder = ({
           </Button>
         ) : window.location.href.slice(
             window.location.href.lastIndexOf("/") + 1
-          ) !== "selectedProjects" && checkedAccept === null ?(
+          ) !== "selectedProjects" && checkedAccept === null ? (
           <Button
             className="order-partial-info__container__btn-delete btn"
             variant="contained"
-            onClick={() => {dispatch(postOrderReqest(id, orderId)); setCheckedAccept("1");}}>
+            onClick={() => {
+              dispatch(postOrderReqest(id, orderId));
+              setCheckedAccept("1");
+            }}
+          >
             <p>Respond</p>
           </Button>
         ) : null}

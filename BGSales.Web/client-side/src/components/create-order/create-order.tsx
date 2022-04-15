@@ -72,8 +72,7 @@ const CreateOrder = ({
               <TextField
                 defaultValue={form.audienceAge}
                 variant="outlined"
-                error={!form.audienceAge ||
-                  !Number(form.audienceAge)}
+                error={!form.audienceAge || !Number(form.audienceAge)}
                 onChange={(e: any) =>
                   setForm({ ...form, audienceAge: e.target.value })
                 }
@@ -84,8 +83,7 @@ const CreateOrder = ({
               <TextField
                 defaultValue={form.budget}
                 variant="outlined"
-                error={!form.budget ||
-                  !Number(form.budget)}
+                error={!form.budget || !Number(form.budget)}
                 onChange={(e: any) =>
                   setForm({ ...form, budget: e.target.value })
                 }
