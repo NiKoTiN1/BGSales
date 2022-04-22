@@ -2,7 +2,9 @@
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,15 +17,15 @@ namespace BGSales.Web.Controllers
     {
         private readonly IBloggerService _bloggerService;
         private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _appEnvironment;
 
         public BloggerController(IBloggerService bloggerService,
             IAccountService accountService,
-            IMapper mapper)
+            IWebHostEnvironment appEnvironment)
         {
             _bloggerService = bloggerService;
-            _mapper = mapper;
             _accountService = accountService;
+            _appEnvironment = appEnvironment;
         }
 
         [AllowAnonymous]
@@ -43,7 +45,6 @@ namespace BGSales.Web.Controllers
                 return BadRequest("User with this username is already created!");
             }
 
-            var loginModel = _mapper.Map<LoginViewModel>(model);
             var tokenModel = await _accountService.GenerateToken(user);
 
             return Ok(tokenModel);
@@ -63,6 +64,28 @@ namespace BGSales.Web.Controllers
             var model = _bloggerService.GetAllBloggers();
 
             return Ok(model);
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("update")]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBloggerViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            if (viewModel.UserId != userIdClaim.Value)
+            {
+                throw new Exception("You cannot update this profile.");
+            }
+
+            var updatedModel = await _bloggerService.Update(viewModel, _appEnvironment.ContentRootPath);
+
+            return Ok(updatedModel);
         }
     }
 }

@@ -2,7 +2,10 @@
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BGSales.Web.Controllers
@@ -13,12 +16,16 @@ namespace BGSales.Web.Controllers
     public class BusinessmanController : Controller
     {
         private readonly IBusinessmanService _businessmanService;
-        private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _appEnvironment;
+        private readonly IAccountService _accountService;
+
         public BusinessmanController(IBusinessmanService businessmanService,
-            IMapper mapper)
+            IWebHostEnvironment appEnvironment,
+            IAccountService accountService)
         {
             _businessmanService = businessmanService;
-            _mapper = mapper;
+            _appEnvironment = appEnvironment;
+            _accountService = accountService;
         }
 
         [AllowAnonymous]
@@ -38,9 +45,31 @@ namespace BGSales.Web.Controllers
                 return BadRequest("User with this username is already created!");
             }
 
-            var loginModel = _mapper.Map<LoginViewModel>(model);
+            var tokenModel = await _accountService.GenerateToken(user);
 
-            return RedirectToAction("Login", "Account", loginModel);
+            return Ok(tokenModel);
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("update")]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBusinessmanViewModel viewModel)
+        {
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
+
+            if (string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return Unauthorized();
+            }
+
+            if (viewModel.UserId != userIdClaim.Value)
+            {
+                throw new Exception("You cannot update this profile.");
+            }
+
+            var updatedModel = await _businessmanService.Update(viewModel, _appEnvironment.ContentRootPath);
+
+            return Ok(updatedModel);
         }
     }
 }
