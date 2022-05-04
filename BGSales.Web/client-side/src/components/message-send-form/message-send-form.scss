@@ -1,22 +1,22 @@
-.input-form{
-   &__input{
-      padding: 0px 20px;
-      border-radius: 20px;
-      height: 30px;
-      width: 80%;
-      border: 2px solid mediumturquoise;
-      margin-bottom: 20px;
-   }
-   &__btn{
-      margin-left: 20px;
-      border-radius: 20px;
-      width: 80px;
-      height: 35px;
-      border: 2px solid mediumturquoise;
-      margin-bottom: 20px;
-      background-color: rgba(46, 201, 228, 0.37);
-      &:hover{
-         background-color: rgb(93, 139, 224);
-      }
-   }
+.input-form {
+  &__input {
+    padding: 0px 20px;
+    border-radius: 20px;
+    height: 30px;
+    width: 80%;
+    border: 2px solid mediumturquoise;
+    margin-bottom: 20px;
+  }
+  &__btn {
+    margin-left: 20px;
+    border-radius: 20px;
+    width: 80px;
+    height: 35px;
+    border: 2px solid mediumturquoise;
+    margin-bottom: 20px;
+    background-color: rgba(46, 201, 228, 0.37);
+    &:hover {
+      background-color: rgb(93, 139, 224);
+    }
+  }
 }

@@ -59,7 +59,7 @@ const Orders = ({
             history.push(`${nameOrderUrl}/${orderId}`);
           }}
         />
-        {currentUser.role === "Businessman" && !item.acceptedUserId? (
+        {currentUser.role === "Businessman" && !item.acceptedUserId ? (
           <p className="list-orders__item-order__notif">{item.requests}</p>
         ) : null}
       </li>

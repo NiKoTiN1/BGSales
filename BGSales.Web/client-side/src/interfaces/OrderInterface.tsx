@@ -13,5 +13,5 @@ export default interface OrderInterface {
   createDate: string;
   advitiser: AdvertiserInterface;
   isPaid: boolean;
-  stripeId: string; 
+  stripeId: string;
 }

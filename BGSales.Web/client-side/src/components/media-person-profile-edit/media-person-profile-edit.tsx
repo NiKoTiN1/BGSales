@@ -157,10 +157,7 @@ const MediaPersonProfileEdit = ({
                   label="Number of subscribers"
                   defaultValue={form.subscribers}
                   variant="outlined"
-                  error={
-                    form.subscribers === "" ||
-                    !Number(form.subscribers)
-                  }
+                  error={form.subscribers === "" || !Number(form.subscribers)}
                   onChange={(e: any) =>
                     setForm({ ...form, subscribers: e.target.value })
                   }

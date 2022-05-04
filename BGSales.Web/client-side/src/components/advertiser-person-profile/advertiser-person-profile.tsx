@@ -7,7 +7,7 @@ import { imageSrc } from "../../imageRequire";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import StateInterface from "../../interfaces/StateInterface";
 import { getProfileData, getNewProfileData, joinChat } from "../../actions";
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory } from "history";
 const AdvertiserPersonProfile = ({
   profile,
   dispatch,
@@ -62,9 +62,7 @@ const AdvertiserPersonProfile = ({
                   : "empty"}
               </p>
               <p className="information__name__text">
-                {selectedProfile.ordersCount
-                  ? selectedProfile.ordersCount
-                  : 0}
+                {selectedProfile.ordersCount ? selectedProfile.ordersCount : 0}
               </p>
             </div>
           </div>
