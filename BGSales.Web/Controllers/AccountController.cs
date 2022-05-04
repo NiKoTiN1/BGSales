@@ -16,7 +16,6 @@ namespace BGSales.Web.Controllers
     public class AccountController : Controller
     {
         public AccountController(IAccountService accountService,
-            ITokenService tokenService,
             IMapper mapper,
             IBloggerService bloggerService,
             IBusinessmanService businessmanService,
@@ -24,7 +23,6 @@ namespace BGSales.Web.Controllers
             IChatService chatService)
         {
             _accountService = accountService;
-            _tokenService = tokenService;
             _mapper = mapper;
             _bloggerService = bloggerService;
             _businessmanService = businessmanService;
@@ -33,42 +31,11 @@ namespace BGSales.Web.Controllers
         }
 
         private readonly IAccountService _accountService;
-        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IBloggerService _bloggerService;
         private readonly IBusinessmanService _businessmanService;
         private readonly IWebHostEnvironment _appEnvironment;
         private readonly IChatService _chatService;
-
-        [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromForm] RegistrationViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model error!");
-            }
-
-            var user = await _accountService.CreateUser(model);
-
-            if (user == null)
-            {
-                return BadRequest("User with this username is already created!");
-            }
-
-            user.RefreshToken = _tokenService.GenerateRefreshToken();
-            var isUpdated = await _accountService.UpdateUser(user);
-
-            if (!isUpdated)
-            {
-                BadRequest("User cannot set refresh error!");
-            }
-
-            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
-            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
-
-            return Ok(tokenModel);
-        }
 
         [HttpPost]
         [Route("login")]
@@ -81,16 +48,7 @@ namespace BGSales.Web.Controllers
                 return BadRequest("Invalid email or password.");
             }
 
-            user.RefreshToken = _tokenService.GenerateRefreshToken();
-            var isUpdated = await _accountService.UpdateUser(user);
-
-            if (!isUpdated)
-            {
-                BadRequest("User cannot set refresh error!");
-            }
-
-            var tokenModel = _mapper.Map<TokenViewModel>(user.RefreshToken);
-            tokenModel.AccessToken = await _tokenService.GenerateToken(user);
+            var tokenModel = await _accountService.GenerateToken(user);
 
             return Ok(tokenModel);
         }
@@ -200,7 +158,7 @@ namespace BGSales.Web.Controllers
                 throw new Exception("You cannot update this profile.");
             }
 
-            var updatedModel = await _accountService.UpdateBlogger(viewModel, _appEnvironment.ContentRootPath);
+            var updatedModel = await _bloggerService.Update(viewModel, _appEnvironment.ContentRootPath);
 
             return Ok(updatedModel);
         }
@@ -222,7 +180,7 @@ namespace BGSales.Web.Controllers
                 throw new Exception("You cannot update this profile.");
             }
 
-            var updatedModel = await _accountService.UpdateBusinessman(viewModel, _appEnvironment.ContentRootPath);
+            var updatedModel = await _businessmanService.Update(viewModel, _appEnvironment.ContentRootPath);
 
             return Ok(updatedModel);
         }

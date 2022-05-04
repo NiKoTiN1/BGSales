@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BGSales.Data.Interfaces;
 using BGSales.Domain.Models;
+using BGSales.Services.Dtos.User;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
 using System;
@@ -13,20 +14,35 @@ namespace BGSales.Services.Services
     public class BloggerService : IBloggerService
     {
         public BloggerService(IBloggerRepository bloggerRepository,
+            IAccountService accountService,
+            IImageService imageService,
             IMapper mapper)
         {
             _bloggerRepository = bloggerRepository;
+            _accountService = accountService;
+            _imageService = imageService;
             _mapper = mapper;
         }
 
         private readonly IBloggerRepository _bloggerRepository;
+        private readonly IAccountService _accountService;
+        private readonly IImageService _imageService;
         private readonly IMapper _mapper;
 
-        public async Task CreateBlogger(ApplicationUser user)
+        public async Task<ApplicationUser> CreateBlogger(RegistrationViewModel model)
         {
+            var registrationDto = new RegistrationDto()
+            {
+                UserId = Guid.NewGuid().ToString(),
+                Model = model,
+                UserType = UserType.Blogger
+            };
+            var user = await _accountService.CreateUser(registrationDto);
             var blogger = _mapper.Map<Blogger>(user);
 
             await _bloggerRepository.Add(blogger);
+
+            return user;
         }
 
         public BloggerViewModel Get(ApplicationUser user)
@@ -68,8 +84,23 @@ namespace BGSales.Services.Services
             return bloggerModels;
         }
 
-        public async Task<BloggerViewModel> Update(UpdateBloggerViewModel model)
+        public async Task<BloggerViewModel> Update(UpdateBloggerViewModel model, string rootPath)
         {
+            var user = await _accountService.GetById(model.UserId);
+
+            if (user == null)
+            {
+                throw new Exception("Cannot find user!");
+            }
+
+            var updatedUser = _mapper.Map(model, user);
+
+            if (model.ImageFile != null)
+            {
+                var image = await _imageService.CreateImage(rootPath, model.ImageFile);
+                updatedUser.AvatarId = image.Id;
+            }
+
             var blogger = _bloggerRepository.Get(b => b.UserId == model.UserId).SingleOrDefault();
 
             if (blogger == null)
@@ -86,6 +117,13 @@ namespace BGSales.Services.Services
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+
+            var userUpdateResult = await _accountService.UpdateUser(user);
+
+            if (!userUpdateResult)
+            {
+                throw new Exception("Error during user update.");
             }
 
             var updatedModel = _mapper.Map<BloggerViewModel>(blogger);
