@@ -3,7 +3,6 @@ import FullChatInterface from "./FullChatInterface";
 import MessagesInterface from "./MessagesInterface";
 
 export default interface ActionInterfaceOrder {
-    type: string;
-    payload: Array<ChatInterface> | FullChatInterface | MessagesInterface;
+  type: string;
+  payload: Array<ChatInterface> | FullChatInterface | MessagesInterface;
 }
-  

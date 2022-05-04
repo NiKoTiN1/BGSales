@@ -6,14 +6,14 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getOrder, joinChat, payOrder} from "../../actions";
+import { getOrder, joinChat, payOrder } from "../../actions";
 import OrderInterface from "../../interfaces/OrderInterface";
 import AdvertiserInterface from "../../interfaces/AdvertiserInterface";
 import MediaPersonsIterface from "../../interfaces/MediaPersonsIterface";
 import PartialMediaPersonOrder from "../partial-media-person-order";
 import HistoryPropsInterface from "../../interfaces/HistoryPropsInterface";
 import UserProfileInterface from "../../interfaces/UserProfileInterface";
-import history from '../../history';
+import history from "../../history";
 
 interface Props {
   id: string;
@@ -23,7 +23,14 @@ interface Props {
   profile: UserProfileInterface;
   selectedProfile: UserProfileInterface;
 }
-const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) => {
+const Order = ({
+  id,
+  order,
+  dispatch,
+  role,
+  profile,
+  selectedProfile,
+}: Props) => {
   useEffect(() => {
     dispatch(getOrder(id));
   }, [order.isPaid]);
@@ -45,12 +52,12 @@ const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) =>
     return <p>Error this page is not available</p>;
   }
   const chekedChatId = () => {
-    if(!order.chatId){
-      dispatch(joinChat(profile.userId, order.advitiser.userId))
-    }else{
+    if (!order.chatId) {
+      dispatch(joinChat(profile.userId, order.advitiser.userId));
+    } else {
       history.push(`/chat/${order.chatId}`);
     }
-  }
+  };
   return (
     <div className="container">
       <div className="order">
@@ -85,11 +92,17 @@ const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) =>
                 className="order__edit-media__link"
                 to={`profileAdvertiser/${order.advitiser.userId}`}
               >
-                <Button className="order__edit-media__btn" variant="outlined">Look the advertiser</Button>
-              </Link>
-                <Button className="order__edit-media__btn" variant="outlined" onClick={chekedChatId}>
-                  Write message
+                <Button className="order__edit-media__btn" variant="outlined">
+                  Look the advertiser
                 </Button>
+              </Link>
+              <Button
+                className="order__edit-media__btn"
+                variant="outlined"
+                onClick={chekedChatId}
+              >
+                Write message
+              </Button>
             </div>
           )}
         </div>
@@ -98,28 +111,33 @@ const Order = ({ id, order, dispatch, role, profile, selectedProfile}: Props) =>
         <div>
           <ul className="media-person-ul">
             {order.blogger ? (
-                <div>
-                  <p className="div-accept-text">Working on an order</p>
-              <div className="div-accept">
-                <PartialMediaPersonOrder
-                  checked={false}
-                  orderId={order.orderId}
-                  {...order.blogger}
-                  onItemSelected={(orderId: string) => {
-                    //history.push(`${ordersSelectName}/${orderId}`)
-                  }}
-                />
-              </div> 
+              <div>
+                <p className="div-accept-text">Working on an order</p>
+                <div className="div-accept">
+                  <PartialMediaPersonOrder
+                    checked={false}
+                    orderId={order.orderId}
+                    {...order.blogger}
+                    onItemSelected={(orderId: string) => {
+                      //history.push(`${ordersSelectName}/${orderId}`)
+                    }}
+                  />
+                </div>
               </div>
             ) : (
               elements
             )}
           </ul>
-          {!order.isPaid && order.blogger?<Button className="order__edit-media__btn-pay" variant="outlined" onClick={()=>dispatch(payOrder(order.stripeId, order.orderId))}>
-                 Pay order
-          </Button> : null}
-          
-          </div>
+          {!order.isPaid && order.blogger ? (
+            <Button
+              className="order__edit-media__btn-pay"
+              variant="outlined"
+              onClick={() => dispatch(payOrder(order.stripeId, order.orderId))}
+            >
+              Pay order
+            </Button>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );

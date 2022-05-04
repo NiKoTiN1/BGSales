@@ -22,7 +22,6 @@ import "./app.scss";
 import StateInterface from "../../interfaces/StateInterface";
 import { addRole } from "../../actions";
 
-
 const App = ({ currentUser, dispatch }: PropsAppInterface) => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -88,7 +87,9 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
         <Route path="/projectEdit" exact component={OrderEdit} />
         <Route path="/createProjects" exact component={CreateOrder} />
         <Route path="/mediaPersons" exact component={MediaPersons} />
-        <Route path="/chat/:chatId"  exact
+        <Route
+          path="/chat/:chatId"
+          exact
           render={({ match }) => {
             const { chatId } = match.params;
             return <Chat chatId={chatId} />;

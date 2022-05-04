@@ -7,7 +7,7 @@ import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
 import { getProfileData, getNewProfileData, joinChat } from "../../actions";
-import history from '../../history';
+import history from "../../history";
 
 const MediaPersonProfile = ({
   profile,
@@ -27,12 +27,12 @@ const MediaPersonProfile = ({
     return <p>Error this page is not available</p>;
   }
   const chekedChatId = () => {
-    if(!selectedProfile.chatId){
-      dispatch(joinChat(selectedProfile.userId, profile.userId))
-    }else{
+    if (!selectedProfile.chatId) {
+      dispatch(joinChat(selectedProfile.userId, profile.userId));
+    } else {
       history.push(`/chat/${selectedProfile.chatId}`);
     }
-  }
+  };
   return (
     <>
       <div className="media-profile">
@@ -66,9 +66,7 @@ const MediaPersonProfile = ({
             >
               link to channel/page
             </a>
-            <p>
-              {selectedProfile.ordersCompleted}
-            </p>
+            <p>{selectedProfile.ordersCompleted}</p>
           </div>
         </div>
       </div>
@@ -103,9 +101,13 @@ const MediaPersonProfile = ({
             <Button variant="outlined">Edit</Button>
           </Link>
         ) : (
-         
-            <Button className="edit__link" variant="outlined" onClick={chekedChatId}>Write message</Button>
-         
+          <Button
+            className="edit__link"
+            variant="outlined"
+            onClick={chekedChatId}
+          >
+            Write message
+          </Button>
         )}
       </div>
     </>
