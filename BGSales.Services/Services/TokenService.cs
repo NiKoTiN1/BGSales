@@ -40,10 +40,10 @@ namespace BGSales.Services.Services
                     new Claim("UserId", user.Id.ToString()),
                     new Claim("Role", userRole.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(Convert.ToInt32(_configuration["Authentication:LIFETIME"])),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:KEY"])), SecurityAlgorithms.HmacSha256Signature),
-                Audience = _configuration["Authentication:AUDIENCE"],
-                Issuer = _configuration["Authentication:ISSUER"],
+                Expires = DateTime.UtcNow.AddHours(Convert.ToInt32(_configuration["Authentication:JWT:LIFETIME"])),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Authentication:JWT:KEY"])), SecurityAlgorithms.HmacSha256Signature),
+                Audience = _configuration["Authentication:JWT:AUDIENCE"],
+                Issuer = _configuration["Authentication:JWT:ISSUER"],
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);

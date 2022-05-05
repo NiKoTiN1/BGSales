@@ -2,6 +2,9 @@
 using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
 using BGSales.Views.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +54,34 @@ namespace BGSales.Web.Controllers
             var tokenModel = await _accountService.GenerateToken(user);
 
             return Ok(tokenModel);
+        }
+
+        [HttpPost]
+        [Route("facebook-login")]
+        public IActionResult LoginFacebook()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("FacebookResponce")
+            };
+
+            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
+        }
+
+        [HttpPost]
+        [Route("facebook-response")]
+        public async Task<IActionResult> FacebookResponce()
+        {
+            var result = await HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
+            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+
+            return Json(claims);
         }
 
         [HttpGet]

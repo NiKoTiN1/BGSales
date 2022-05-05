@@ -53,14 +53,20 @@ namespace BGSales.Web
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = Configuration["Authentication:ISSUER"],
+                    ValidIssuer = Configuration["Authentication:JWT:ISSUER"],
                     ValidateAudience = true,
-                    ValidAudience = Configuration["Authentication:AUDIENCE"],
+                    ValidAudience = Configuration["Authentication:JWT:AUDIENCE"],
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["Authentication:KEY"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["Authentication:JWT:KEY"])),
                     ValidateIssuerSigningKey = true,
                     ClockSkew = TimeSpan.Zero
                 };
+            })
+            .AddFacebook(options =>
+            {
+                options.AppId = Configuration["Authentication:Facebook:AppId"];
+                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.AccessDeniedPath = "/AccessDeniedPathInfo";
             });
 
             services.AddControllers()
