@@ -1,77 +1,69 @@
 $white: #fff;
 $black: #000;
 
-.cards {
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
-  justify-content: space-around;
-  margin: 50px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
 }
 
-.card {
-  width: 400px;
-  .image {
-    border-radius: 10px;
-    background-color: $white;
-    min-height: 540px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 19px 38px rgba($black, 0.3), 0 15px 12px rgba($black, 0.2);
-    &:hover {
-      .data {
-        transform: translateY(0);
-      }
-    }
-  }
-  .data {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    transform: translateY(calc(70px + 1em));
-    transition: transform 0.3s;
-    .content {
-      padding: 1em;
-      position: relative;
-      z-index: 1;
-      background-color: $white;
-      box-shadow: 0 5px 30px 10px rgba($black, 0.3);
-    }
-  }
-  .author {
-    font-size: 12px;
-  }
-  .title {
-    margin-top: 10px;
-  }
-  .text {
-    height: 70px;
-    margin: 0;
-  }
+.swiper-slide img {
+  display: block;
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+}
+.text-info {
+  margin-top: 200px;
+  font-family: "Ubuntu";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: #000000;
 }
 
-.card-1 {
-  &__image {
-    background: url(https://texterra.ru/upload/iblock/6e9/header.jpg) 20% 1% /
-      cover no-repeat;
-  }
-}
-.card-2 {
-  &__image {
-    background: url(https://bbf.media/wp-content/uploads/2020/07/reklama-u-blogerov.jpg)
-      20% 1% / cover no-repeat;
-  }
+.line {
+  height: 5px;
+  width: 83%;
+  margin-left: 8.5%;
+  background-color: #1aa080;
+  margin-bottom: 200px;
+  margin-top: 50px;
 }
 .info {
   display: flex;
-  background-color: rgba(157, 180, 184, 0.103);
   align-items: center;
   justify-content: center;
   height: 200px;
-  margin-top: 100px;
-  margin-bottom: 100px;
+  margin-top: 8%;
+  margin-bottom: 58px;
   &__label {
-    color: rgba(0, 0, 0, 0.658);
-    font-style: italic;
-    font-size: 22px;
+    color: #000000;
+    font-style: "Montserrat", sans-serif;
+    font-size: 30px;
   }
 }
 .button-container {
@@ -82,27 +74,19 @@ $black: #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
-    height: 100px;
+    width: 249px;
+    height: 94px;
     margin-bottom: 200px;
-    border-radius: 30px;
-    background-image: linear-gradient(
-      45deg,
-      #6ab1d7 0%,
-      #33d9de 50%,
-      #002878 100%
-    );
-    background-position: 100% 0;
-    background-size: 200% 200%;
-    font-family: "Montserrat", sans-serif;
-    font-size: 24px;
-    font-weight: 300;
+    border: 5px solid #524ba7;
+    box-shadow: 1px -2px 8px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: #b2abff;
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 34px;
+    display: flex;
     color: white;
-    box-shadow: 0 16px 32px 0 rgba(0, 40, 120, 0.35);
-    transition: 0.5s;
-    &:hover {
-      box-shadow: 0 0 0 0 rgba(0, 40, 120, 0);
-      background-position: 0 0;
-    }
   }
 }

@@ -1,11 +1,15 @@
 .header {
   position: relative;
-  background-color: rgba(14, 123, 212, 0.76);
   height: 60px;
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: end;
+  &__logo {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+  }
   .notification {
     display: flex;
     justify-content: center;
@@ -34,12 +38,42 @@
       color: white;
     }
   }
-  &__link {
+  &__links {
     display: flex;
+    margin-top: 50px;
     margin-right: 80px;
-    font-size: 18px;
-    color: #fff;
+    color: #524ba7;
     text-decoration: none;
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    &-login {
+      background: #ffffff;
+      border: 5px solid #524ba7;
+      width: 157px;
+      height: 63px;
+      backdrop-filter: blur(7px);
+      display: flex;
+      text-decoration: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+    }
+    &-signup {
+      margin-left: 30px;
+      background: #b2abff;
+      border: 5px solid #524ba7;
+      width: 157px;
+      height: 63px;
+      color: #ffffff;
+      backdrop-filter: blur(7px);
+      display: flex;
+      text-decoration: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+    }
   }
 }
 // @media screen and (max-width: 768px){

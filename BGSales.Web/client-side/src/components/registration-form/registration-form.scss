@@ -4,32 +4,141 @@
   align-items: center;
   justify-content: center;
   word-wrap: normal;
+  margin-top: 100px;
+  margin-bottom: 200px;
   &__heading {
-    font-family: "Playfair Display SC", serif;
+    position: absolute;
+    top: 0px;
+    font-family: "Ubuntu";
+    font-style: normal;
     font-weight: 500;
-    letter-spacing: 1px;
-    font-size: 24px;
-    color: #cfbdbd;
-    text-align: center;
+    font-size: 40px;
+    line-height: 46px;
+    color: #000000;
   }
-
   &__field {
+    position: relative;
     display: flex;
     flex-direction: column;
-    margin: 10px 0px;
+    margin: 20px 0px;
     align-items: center;
+    &__visible {
+      cursor: pointer;
+      border: none;
+      background-color: #ffffff;
+      text-decoration: none;
+      position: absolute;
+      top: 18px;
+      right: 22px;
+    }
+    &__image {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+    }
+    &__text {
+      position: absolute;
+      top: 18px;
+      right: -200px;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fa4cb4;
+    }
+    &__text-wrong {
+      position: absolute;
+      top: 18px;
+      right: -138px;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fa4cb4;
+    }
+     &__text-match {
+      position: absolute;
+      top: 18px;
+      right: -189px;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fa4cb4;
+    }
+    .warning {
+      border: 5px solid #fa4cb4 !important;
+    }
+    & input {
+      border: 5px solid #121212;
+      width: 427px;
+      height: 50px;
+      background: #ffffff;
+      border-radius: 15px;
+      padding: 0 20px;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 23px;
+      color: #121212;
+      &:focus {
+        outline: none;
+        border: 5px solid #524ba7;
+      }
+      &::placeholder {
+        color: #a7a7a7;
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+      }
+    }
   }
 
   &__button {
     margin-top: 30px;
-    &_signin {
-      margin-left: 55px;
-    }
-    &_back {
+    & button {
+      color: #524ba7;
+      cursor: pointer;
       text-decoration: none;
+      font-family: "Ubuntu";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      background: #b2abff;
+      border: 5px solid #524ba7;
+      width: 158px;
+      height: 63px;
+      color: #ffffff;
+      backdrop-filter: blur(7px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
     }
   }
-  &__checkbox {
-    margin-left: 0px;
+  &__container-checkbox {
+    margin-bottom: 50px;
+    &__checkbox {
+      & input {
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+        accent-color: #b2abff;
+      }
+      & label {
+        margin-left: 25px;
+        font-family: "Ubuntu";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 23px;
+        color: #121212;
+      }
+    }
   }
 }
