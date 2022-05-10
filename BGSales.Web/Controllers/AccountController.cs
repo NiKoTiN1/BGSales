@@ -140,49 +140,5 @@ namespace BGSales.Web.Controllers
             var model = _mapper.Map<PartialProfileViewModel>(user);
             return Ok(model);
         }
-
-        [HttpPut]
-        [Authorize]
-        [Route("update/blogger")]
-        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBloggerViewModel viewModel)
-        {
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
-
-            if (string.IsNullOrEmpty(userIdClaim.Value))
-            {
-                return Unauthorized();
-            }
-
-            if (viewModel.UserId != userIdClaim.Value)
-            {
-                throw new Exception("You cannot update this profile.");
-            }
-
-            var updatedModel = await _bloggerService.Update(viewModel, _appEnvironment.ContentRootPath);
-
-            return Ok(updatedModel);
-        }
-
-        [HttpPut]
-        [Authorize]
-        [Route("update/businessman")]
-        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBusinessmanViewModel viewModel)
-        {
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
-
-            if (string.IsNullOrEmpty(userIdClaim.Value))
-            {
-                return Unauthorized();
-            }
-
-            if (viewModel.UserId != userIdClaim.Value)
-            {
-                throw new Exception("You cannot update this profile.");
-            }
-
-            var updatedModel = await _businessmanService.Update(viewModel, _appEnvironment.ContentRootPath);
-
-            return Ok(updatedModel);
-        }
     }
 }
