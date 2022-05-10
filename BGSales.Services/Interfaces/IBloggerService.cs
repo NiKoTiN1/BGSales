@@ -10,7 +10,7 @@ namespace BGSales.Services.Interfaces
         public Task<ApplicationUser> CreateBlogger(RegistrationViewModel model);
         public BloggerViewModel Get(ApplicationUser user);
         public Blogger GetByUserId(string userId);
-        public List<BloggerPartialViewModel> GetAllBloggers();
+        public List<BloggerPartialViewModel> GetAllBloggers(string searchString);
         public Task<BloggerViewModel> Update(UpdateBloggerViewModel model, string rootPath);
     }
 }

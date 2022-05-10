@@ -42,7 +42,7 @@ namespace BGSales.Web.Controllers
 
         [HttpGet]
         [Route("available/{bloggerUserId}/{searchString?}")]
-        public IActionResult GetAllAvailableOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString)
+        public IActionResult GetAllAvailableOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -78,7 +78,7 @@ namespace BGSales.Web.Controllers
 
         [HttpGet]
         [Route("requested/{bloggerUserId}/{searchString?}")]
-        public IActionResult GetAllRequestedOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString)
+        public IActionResult GetAllRequestedOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -96,7 +96,7 @@ namespace BGSales.Web.Controllers
 
         [HttpGet]
         [Route("accepted/{bloggerUserId}/{searchString?}")]
-        public async Task<IActionResult> GetBloggerAcceptedOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString)
+        public async Task<IActionResult> GetBloggerAcceptedOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
