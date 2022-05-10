@@ -2,8 +2,6 @@
 using BGSales.Data.Interfaces;
 using BGSales.Domain.Models;
 using BGSales.Services.Interfaces;
-using ImageProcessor;
-using ImageProcessor.Imaging.Formats;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -34,14 +32,7 @@ namespace BGSales.Services.Services
 
             using (var fileStream = new FileStream(url, FileMode.Create, FileAccess.Write))
             {
-                using (var imageFactory = new ImageFactory(preserveExifData: false))
-                {
-                    imageFactory
-                        .Load(image.OpenReadStream())
-                        .Format(new JpegFormat())
-                        .Quality(25)
-                        .Save(fileStream);
-                }
+                await image.CopyToAsync(fileStream);
             }
 
             var imageModel = _mapper.Map<Image>(imageName + ".jpg");
