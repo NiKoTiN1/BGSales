@@ -51,8 +51,8 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        public IActionResult GetAllBloggers()
+        [Route("all/{searchString?}")]
+        public IActionResult GetAllBloggers([FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -61,7 +61,7 @@ namespace BGSales.Web.Controllers
                 return Unauthorized();
             }
 
-            var model = _bloggerService.GetAllBloggers();
+            var model = _bloggerService.GetAllBloggers(searchString);
 
             return Ok(model);
         }

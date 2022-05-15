@@ -41,8 +41,8 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("available/{bloggerUserId}")]
-        public IActionResult GetAllAvailableOrders([FromRoute] string bloggerUserId)
+        [Route("available/{bloggerUserId}/{searchString?}")]
+        public IActionResult GetAllAvailableOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -53,7 +53,7 @@ namespace BGSales.Web.Controllers
 
             CheckPermission(bloggerUserId, userIdClaim);
 
-            var model = _orderService.GetAllAvailablePartialOrders(userIdClaim.Value);
+            var model = _orderService.GetAllAvailablePartialOrders(userIdClaim.Value, searchString);
 
             return Ok(model);
         }
@@ -77,8 +77,8 @@ namespace BGSales.Web.Controllers
         }
 
         [HttpGet]
-        [Route("requested/{bloggerUserId}")]
-        public IActionResult GetAllRequestedOrders([FromRoute] string bloggerUserId)
+        [Route("requested/{bloggerUserId}/{searchString?}")]
+        public IActionResult GetAllRequestedOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -89,14 +89,14 @@ namespace BGSales.Web.Controllers
 
             CheckPermission(bloggerUserId, userIdClaim);
 
-            var model = _orderService.GetAllRequestedPartialOrders(userIdClaim.Value);
+            var model = _orderService.GetAllRequestedPartialOrders(userIdClaim.Value, searchString);
 
             return Ok(model);
         }
 
         [HttpGet]
-        [Route("accepted/{bloggerUserId}")]
-        public async Task<IActionResult> GetBloggerAcceptedOrders([FromRoute] string bloggerUserId)
+        [Route("accepted/{bloggerUserId}/{searchString?}")]
+        public async Task<IActionResult> GetBloggerAcceptedOrders([FromRoute] string bloggerUserId, [FromRoute] string searchString = null)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -107,7 +107,7 @@ namespace BGSales.Web.Controllers
 
             CheckPermission(bloggerUserId, userIdClaim);
 
-            var model = await _orderService.GetAcceptedBloggerOrders(userIdClaim.Value);
+            var model = await _orderService.GetAcceptedBloggerOrders(userIdClaim.Value, searchString);
 
             return Ok(model);
         }

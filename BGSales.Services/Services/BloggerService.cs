@@ -71,9 +71,15 @@ namespace BGSales.Services.Services
             return blogger;
         }
 
-        public List<BloggerPartialViewModel> GetAllBloggers()
+        public List<BloggerPartialViewModel> GetAllBloggers(string searchString)
         {
             var bloggers = _bloggerRepository.Get(b => true).ToList();
+
+            if(searchString != null)
+            {
+                bloggers = SearchBloggers(bloggers, searchString);
+            }
+
             if (bloggers.Count == 0)
             {
                 throw new System.Exception("There is no bloggers");
@@ -129,6 +135,12 @@ namespace BGSales.Services.Services
             var updatedModel = _mapper.Map<BloggerViewModel>(blogger);
 
             return updatedModel;
+        }
+
+        private List<Blogger> SearchBloggers(IEnumerable<Blogger> bloggers, string searchString)
+        {
+            var found = bloggers.Where(b => b.User.FirstName.ToLower().Contains(searchString.ToLower()) || b.User.LastName.ToLower().Contains(searchString.ToLower())).ToList();
+            return found;
         }
     }
 }
