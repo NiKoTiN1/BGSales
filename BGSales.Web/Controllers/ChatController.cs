@@ -75,7 +75,8 @@ namespace BGSales.Web.Controllers
 
             var chat = _chatService.GetChat(messageModel.ChatId, userIdClaim.Value);
             var message = await _messageService.SendMessage(messageModel);
-            await _hubContext.Clients.All.SendAsync("ReceiveOne", message);
+
+            await _hubContext.Clients.User(userIdClaim.Value).SendAsync("ReceiveOne", message);
 
             return Ok();
         }
