@@ -157,12 +157,14 @@ function RegistrationForm({ dispatch, history }: LogFormPropsInterface) {
             <div className="registration-form__field__image">
               <img src={assetList.info} />
             </div>
-            <div className="registration-form__field__text-wrong">Wrong password</div>
+            <div className="registration-form__field__text-wrong">
+              Wrong password
+            </div>
           </>
         ) : (
           <button
             type="button"
-              className="registration-form__field__visible"
+            className="registration-form__field__visible"
             onClick={() =>
               setVisible({ ...visible, password: !visible.password })
             }
@@ -195,9 +197,12 @@ function RegistrationForm({ dispatch, history }: LogFormPropsInterface) {
         ) : (
           <button
             type="button"
-              className="registration-form__field__visible"
+            className="registration-form__field__visible"
             onClick={() =>
-              setVisible({ ...visible, passwordConfirm: !visible.passwordConfirm })
+              setVisible({
+                ...visible,
+                passwordConfirm: !visible.passwordConfirm,
+              })
             }
           >
             <img

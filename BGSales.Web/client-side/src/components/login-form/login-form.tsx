@@ -14,7 +14,6 @@ const LoginForm = ({ dispatch, history }: LogFormPropsInterface) => {
     email: "",
     password: "",
   });
-  
 
   const [visible, setVisible] = useState(false);
   const [warningEmail, setWarningEmail] = useState(false);
@@ -29,7 +28,7 @@ const LoginForm = ({ dispatch, history }: LogFormPropsInterface) => {
     };
     setWarningEmail(false);
     setWarningPassword(false);
-    if (!EMAIL_REGEXP.test(form.email)){
+    if (!EMAIL_REGEXP.test(form.email)) {
       setWarningEmail(true);
       allCorrect = false;
     }
@@ -37,7 +36,7 @@ const LoginForm = ({ dispatch, history }: LogFormPropsInterface) => {
       setWarningPassword(true);
       allCorrect = false;
     }
-    if (allCorrect){
+    if (allCorrect) {
       dispatch(postProfileData(user));
       history.push("/");
     }

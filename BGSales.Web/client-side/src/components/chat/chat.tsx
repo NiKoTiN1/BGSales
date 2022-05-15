@@ -44,7 +44,6 @@ const Chat = ({ chatId, chats, dispatch, chat, userId, role }: any) => {
       connection
         .start()
         .then((result) => {
-          console.log("Connected!");
           connection.on("ReceiveOne", (message) => {
             setTimeout(() => {}, 200);
             const updatedChat = [...latestChat.current];

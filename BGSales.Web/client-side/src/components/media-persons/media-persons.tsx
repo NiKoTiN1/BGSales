@@ -34,7 +34,7 @@ const MediaPersons = ({
     );
   });
   if (role !== "Businessman") {
-    return <p>Error this page is not available</p>;
+    history.push("/error");
   }
   return (
     <>

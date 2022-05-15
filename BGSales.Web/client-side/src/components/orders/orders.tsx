@@ -65,6 +65,9 @@ const Orders = ({
       </li>
     );
   });
+  if (currentUser.role === "") {
+    history.push("/error");
+  }
   return (
     <>
       <ul className="list-orders">{elements}</ul>

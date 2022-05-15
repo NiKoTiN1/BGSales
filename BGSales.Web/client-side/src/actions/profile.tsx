@@ -99,7 +99,6 @@ const getProfileData = () => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(changeProfile(data.data));
         dispatch(addSelectedProfile(data.data));
       })
@@ -128,7 +127,6 @@ const getNewProfileData = (id: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(addSelectedProfile(data.data));
       })
       .catch((data: any) => {

@@ -1,15 +1,16 @@
 .list-media-persons {
   margin-left: 0;
+  margin-top: 150px;
+  margin-bottom: 200px;
   list-style: none;
   font-family: calibri;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   &__person {
-    position: relative;
-    left: 1.5em;
-    margin-bottom: 0.75em;
-    background: #7cb9eb70;
-    margin-right: 3%;
-    border-top-left-radius: 100px;
-    border-bottom-left-radius: 100px;
-    height: 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px 37px;
   }
 }

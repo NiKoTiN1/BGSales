@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import "./advertiser-person-profile.scss";
 import { Button } from "@material-ui/core";
@@ -7,7 +7,7 @@ import { imageSrc } from "../../imageRequire";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import StateInterface from "../../interfaces/StateInterface";
 import { getProfileData, getNewProfileData, joinChat } from "../../actions";
-import { createBrowserHistory } from "history";
+import { assetList } from "../../assets";
 const AdvertiserPersonProfile = ({
   profile,
   dispatch,
@@ -15,6 +15,7 @@ const AdvertiserPersonProfile = ({
   role,
   id,
 }: PersonProfileInterface) => {
+  const history = useHistory();
   useEffect(() => {
     if (id) {
       dispatch(getNewProfileData(id));
@@ -23,7 +24,7 @@ const AdvertiserPersonProfile = ({
     }
   }, []);
   if (role === "") {
-    return <p>Error this page is not available</p>;
+    history.push("/error");
   }
   return (
     <>
@@ -35,47 +36,33 @@ const AdvertiserPersonProfile = ({
             alt=""
           />
         </div>
-        <div className="information-container">
-          <div className="information col-1">
-            <div className="information__name">
-              <p className="information__name__text">First name:</p>
-              <p className="information__name__text">Second name:</p>
-            </div>
-            <div className="information__name">
-              <p className="information__name__text">
-                {selectedProfile.firstName}
-              </p>
-              <p className="information__name__text">
-                {selectedProfile.secondName}
-              </p>
-            </div>
-          </div>
-          <div className="information col-2">
-            <div className="information__name">
-              <p className="information__name__text">Name Company:</p>
-              <p className="information__name__text">Number Offers:</p>
-            </div>
-            <div className="information__name">
-              <p className="information__name__text">
-                {selectedProfile.nameCompany
-                  ? selectedProfile.nameCompany
-                  : "empty"}
-              </p>
-              <p className="information__name__text">
-                {selectedProfile.ordersCount ? selectedProfile.ordersCount : 0}
-              </p>
-            </div>
+        <div className="advertise-profile__information">
+          <div className="advertise-profile__information__container">
+            <p className="information__container__name">
+              {selectedProfile.firstName} {selectedProfile.secondName}
+            </p>
+            <p className="information__container__info">
+              Name Company:{" "}
+              {selectedProfile.nameCompany
+                ? selectedProfile.nameCompany
+                : "Not specified"}
+            </p>
+            <p className="information__container__info">
+              Number offers:{" "}
+              {selectedProfile.ordersCount
+                ? selectedProfile.ordersCount
+                : "Not specified"}
+            </p>
           </div>
         </div>
-        <div className="edit">
-          {role === "Businessman" ? (
-            <Link className="edit__link" to="/profileAdvertiserEdit">
-              <Button className="edit__link__btn" variant="outlined">
-                Edit
-              </Button>
-            </Link>
-          ) : null}
-        </div>
+      </div>
+
+      <div className="edit-advertiser">
+        {role === "Businessman" ? (
+          <Link className="edit-advertiser__link" to="/profileAdvertiserEdit">
+            <img src={assetList.edit} />
+          </Link>
+        ) : null}
       </div>
     </>
   );

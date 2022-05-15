@@ -41,7 +41,18 @@ const Main = ({ checkUser }: MainPropsInterface) => {
           <img src={assetList.imageInfoFirst} />
         </SwiperSlide>
       </Swiper>
-      {checkUser ? null : (
+      {checkUser ? (
+        <>
+          <div className="info">
+            <label className="info__label">Start now</label>
+          </div>
+          <div className="button-container">
+            <Link className="button-container__pressed" to="/mediaPersons">
+              Go!
+            </Link>
+          </div>
+        </>
+      ) : (
         <>
           <div className="info">
             <label className="info__label">Sign up to see more</label>

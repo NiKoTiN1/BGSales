@@ -130,7 +130,6 @@ const getChat = (chatId: string) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(addChat(data.data));
       })
       .catch((data: any) => {

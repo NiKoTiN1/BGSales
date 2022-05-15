@@ -30,19 +30,24 @@ const PartialMediaPerson = ({
       </div>
       <div className="partial-media-person-info">
         <div className="partial-media-person-info__container">
-          <p>{firstName}</p>
-          <p>{secondName}</p>
-          <p>Activity: {activity ? activity : "empty"}</p>
-          <p>Subscribers: {numberSubscribers ? numberSubscribers : "empty"}</p>
+          <p className="partial-media-person-info__container__name">
+            {firstName} {secondName}
+          </p>
+          <p className="partial-media-person-info__container__info">
+            Activity: {activity ? activity : "Not specified"}
+          </p>
+          <p className="partial-media-person-info__container__info">
+            Subscribers:{" "}
+            {numberSubscribers ? numberSubscribers : "Not specified"}
+          </p>
         </div>
         <div className="partial-media-person-info__container">
-          <Button
+          <button
             className="partial-media-person-info__container__btn-look btn"
-            variant="outlined"
             onClick={() => onItemSelected(userId)}
           >
-            Look
-          </Button>
+            more
+          </button>
         </div>
       </div>
     </>

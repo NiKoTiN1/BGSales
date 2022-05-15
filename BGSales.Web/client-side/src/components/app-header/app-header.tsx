@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import "./app-header.scss";
@@ -13,14 +13,16 @@ const AppHeader = ({
   currentUser,
   dispatch,
 }: AppHeaderInterface) => {
+  const location = useLocation();
+  const screenWidth = window.innerWidth
+  const [search, setSearch] = useState("");
+  const [searchHidden, setSearchHidden] = useState(false);
+
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
-      console.log("It's profile");
       dispatch(getPartialProfileData());
     }
   }, []);
-
-  const location = useLocation();
 
   return (
     <header className="header">
@@ -29,24 +31,54 @@ const AppHeader = ({
       </Link>
       {checkUser ? (
         <>
+          {window.location.href.search("mediaPersons") !== -1 || window.location.href.search("projects") !== -1 ?
+          <div className={(screenWidth < 1650 && currentUser.role === "Blogger") || screenWidth < 1275 ? "header__search low" : "header__search"}>
+            {searchHidden ? (
+              <input
+                className="input-hidden"
+                type="text"
+                disabled
+                onChange={(e: any) => setSearch(e.target.value)}
+              />
+            ) : (
+              <input
+                type="text"
+                onChange={(e: any) => setSearch(e.target.value)}
+              />
+            )}
+            <img src={assetList.search} />
+            </div> : null}
+          
           {currentUser.role === "Blogger" ? (
             <>
               <Link
-                className="header__links projects"
+                className={
+                  location.pathname === ""
+                    ? "header__links highlight"
+                    : "header__links"
+                }
                 to="/projects/allProjects"
                 onClick={() => dispatch(addNameOrderUrl("allProjects"))}
               >
                 All Projects
               </Link>
               <Link
-                className="header__links projects"
+                className={
+                  location.pathname === ""
+                    ? "header__links highlight"
+                    : "header__links"
+                }
                 to="/projects/selectedProjects"
                 onClick={() => dispatch(addNameOrderUrl("selectedProjects"))}
               >
                 Selected Projects
               </Link>
               <Link
-                className="header__links projects"
+                className={
+                  location.pathname === ""
+                    ? "header__links highlight"
+                    : "header__links"
+                }
                 to="/projects/acceptedProjects"
                 onClick={() => dispatch(addNameOrderUrl("acceptedProjects"))}
               >
@@ -55,11 +87,22 @@ const AppHeader = ({
             </>
           ) : (
             <>
-              <Link className="header__links projects" to="/mediaPersons">
+              <Link
+                className={
+                  location.pathname === "/mediaPersons"
+                    ? "header__links highlight"
+                    : "header__links"
+                }
+                to="/mediaPersons"
+              >
                 Bloggers
               </Link>
               <Link
-                className="header__links projects"
+                className={
+                  location.pathname === "/projects/myProjects"
+                    ? "header__links highlight"
+                    : "header__links"
+                }
                 to="/projects/myProjects"
                 onClick={() => dispatch(addNameOrderUrl("myProjects"))}
               >
@@ -67,10 +110,17 @@ const AppHeader = ({
               </Link>
             </>
           )}
-          <Link className="header__links notification" to="/chat">
-            <span>Inbox</span>
+          <Link
+            className={
+              location.pathname === "/chat"
+                ? "header__links highlight"
+                : "header__links"
+            }
+            to="/chat"
+          >
+            <span>Chat</span>
           </Link>
-          <UserMenu />
+          <UserMenu onClick={() => setSearchHidden(!searchHidden)} />
         </>
       ) : (
         <div className="header__links">
@@ -82,7 +132,9 @@ const AppHeader = ({
           {location.pathname !== "/registration" ? (
             <Link
               className={
-                location.pathname === "/"
+                location.pathname === "/" ||
+                (currentUser.role === "" &&
+                  location.pathname !== "/authorization")
                   ? "header__links-signup"
                   : "header__links-login"
               }
