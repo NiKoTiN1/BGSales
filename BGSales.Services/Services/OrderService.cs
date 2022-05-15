@@ -103,23 +103,35 @@ namespace BGSales.Services.Services
             return orders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
-        public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId)
+        public List<PartialOrderViewModel> GetAllAvailablePartialOrders(string userId, string searchString)
         {
             var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
             var availableOrders = orders.Where(o => o.BloggerRequests.All(b => b.UserId != userId));
+
+            if(searchString != null)
+            {
+                availableOrders = SearchOrders(availableOrders, searchString);
+            }
+
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
-        public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId)
+        public List<PartialOrderViewModel> GetAllRequestedPartialOrders(string userId, string searchString)
         {
             var orders = _orderRepository.Get(o => string.IsNullOrEmpty(o.BloggerId), new[] { "BloggerRequests", "Advertiser" })
                 .ToList();
             var availableOrders = orders.Where(o => o.BloggerRequests.Any(b => b.UserId == userId));
+
+            if (searchString != null)
+            {
+                availableOrders = SearchOrders(availableOrders, searchString);
+            }
+
             return availableOrders.Select(o => _mapper.Map<PartialOrderViewModel>(o)).ToList();
         }
 
-        public async Task<List<PartialOrderViewModel>> GetAcceptedBloggerOrders(string userId)
+        public async Task<List<PartialOrderViewModel>> GetAcceptedBloggerOrders(string userId, string searchString)
         {
             var user = await _accountService.GetById(userId);
             var isBlogger = await _accountService.IsInRole(user, Roles.Blogger);
@@ -131,6 +143,12 @@ namespace BGSales.Services.Services
 
             var orders = _orderRepository.Get(o => o.Blogger.UserId == userId, new[] { "Blogger", "Advertiser" })
                 .ToList();
+
+            if (searchString != null)
+            {
+                orders = SearchOrders(orders, searchString);
+            }
+
             var orderModels = _mapper.Map<List<PartialOrderViewModel>>(orders);
             return orderModels;
         }
@@ -261,6 +279,12 @@ namespace BGSales.Services.Services
             order.IsPaid = true;
 
             await _orderRepository.Update(order);
+        }
+
+        private List<Order> SearchOrders(IEnumerable<Order> orders, string searchString)
+        {
+            var found = orders.Where(o => o.Name.ToLower().Contains(searchString.ToLower())).ToList();
+            return found;
         }
     }
 }

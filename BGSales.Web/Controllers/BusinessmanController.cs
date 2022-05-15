@@ -10,22 +10,22 @@ using System.Threading.Tasks;
 
 namespace BGSales.Web.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route("api/[controller]")]
-    public class BloggerController : Controller
+    public class BusinessmanController : Controller
     {
-        private readonly IBloggerService _bloggerService;
-        private readonly IAccountService _accountService;
+        private readonly IBusinessmanService _businessmanService;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly IAccountService _accountService;
 
-        public BloggerController(IBloggerService bloggerService,
-            IAccountService accountService,
-            IWebHostEnvironment appEnvironment)
+        public BusinessmanController(IBusinessmanService businessmanService,
+            IWebHostEnvironment appEnvironment,
+            IAccountService accountService)
         {
-            _bloggerService = bloggerService;
-            _accountService = accountService;
+            _businessmanService = businessmanService;
             _appEnvironment = appEnvironment;
+            _accountService = accountService;
         }
 
         [AllowAnonymous]
@@ -38,7 +38,7 @@ namespace BGSales.Web.Controllers
                 return BadRequest("Model error!");
             }
 
-            var user = await _bloggerService.CreateBlogger(model);
+            var user = await _businessmanService.CreateBusinessman(model);
 
             if (user == null)
             {
@@ -50,26 +50,10 @@ namespace BGSales.Web.Controllers
             return Ok(tokenModel);
         }
 
-        [HttpGet]
-        [Route("all/{searchString?}")]
-        public IActionResult GetAllBloggers([FromRoute] string searchString = null)
-        {
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
-
-            if (string.IsNullOrEmpty(userIdClaim.Value))
-            {
-                return Unauthorized();
-            }
-
-            var model = _bloggerService.GetAllBloggers(searchString);
-
-            return Ok(model);
-        }
-
         [HttpPut]
         [Authorize]
         [Route("update")]
-        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBloggerViewModel viewModel)
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateBusinessmanViewModel viewModel)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "UserId");
 
@@ -83,7 +67,7 @@ namespace BGSales.Web.Controllers
                 throw new Exception("You cannot update this profile.");
             }
 
-            var updatedModel = await _bloggerService.Update(viewModel, _appEnvironment.ContentRootPath);
+            var updatedModel = await _businessmanService.Update(viewModel, _appEnvironment.ContentRootPath);
 
             return Ok(updatedModel);
         }
