@@ -1,126 +1,41 @@
 .advertise-profile {
-  width: 100%;
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  margin-top: 50px;
   &__container-img {
-    width: 300px;
-    height: 300px;
-    background-color: #fff;
-    position: relative;
-    margin: 60px auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-family: "Roboto Condensed", sans-serif;
-    box-shadow: inset 6px 6px 8px 0 rgba(0, 0, 0, 0.4);
-    &:after,
-    &:before {
-      mix-blend-mode: multiply;
-      filter: none;
-      z-index: 1;
-      content: "";
-      width: calc(100% + 90px);
-      height: calc(100% + 90px);
-      position: absolute;
-      animation: anim-ramka 8s ease-in-out infinite;
-    }
-    @keyframes anim-ramka {
-      0%,
-      100% {
-        clip-path: polygon(
-          0 0,
-          calc(100% - (33px)) calc(0% + (33px)),
-          100% 100%,
-          calc(0% + (33px)) calc(100% - (33px))
-        );
-      }
-      50% {
-        clip-path: polygon(
-          calc(0% + (33px)) calc(0% + (33px)),
-          100% 0,
-          calc(100% - (33px)) calc(100% - (33px)),
-          0 100%
-        );
-      }
-    }
-    &:after {
-      animation-delay: -5s;
-      background-color: #bfe2ff;
-      clip-path: polygon(
-        0 0,
-        calc(100% - (33px)) calc(0% + (33px)),
-        100% 100%,
-        calc(0% + (33px)) calc(100% - (33px))
-      );
-    }
-    &:before {
-      background-color: #337ab7;
-      clip-path: polygon(
-        calc(0% + (33px)) calc(0% + (33px)),
-        100% 0,
-        calc(100% - (33px)) calc(100% - (33px)),
-        0 100%
-      );
-    }
-    &:hover:before,
-    &:hover:after {
-      animation-play-state: paused;
-    }
     &__img {
-      z-index: 2;
-      border-radius: 5px;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      overflow: hidden;
+      border-radius: 173px;
+      border: 4px solid #b2abff;
+      width: 341px;
+      height: 341px;
     }
   }
-  .information-container {
-    display: flex;
-    flex-direction: row;
-    .information {
+  &__information {
+    &__container {
       display: flex;
-      margin-right: 100px;
-      margin-left: 100px;
-      flex-direction: row;
-      &__name {
-        margin-left: 30px;
-        &__text {
-          font-variant-ligatures: initial;
-          font-size: 20px;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      .information__container__name {
+        font-family: "Ubuntu";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        color: #121212;
+      }
+      .information__container__info {
+        a {
+          text-decoration: none;
+          color: #a59dfc;
         }
+        font-family: "Ubuntu";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        color: #000000;
       }
     }
-    .col-1 {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #bfe2ff;
-      width: 400px;
-      height: 400px;
-      border-radius: 400px;
-    }
-    .col-2 {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #337ab7;
-      width: 400px;
-      height: 400px;
-      border-radius: 400px;
-    }
-  }
-}
-.advertise-header {
-  display: flex;
-  justify-content: center;
-  h1 {
-    font-family: "Courier New", Courier, monospace;
-    color: rgba(0, 0, 0, 0.664);
   }
 }
 
@@ -133,16 +48,13 @@
     margin-left: 30px;
   }
 }
-.edit {
+.edit-advertiser {
   margin-top: 20px;
   margin-left: 20px;
   margin-bottom: 50px;
   &__link {
-    text-decoration: none;
-    color: black;
-    &__btn {
-      width: 300px;
-      height: 50px;
-    }
+    position: absolute;
+    top: 160px;
+    right: 5%;
   }
 }

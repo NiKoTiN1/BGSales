@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./order.scss";
@@ -6,7 +6,13 @@ import { Button } from "@material-ui/core";
 import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
-import { getOrder, joinChat, payOrder } from "../../actions";
+import {
+  deleteOrder,
+  getOrder,
+  joinChat,
+  payOrder,
+  postOrderReqest,
+} from "../../actions";
 import OrderInterface from "../../interfaces/OrderInterface";
 import AdvertiserInterface from "../../interfaces/AdvertiserInterface";
 import MediaPersonsIterface from "../../interfaces/MediaPersonsIterface";
@@ -14,8 +20,11 @@ import PartialMediaPersonOrder from "../partial-media-person-order";
 import HistoryPropsInterface from "../../interfaces/HistoryPropsInterface";
 import UserProfileInterface from "../../interfaces/UserProfileInterface";
 import history from "../../history";
+import { assetList } from "../../assets";
+import PartialMediaPerson from "../partial-media-person";
+import Error from "../error";
 
-interface Props {
+interface OrderProps {
   id: string;
   dispatch: Function;
   order: OrderInterface;
@@ -30,26 +39,31 @@ const Order = ({
   role,
   profile,
   selectedProfile,
-}: Props) => {
+}: OrderProps) => {
   useEffect(() => {
     dispatch(getOrder(id));
   }, [order.isPaid]);
+
+  const [visibleAuthor, setVisibleAuthor] = useState(false);
+  const [checkedAccept, setCheckedAccept] = useState(true);
+
+  const removeOrder = () => {
+    dispatch(deleteOrder(profile.userId, order.orderId));
+  };
+
   const elements = order.bloggerRequests.map((item: any) => {
     return (
-      <li key={item.userId} className="list-orders__item-order">
+      <li key={item.userId} className="blogger-select">
         <PartialMediaPersonOrder
           checked={true}
           orderId={order.orderId}
           {...item}
-          onItemSelected={(userId: string) => {
-            //history.push(`profileAdvertiser/${id}`)
-          }}
         />
       </li>
     );
   });
   if (role === "") {
-    return <p>Error this page is not available</p>;
+    return <Error />;
   }
   const chekedChatId = () => {
     if (!order.chatId) {
@@ -62,80 +76,124 @@ const Order = ({
     <div className="container">
       <div className="order">
         <div className="information">
-          <div className="information__name__title ">
+          <div className="information__name-title ">
             <p>{order.title}</p>
           </div>
-          <div className="information__name__description ">
+          <div className="information__name">
+            <p>Budget: {order.budget ? order.budget + "$" : "Not specified"}</p>
+            <p>
+              AudienceAge:{" "}
+              {order.audienceAge ? order.audienceAge : "Not specified"}
+            </p>
+            <p>Name Company: {order.advitiser.nameCompany}</p>
+          </div>
+          <div className="information__name-description">
+            <p className="information__name-description__title">About:</p>
             <p>{order.description}</p>
           </div>
-          <div className="information__name-main">
-            <div className="information__name col-1">
-              <p>Budget:</p>
-              <p>AudienceAge:</p>
-              <p>Name Company:</p>
-            </div>
-            <div className="information__name col-2">
-              <p>{order.budget ? order.budget + "$" : "empty"}</p>
-              <p>{order.audienceAge ? order.audienceAge : "empty"}</p>
-              <p>{order.advitiser.nameCompany}</p>
-            </div>
-          </div>
         </div>
-        <div className="order__edit">
+
+        <div>
           {role === "Businessman" ? (
-            <Link className="order__edit__link" to="/projectEdit">
-              <Button variant="outlined">Edit</Button>
-            </Link>
-          ) : (
-            <div className="order__edit-media">
+            <div className="order__buttons">
               <Link
-                className="order__edit-media__link"
-                to={`profileAdvertiser/${order.advitiser.userId}`}
+                className="order__buttons__bin"
+                to="/projects/myProjects"
+                onClick={removeOrder}
               >
-                <Button className="order__edit-media__btn" variant="outlined">
-                  Look the advertiser
-                </Button>
+                <img src={assetList.bin} />
               </Link>
-              <Button
-                className="order__edit-media__btn"
-                variant="outlined"
-                onClick={chekedChatId}
-              >
-                Write message
-              </Button>
+              <Link className="order__buttons__edit" to="/projectEdit">
+                <img src={assetList.edit} />
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <div className="order__buttons-media">
+                <Link
+                  className="order__buttons-media__link"
+                  to={`profileAdvertiser/${order.advitiser.userId}`}
+                >
+                  Look the advertiser
+                </Link>
+                <button
+                  className="order__buttons-media__btn"
+                  onClick={chekedChatId}
+                >
+                  Write message
+                </button>
+              </div>
+              {role === "Businessman" ? null : window.location.href.search(
+                  "selectedProjects"
+                ) === -1 &&
+                checkedAccept &&
+                !order.blogger ? (
+                <button
+                  className="order__btn-respond"
+                  onClick={() => {
+                    dispatch(postOrderReqest(profile.userId, id));
+                    setCheckedAccept(false);
+                  }}
+                >
+                  <p>Respond</p>
+                </button>
+              ) : null}
             </div>
           )}
         </div>
       </div>
       {role === "Businessman" ? (
-        <div>
-          <ul className="media-person-ul">
+        <div className="container-blogger">
+          <div>
             {order.blogger ? (
-              <div>
-                <p className="div-accept-text">Working on an order</p>
-                <div className="div-accept">
-                  <PartialMediaPersonOrder
-                    checked={false}
-                    orderId={order.orderId}
-                    {...order.blogger}
-                    onItemSelected={(orderId: string) => {
-                      //history.push(`${ordersSelectName}/${orderId}`)
-                    }}
+              <>
+                <button
+                  className="container-blogger__btn-author"
+                  onClick={() => setVisibleAuthor(!visibleAuthor)}
+                >
+                  <p>Author</p>
+                  <img
+                    src={visibleAuthor ? assetList.backTrue : assetList.back}
                   />
-                </div>
-              </div>
+                </button>
+                {visibleAuthor ? (
+                  <div>
+                    <div className="container-blogger__accept">
+                      <PartialMediaPerson
+                        {...order.blogger}
+                        onItemSelected={(id: string) => {
+                          history.push(`profileMedia/${id}`);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+              </>
             ) : (
-              elements
+              <div>
+                <p className="container-blogger__title">
+                  Responses: {order.bloggerRequests.length}
+                </p>
+                <ul className="container-blogger__media-person-ul">
+                  {elements}
+                </ul>
+              </div>
             )}
-          </ul>
+          </div>
           {!order.isPaid && order.blogger ? (
-            <Button
-              className="order__edit-media__btn-pay"
-              variant="outlined"
-              onClick={() => dispatch(payOrder(order.stripeId, order.orderId))}
-            >
-              Pay order
-            </Button>
+            <div className="container-blogger__pay">
+              <p className="container-blogger__pay__text-pay">Payment</p>
+              <div className="container-blogger__pay__wrap">
+                <button
+                  className="container-blogger__pay__btn-pay"
+                  onClick={() =>
+                    dispatch(payOrder(order.stripeId, order.orderId))
+                  }
+                >
+                  Pay order
+                </button>
+              </div>
+            </div>
           ) : null}
         </div>
       ) : null}

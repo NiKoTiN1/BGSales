@@ -18,47 +18,22 @@ const PartialOrder = ({
   dispatch,
   onItemSelected,
 }: PartialAdvertiserOrderInterface) => {
-  const removeOrder = () => {
-    dispatch(deleteOrder(id, orderId));
-  };
-  const [checkedAccept, setCheckedAccept] = useState(acceptedUserId);
   return (
     <div className="order-partial-info">
       <div className="order-partial-info__container">
-        <p>{title}</p>
-        <p>{companyName}</p>
-        <p>{budget}$</p>
+        <p className="order-partial-info__container__title">{title}</p>
+        <p>
+          Company name: {companyName === "" ? "Not specified" : companyName}
+        </p>
+        <p>Budget: {budget}$</p>
       </div>
       <div className="order-partial-info__container">
-        <Button
+        <button
           className="order-partial-info__container__btn-look btn"
-          variant="outlined"
           onClick={() => onItemSelected(orderId)}
         >
-          Look
-        </Button>
-        {currentUser.role === "Businessman" ? (
-          <Button
-            className="order-partial-info__container__btn-delete btn"
-            variant="contained"
-            onClick={removeOrder}
-          >
-            <p>Delete</p>
-          </Button>
-        ) : window.location.href.slice(
-            window.location.href.lastIndexOf("/") + 1
-          ) !== "selectedProjects" && checkedAccept === null ? (
-          <Button
-            className="order-partial-info__container__btn-delete btn"
-            variant="contained"
-            onClick={() => {
-              dispatch(postOrderReqest(id, orderId));
-              setCheckedAccept("1");
-            }}
-          >
-            <p>Respond</p>
-          </Button>
-        ) : null}
+          more
+        </button>
       </div>
     </div>
   );

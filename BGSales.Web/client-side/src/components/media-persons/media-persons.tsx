@@ -7,6 +7,7 @@ import { getMediaPersons } from "../../actions";
 import PartialMediaPerson from "../partial-media-person";
 import MediaPersonsIterface from "../../interfaces/MediaPersonsIterface";
 import PartialMediaProfileInterface from "../../interfaces/PartialMediaProfileInterface";
+import Error from "../error";
 
 const MediaPersons = ({
   allMediaPersons,
@@ -34,7 +35,7 @@ const MediaPersons = ({
     );
   });
   if (role !== "Businessman") {
-    return <p>Error this page is not available</p>;
+    return <Error />;
   }
   return (
     <>

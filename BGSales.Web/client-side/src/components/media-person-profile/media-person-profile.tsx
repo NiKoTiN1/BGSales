@@ -8,6 +8,8 @@ import { imageSrc } from "../../imageRequire";
 import StateInterface from "../../interfaces/StateInterface";
 import { getProfileData, getNewProfileData, joinChat } from "../../actions";
 import history from "../../history";
+import { assetList } from "../../assets";
+import Error from "../error";
 
 const MediaPersonProfile = ({
   profile,
@@ -24,7 +26,7 @@ const MediaPersonProfile = ({
     }
   }, []);
   if (role === "") {
-    return <p>Error this page is not available</p>;
+    return <Error />;
   }
   const chekedChatId = () => {
     if (!selectedProfile.chatId) {
@@ -37,36 +39,48 @@ const MediaPersonProfile = ({
     <>
       <div className="media-profile">
         <div className="media-profile__container-img">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
           <img
             className="media-profile__container-img__img"
-            src={selectedProfile.imageUrl ? selectedProfile.imageUrl : imageSrc}
+            src={
+              selectedProfile.imageUrl
+                ? String(selectedProfile.imageUrl)
+                : imageSrc
+            }
             alt=""
           />
         </div>
-        <div className="information">
-          <div className="information__name col-1">
-            <p>First name:</p>
-            <p>Second name:</p>
-            <p>Link to channel:</p>
-            <p>Number of completed orders:</p>
-          </div>
-          <div className="information__name col-2">
-            <p>{selectedProfile.firstName}</p>
-            <p>{selectedProfile.secondName}</p>
-            <a
-              href={
-                selectedProfile.urlYouTube
-                  ? selectedProfile.urlYouTube
-                  : "empty"
-              }
-            >
-              link to channel/page
-            </a>
-            <p>{selectedProfile.ordersCompleted}</p>
+        <div className="media-profile__information">
+          <div className="media-profile__information__container">
+            <p className="information__container__name">
+              {selectedProfile.firstName} {selectedProfile.secondName}
+            </p>
+            <p className="information__container__info">
+              Activity:{" "}
+              {selectedProfile.activity
+                ? selectedProfile.activity
+                : "Not specified"}
+            </p>
+            <p className="information__container__info">
+              Subscribers:{" "}
+              {selectedProfile.subscribers
+                ? selectedProfile.subscribers
+                : "Not specified"}
+            </p>
+            <p className="information__container__info">
+              Link to channel:{" "}
+              <a
+                href={
+                  selectedProfile.urlYouTube
+                    ? selectedProfile.urlYouTube
+                    : "Not specified"
+                }
+              >
+                link to channel/page
+              </a>
+            </p>
+            <p className="information__container__info">
+              Number of completed orders: {selectedProfile.ordersCompleted}
+            </p>
           </div>
         </div>
       </div>
@@ -75,39 +89,41 @@ const MediaPersonProfile = ({
       </div>
       <div className="information-activity">
         <div className="information-activity__name col-1">
-          <p>Activity:</p>
-          <p>Subjects:</p>
-          <p>Number of subscribers:</p>
-          <p>Average age of the audience:</p>
-        </div>
-        <div className="information-activity__name col-2">
-          <p>{selectedProfile.activity ? selectedProfile.activity : "empty"}</p>
-          <p>{selectedProfile.subjects ? selectedProfile.subjects : "empty"}</p>
           <p>
-            {selectedProfile.subscribers
-              ? selectedProfile.subscribers
-              : "empty"}
+            Activity:{" "}
+            {selectedProfile.activity
+              ? selectedProfile.activity
+              : "Not specified"}
           </p>
           <p>
+            Subjects:{" "}
+            {selectedProfile.subjects
+              ? selectedProfile.subjects
+              : "Not specified"}
+          </p>
+          <p>
+            Number of subscribers:{" "}
+            {selectedProfile.subscribers
+              ? selectedProfile.subscribers
+              : "Not specified"}
+          </p>
+          <p>
+            Average age of the audience:{" "}
             {selectedProfile.ageAudience
               ? selectedProfile.ageAudience
-              : "empty"}
+              : "Not specified"}
           </p>
         </div>
       </div>
       <div className="edit">
         {role === "Blogger" ? (
           <Link className="edit__link" to="/profileMediaEdit">
-            <Button variant="outlined">Edit</Button>
+            <img src={assetList.edit} />
           </Link>
         ) : (
-          <Button
-            className="edit__link"
-            variant="outlined"
-            onClick={chekedChatId}
-          >
+          <button className="edit__message" onClick={chekedChatId}>
             Write message
-          </Button>
+          </button>
         )}
       </div>
     </>

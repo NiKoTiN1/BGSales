@@ -1,0 +1,16 @@
+export const assetList = {
+  imageInfoFirst: require("./image/imageFirst.svg"),
+  imageInfoSecond: require("./image/imageSecond.svg"),
+  logo: require("./image/logo.svg"),
+  groupImg: require("./image/groupImg.svg"),
+  info: require("./image/info.svg"),
+  look: require("./image/look.svg"),
+  noLook: require("./image/noLook.svg"),
+  menu: require("./image/menu.svg"),
+  search: require("./image/search.svg"),
+  edit: require("./image/edit.svg"),
+  bin: require("./image/bin.svg"),
+  back: require("./image/back.svg"),
+  backTrue: require("./image/backTrue.svg"),
+  error: require("./image/error.svg"),
+};

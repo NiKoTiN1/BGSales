@@ -3,16 +3,21 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { putOrder } from "../../actions";
-import "./order-edit.scss";
+import { postOrder, putOrder } from "../../actions";
+import "../create-order/create-order.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import CreateOrderInterface from "../../interfaces/CreateOrderInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import { TextareaAutosize } from "@material-ui/core";
+import { assetList } from "../../assets";
+import Error from "../error";
 
 const OrderEdit = ({
   dispatch,
   order,
   history,
+  userId,
+  nameOrderUrl,
   role,
 }: CreateOrderInterface) => {
   const [form, setForm] = useState<FormInterface>({
@@ -22,15 +27,41 @@ const OrderEdit = ({
     budget: `${order.budget}`,
     createDate: order.createDate ? order.createDate : String(new Date()),
   });
+  const [warningAge, setWarningAge] = useState(false);
+  const [warningBudget, setWarningBudget] = useState(false);
+  const [errorEmptyTitle, setErrorEmptyTitle] = useState(false);
+  const [errorEmptyAge, setErrorEmptyAge] = useState(false);
+  const [errorEmptyBudget, setErrorEmptyBudget] = useState(false);
+
   const submitForm = (e: any) => {
     e.preventDefault();
-    let errorFlag = false;
-    for (let item in form) {
-      if (form[item] === "") {
-        errorFlag = true;
-      }
+    let allCorrect = true;
+    setWarningAge(false);
+    setWarningBudget(false);
+    setErrorEmptyTitle(false);
+    setErrorEmptyAge(false);
+    setErrorEmptyBudget(false);
+
+    if (form["title"] === "") {
+      setErrorEmptyTitle(true);
+      allCorrect = false;
     }
-    const orderNew = {
+    if (form["audienceAge"] === "") {
+      setErrorEmptyAge(true);
+      allCorrect = false;
+    } else if (!Number(form["audienceAge"])) {
+      setWarningAge(true);
+      allCorrect = false;
+    }
+    if (form["budget"] === "") {
+      setErrorEmptyBudget(true);
+      allCorrect = false;
+    } else if (!Number(form["budget"])) {
+      setWarningBudget(true);
+      allCorrect = false;
+    }
+
+    const newOrder = {
       orderId: order.orderId,
       title: String(form.title),
       audienceAge: Number(form.audienceAge),
@@ -38,14 +69,16 @@ const OrderEdit = ({
       budget: Number(form.budget),
       updateDate: String(new Date()),
     };
-    if (!errorFlag) {
-      dispatch(putOrder(orderNew));
+    if (allCorrect) {
+      dispatch(putOrder(newOrder));
       history.goBack();
     }
   };
+
   if (role !== "Businessman") {
-    return <p>Error this page is not available</p>;
+    return <Error />;
   }
+
   return (
     <>
       <form onSubmit={submitForm}>
@@ -53,42 +86,86 @@ const OrderEdit = ({
           <div className="order-create-form__col-1">
             <h2>Project adit</h2>
             <div className="container">
-              <label className="container__label">Title</label>
-              <TextField
+              <input
+                className={errorEmptyTitle ? "warning" : ""}
                 defaultValue={form.title}
-                variant="outlined"
-                error={form.title === ""}
+                placeholder="Title"
+                value={form.title}
                 onChange={(e: any) =>
                   setForm({ ...form, title: e.target.value })
                 }
               />
+              {errorEmptyTitle ? (
+                <>
+                  <div className="container__error-image">
+                    <img src={assetList.info} />
+                  </div>
+                  <div className="container__error-text">
+                    The field cannot be empty
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className="container">
-              <label className="container__label">Audience Age</label>
-              <TextField
-                defaultValue={form.audienceAge}
-                variant="outlined"
-                error={form.audienceAge === ""}
+              <input
+                className={errorEmptyAge || warningAge ? "warning" : ""}
+                value={form.audienceAge}
+                placeholder="Audience age"
                 onChange={(e: any) =>
                   setForm({ ...form, audienceAge: e.target.value })
                 }
               />
+              {errorEmptyAge || warningAge ? (
+                <>
+                  <div className="container__error-image">
+                    <img src={assetList.info} />
+                  </div>
+                  <div
+                    className={
+                      warningAge
+                        ? "container__warning-text"
+                        : "container__error-text"
+                    }
+                  >
+                    {errorEmptyAge
+                      ? "The field cannot be empty"
+                      : "The field must be a number"}
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className="container">
-              <label className="container__label">Budget</label>
-              <TextField
-                defaultValue={form.budget}
-                variant="outlined"
-                error={form.budget === ""}
+              <input
+                className={errorEmptyBudget || warningBudget ? "warning" : ""}
+                value={form.budget}
+                placeholder="Budget"
                 onChange={(e: any) =>
                   setForm({ ...form, budget: e.target.value })
                 }
               />
+              {errorEmptyBudget || warningBudget ? (
+                <>
+                  <div className="container__error-image">
+                    <img src={assetList.info} />
+                  </div>
+                  <div
+                    className={
+                      warningBudget
+                        ? "container__warning-text"
+                        : "container__error-text"
+                    }
+                  >
+                    {errorEmptyBudget
+                      ? "The field cannot be empty"
+                      : "The field must be a number"}
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className="container">
-              <label className="container__label">Description</label>
               <textarea
                 className="container__text"
+                placeholder="Description"
                 name="message"
                 value={String(form.description)}
                 onChange={(e: any) =>
@@ -99,9 +176,7 @@ const OrderEdit = ({
           </div>
         </div>
         <div className="button-save">
-          <Button type="submit" variant="contained">
-            Apply changes
-          </Button>
+          <button type="submit">Apply changes</button>
         </div>
       </form>
     </>
@@ -110,6 +185,8 @@ const OrderEdit = ({
 const mapStateToProps = (state: StateInterface) => {
   return {
     order: state.order.order,
+    nameOrderUrl: state.order.nameOrderUrl,
+    userId: state.profile.currentUser.profile.userId,
     role: state.profile.currentUser.role,
   };
 };

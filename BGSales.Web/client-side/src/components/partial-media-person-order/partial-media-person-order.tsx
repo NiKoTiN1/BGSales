@@ -39,33 +39,27 @@ const PartialMediaPerson = ({
   return (
     <>
       <div className="partial-media-person-order-info">
-        <div className="partial-media-person-order-info__container col-1">
-          <p>{firstName}</p>
-          <p>{secondName}</p>
+        <div className="partial-media-person-order-info__container">
+          <p className="partial-media-person-order-info__container__name">
+            {firstName} {secondName}
+          </p>
         </div>
-        <div className="partial-media-person-order-info__container col-2">
-          <p>Activity: {activity ? activity : "empty"}</p>
-          <p>Subscribers: {numberSubscribers ? numberSubscribers : "empty"}</p>
-        </div>
-        <div className="partial-media-person-order-info__container col-3">
-          <Link className="edit__link" to={`profileMedia/${userId}`}>
-            <Button
-              className="partial-media-person-order-info__container__btn-look btn"
-              variant="outlined"
-            >
-              Look
-            </Button>{" "}
+        <div className="partial-media-person-order-info__container">
+          <Link
+            className="partial-media-person-order-info__container__btn-look"
+            to={`profileMedia/${userId}`}
+          >
+            Look
           </Link>
           {checked ? (
-            <Button
-              className="partial-media-person-order-info__container__btn-look btn"
-              variant="outlined"
+            <button
+              className="partial-media-person-order-info__container__btn-approve btn"
               onClick={() =>
                 dispatch(postOrderAccept(orderId, userId, currentUserId))
               }
             >
               Approve
-            </Button>
+            </button>
           ) : null}
         </div>
       </div>

@@ -48,13 +48,52 @@ const addSelectedProfile = (selectedProfile: UserProfileInterface) => {
     payload: selectedProfile,
   };
 };
-
+const getSearchMediaPersons = (serachString: string) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `${bgsApi}/Blogger/all/${serachString}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        let allMediaPersons: any = [];
+        data.data.map((item: any) => {
+          const userInfo = {
+            userId: item.userId,
+            imageUrl: item.imageUrl,
+            nickname: item.nickname ? item.nickname : "",
+            firstName: item.firstName,
+            secondName: item.secondName,
+            activity: item.activity ? item.activity : "",
+            numberSubscribers: item.subscribers ? item.subscribers : "",
+          };
+          allMediaPersons.push(userInfo);
+        });
+        dispatch(addMediaPersons(allMediaPersons));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getSearchMediaPersons(serachString));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
 const getMediaPersons = () => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `${bgsApi}Blogger/all`,
+      url: `${bgsApi}/Blogger/all`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
@@ -95,11 +134,10 @@ const getProfileData = () => {
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `${bgsApi}Account/profile`,
+      url: `${bgsApi}/Account/profile`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(changeProfile(data.data));
         dispatch(addSelectedProfile(data.data));
       })
@@ -124,11 +162,10 @@ const getNewProfileData = (id: string) => {
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `${bgsApi}Account/profile/${id}`,
+      url: `${bgsApi}/Account/profile/${id}`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(addSelectedProfile(data.data));
       })
       .catch((data: any) => {
@@ -163,7 +200,7 @@ const putMediaProfileData = (changedProfile: MediaProfileInterface) => {
     formCheck.append("AgeAudience", String(changedProfile.ageAudience));
     axios({
       method: "PUT",
-      url: `${bgsApi}Account/update/blogger`,
+      url: `${bgsApi}/Blogger/update`,
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -199,7 +236,7 @@ const putAdvertiserProfileData = (
     formCheck.append("ImageFile", changedProfileAdvertiser.imageUrl);
     axios({
       method: "PUT",
-      url: `${bgsApi}Account/update/businessman`,
+      url: `${bgsApi}/Businessman/update`,
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -227,7 +264,7 @@ const getPartialProfileData = () => {
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `${bgsApi}Account/profile/parital`,
+      url: `${bgsApi}/Account/profile/parital`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
@@ -266,7 +303,7 @@ const postData = (user: RegistrationUserInterface) => {
     formCheck.append("Password", user.Password);
     axios({
       method: "POST",
-      url: `${bgsApi}Account/register`,
+      url: `${bgsApi}/${user.UserType}/register`,
       data: formCheck,
     }).then((data: any) => {
       dispatch(getPartialProfileData());
@@ -285,7 +322,7 @@ const postProfileData = (user: LogInUserInterface) => {
     formCheck.append("Password", user.Password);
     axios({
       method: "POST",
-      url: `${bgsApi}Account/login`,
+      url: `${bgsApi}/Account/login`,
       data: formCheck,
     }).then((data: any) => {
       dispatch(getPartialProfileData());
@@ -298,6 +335,7 @@ const postProfileData = (user: LogInUserInterface) => {
 };
 
 export {
+  getSearchMediaPersons,
   getMediaPersons,
   addCheckUser,
   postProfileData,

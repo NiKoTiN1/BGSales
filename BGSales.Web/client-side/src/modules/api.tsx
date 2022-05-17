@@ -1,1 +1,1 @@
-export const bgsApi = "https://localhost:5011/api/";
+export const bgsApi = "https://localhost:5011/api";

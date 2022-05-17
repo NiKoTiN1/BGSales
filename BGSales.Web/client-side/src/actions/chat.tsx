@@ -6,6 +6,7 @@ import FullChatInterface from "../interfaces/FullChatInterface";
 import MessagesInterface from "../interfaces/MessagesInterface";
 import { addCheckUser } from "./profile";
 import { addToken, refreshToken } from "./token";
+import { bgsApi } from "../modules/api";
 
 const addChats = (chats: Array<ChatInterface>) => {
   return {
@@ -27,40 +28,6 @@ const addMessage = (message: MessagesInterface) => {
   };
 };
 
-const payOrder = (stripeId: string, orderId: string) => {
-  const formCheck = new FormData();
-  return (dispatch: Function) => {
-    formCheck.append("StripeId", stripeId);
-    formCheck.append("OrderId", orderId);
-    const token = localStorage.getItem("accessToken");
-    axios({
-      method: "POST",
-      url: "https://localhost:5001/api/Order/purchase",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Access-Control-Allow-Origin": "*",
-      },
-      data: formCheck,
-    })
-      .then((data: any) => {
-        window.location.href = data.data;
-      })
-      .catch((data: any) => {
-        if (data.response.status === 401) {
-          refreshToken()
-            .then((data: any) => {
-              addToken(data.data);
-              dispatch(payOrder(stripeId, orderId));
-            })
-            .catch(() => {
-              localStorage.removeItem("accessToken");
-              localStorage.removeItem("refreshToken");
-              dispatch(addCheckUser(false));
-            });
-        }
-      });
-  };
-};
 const sendMessage = (senderUserId: string, text: string, chatId: string) => {
   return (dispatch: Function) => {
     const token = localStorage.getItem("accessToken");
@@ -70,7 +37,7 @@ const sendMessage = (senderUserId: string, text: string, chatId: string) => {
     formCheck.append("ChatId", chatId);
     axios({
       method: "POST",
-      url: "https://localhost:5001/api/Chat/send",
+      url: `${bgsApi}/Chat/send`,
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
@@ -99,7 +66,7 @@ const getAllChats = () => {
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: "https://localhost:5001/api/Chat/all",
+      url: `${bgsApi}/Chat/all`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
@@ -126,11 +93,10 @@ const getChat = (chatId: string) => {
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `https://localhost:5001/api/Chat/${chatId}`,
+      url: `${bgsApi}/Chat/${chatId}`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
-        console.log(data.data);
         dispatch(addChat(data.data));
       })
       .catch((data: any) => {
@@ -158,7 +124,7 @@ const joinChat = (bloggerUserId: string, businessmanUserId: string) => {
     formCheck.append("BusinessmanUserId", businessmanUserId);
     axios({
       method: "POST",
-      url: "https://localhost:5001/api/Chat/join",
+      url: `${bgsApi}/Chat/join`,
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
@@ -182,12 +148,4 @@ const joinChat = (bloggerUserId: string, businessmanUserId: string) => {
   };
 };
 
-export {
-  payOrder,
-  addMessage,
-  addChat,
-  sendMessage,
-  getAllChats,
-  getChat,
-  joinChat,
-};
+export { addMessage, addChat, sendMessage, getAllChats, getChat, joinChat };

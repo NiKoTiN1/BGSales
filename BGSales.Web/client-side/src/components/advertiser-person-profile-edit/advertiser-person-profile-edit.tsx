@@ -9,6 +9,8 @@ import "./advertiser-person-profile-edit.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import { useHistory } from "react-router-dom";
+import Error from "../error";
 
 const AdvertiserPersonProfileEdit = ({
   dispatch,
@@ -24,12 +26,6 @@ const AdvertiserPersonProfileEdit = ({
   const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
-    let errorFlag = false;
-    for (let item in form) {
-      if (form[item] === "") {
-        errorFlag = true;
-      }
-    }
     const userProfile = {
       userId: currentUser.profile.userId,
       imageUrl: form.imageUrl,
@@ -37,10 +33,9 @@ const AdvertiserPersonProfileEdit = ({
       secondName: String(form.secondName),
       nameCompany: String(form.nameCompany),
     };
-    if (!errorFlag) {
-      dispatch(putAdvertiserProfileData(userProfile));
-      history.push("/profileAdvertiser");
-    }
+
+    dispatch(putAdvertiserProfileData(userProfile));
+    history.push("/profileAdvertiser");
   };
   const imageChange = (e: any) => {
     let reader = new FileReader();
@@ -52,7 +47,7 @@ const AdvertiserPersonProfileEdit = ({
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Businessman") {
-    return <p>Error this page is not available</p>;
+    return <Error />;
   }
   return (
     <>
@@ -72,34 +67,29 @@ const AdvertiserPersonProfileEdit = ({
           </div>
           <div className="advertiser-profile-form__col-1">
             <h2>Personal information</h2>
-            <div>
-              <TextField
-                label="First name"
-                defaultValue={form.firstName}
-                variant="outlined"
-                error={!form.firstName}
+            <div className="container">
+              <input
+                type="text"
+                placeholder="First name"
+                value={form.firstName}
                 onChange={(e: any) =>
                   setForm({ ...form, firstName: e.target.value })
                 }
               />
             </div>
             <div className="container">
-              <TextField
-                label="Second name"
-                defaultValue={form.secondName}
-                variant="outlined"
-                error={!form.secondName}
+              <input
+                placeholder="Second name"
+                value={form.secondName}
                 onChange={(e: any) =>
                   setForm({ ...form, secondName: e.target.value })
                 }
               />
             </div>
             <div className="container">
-              <TextField
-                label="Name Company"
-                defaultValue={form.nameCompany}
-                variant="outlined"
-                error={!form.nameCompany}
+              <input
+                placeholder="Name Company"
+                value={form.nameCompany}
                 onChange={(e: any) =>
                   setForm({ ...form, nameCompany: e.target.value })
                 }
@@ -107,10 +97,8 @@ const AdvertiserPersonProfileEdit = ({
             </div>
           </div>
         </div>
-        <div className="button-save">
-          <Button type="submit" variant="contained">
-            Apply changes
-          </Button>
+        <div className="button-save-adv">
+          <button type="submit">Apply changes</button>
         </div>
       </form>
     </>

@@ -15,22 +15,17 @@ import {
   HubConnectionBuilder,
 } from "@microsoft/signalr";
 import { imageSrc } from "../../imageRequire";
+import Error from "../error";
 
 const Chat = ({ chatId, chats, dispatch, chat, userId, role }: any) => {
   const [connection, setConnection] = useState<HubConnection>();
   const [chated, setChat] = useState<any>([]);
   const latestChat = useRef<any>();
   latestChat.current = chated;
-  useEffect(() => {}, [chat]);
-  useEffect(() => {
-    dispatch(getAllChats());
-    if (chatId) {
-      dispatch(getChat(chatId));
-    }
-  }, [chatId]);
+
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:5001/chatsocket", {
+      .withUrl("https://localhost:5011/chatsocket", {
         skipNegotiation: true,
         transport: HttpTransportType.WebSockets,
       })
@@ -38,13 +33,22 @@ const Chat = ({ chatId, chats, dispatch, chat, userId, role }: any) => {
       .build();
 
     setConnection(newConnection);
+    return () => {
+      newConnection.stop();
+    };
   }, []);
+  useEffect(() => {
+    dispatch(getAllChats());
+    if (chatId) {
+      dispatch(getChat(chatId));
+    }
+  }, [chatId]);
+
   useEffect(() => {
     if (connection) {
       connection
         .start()
         .then((result) => {
-          console.log("Connected!");
           connection.on("ReceiveOne", (message) => {
             setTimeout(() => {}, 200);
             const updatedChat = [...latestChat.current];
@@ -58,6 +62,15 @@ const Chat = ({ chatId, chats, dispatch, chat, userId, role }: any) => {
       console.log("No");
     }
   }, [connection]);
+  useEffect(() => {
+    if (document.getElementsByClassName("chat__message")[0]) {
+      const mess = document.getElementsByClassName("chat__message")[0];
+      mess.scrollTop = mess.scrollHeight;
+    }
+  });
+  if (role === "") {
+    return <Error />;
+  }
   const elements = chats.map((item: ChatInterface) => {
     return (
       <Link className="chats__person-link" to={`/chat/${item.chatId}`}>
@@ -93,8 +106,8 @@ const Chat = ({ chatId, chats, dispatch, chat, userId, role }: any) => {
   return (
     <div className="chat-page">
       <ul className="chats">{elements}</ul>
-      <div className="chat">
-        {chatId ? (
+      {chatId ? (
+        <div className="chat">
           <div className="chat__header">
             <img
               className="chat__header__img"
@@ -108,10 +121,10 @@ const Chat = ({ chatId, chats, dispatch, chat, userId, role }: any) => {
             <p className="chat__header__name">{chat.recivierInfo.firstName}</p>
             <p className="chat__header__name">{chat.recivierInfo.secondName}</p>
           </div>
-        ) : null}
-        <ul className="chat__message"> {messages}</ul>
-        {chatId ? <MessageSendForm chatId={chatId} userId={userId} /> : null}
-      </div>
+          <ul className="chat__message"> {messages}</ul>
+          <MessageSendForm chatId={chatId} userId={userId} />
+        </div>
+      ) : null}
     </div>
   );
 };

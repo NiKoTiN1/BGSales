@@ -1,21 +1,49 @@
 .partial-media-person-order-info {
-  position: relative;
   display: flex;
   flex-direction: row;
+  width: 60%;
   justify-content: space-between;
   &__container {
-    .btn {
-      margin-top: 15px;
-      width: 100px;
-      height: 50px;
-    }
-  }
-  .col-2 {
-    margin-left: 30px;
-    width: 200px;
-  }
-  .col-3 {
     display: flex;
-    margin-left: 0px;
+    align-items: center;
+    &__name {
+      font-family: "Ubuntu";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 28px;
+      line-height: 32px;
+    }
+    &__btn-look {
+      display: flex;
+      width: 60px;
+      height: 63px;
+      font-family: "Ubuntu";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 25px;
+      line-height: 29px;
+      margin-right: 40px;
+      text-decoration: none;
+      color: #524ba7;
+      align-items: center;
+      justify-content: center;
+    }
+    &__btn-approve {
+      display: flex;
+      font-family: "Ubuntu";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+      background: transparent;
+      cursor: pointer;
+      color: #524ba7;
+      width: 180px;
+      height: 63px;
+      border: 5px solid #524ba7;
+      backdrop-filter: blur(7px);
+    }
   }
 }

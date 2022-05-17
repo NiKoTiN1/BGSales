@@ -9,6 +9,8 @@ import "./media-person-profile-edit.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import Error from "../error";
+
 const MediaPersonProfileEdit = ({
   dispatch,
   currentUser,
@@ -28,15 +30,7 @@ const MediaPersonProfileEdit = ({
   const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
-    let errorFlag = false;
-    for (let item in form) {
-      if (form[item] === "") {
-        errorFlag = true;
-      }
-    }
-    if (!Number(form["subscribers"]) || !Number(form["subscribers"])) {
-      errorFlag = true;
-    }
+
     const userProfile = {
       userId: currentUser.profile.userId,
       imageUrl: form.imageUrl,
@@ -49,10 +43,9 @@ const MediaPersonProfileEdit = ({
       subscribers: Number(form.subscribers),
       ageAudience: Number(form.ageAudience),
     };
-    if (!errorFlag) {
-      dispatch(putMediaProfileData(userProfile));
-      history.push("/profileMedia");
-    }
+
+    dispatch(putMediaProfileData(userProfile));
+    history.push("/profileMedia");
   };
   const imageChange = (e: any) => {
     let reader = new FileReader();
@@ -64,7 +57,7 @@ const MediaPersonProfileEdit = ({
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Blogger") {
-    return <p>Error this page is not available</p>;
+    return <Error />;
   }
   return (
     <>
@@ -85,44 +78,38 @@ const MediaPersonProfileEdit = ({
           <div className="media-profile-form__col-1">
             <h2>Personal information</h2>
             <div>
-              <TextField
-                label="First name"
-                defaultValue={form.firstName}
-                variant="outlined"
-                error={!form.firstName}
-                onChange={(e: any) =>
-                  setForm({ ...form, firstName: e.target.value })
-                }
-              />
+              <div className="container">
+                <input
+                  placeholder="First name"
+                  value={form.firstName}
+                  onChange={(e: any) =>
+                    setForm({ ...form, firstName: e.target.value })
+                  }
+                />
+              </div>
             </div>
             <div className="container">
-              <TextField
-                label="Second name"
-                defaultValue={form.secondName}
-                variant="outlined"
-                error={!form.secondName}
+              <input
+                placeholder="Second name"
+                value={form.secondName}
                 onChange={(e: any) =>
                   setForm({ ...form, secondName: e.target.value })
                 }
               />
             </div>
             <div className="container">
-              <TextField
-                label="Nickname"
-                defaultValue={form.nickname}
-                variant="outlined"
-                error={!form.nickname}
+              <input
+                placeholder="Nickname"
+                value={form.nickname}
                 onChange={(e: any) =>
                   setForm({ ...form, nickname: e.target.value })
                 }
               />
             </div>
             <div className="container">
-              <TextField
-                label="Link to channel"
-                defaultValue={form.urlYouTube}
-                variant="outlined"
-                error={!form.urlYouTube}
+              <input
+                placeholder="Link to channel"
+                value={form.urlYouTube}
                 onChange={(e: any) =>
                   setForm({ ...form, urlYouTube: e.target.value })
                 }
@@ -132,43 +119,39 @@ const MediaPersonProfileEdit = ({
           <div className="media-profile-form__col-2">
             <h2>Activity information</h2>
             <div>
-              <TextField
-                label="Activity"
-                defaultValue={form.activity}
-                variant="outlined"
-                error={!form.activity}
-                onChange={(e: any) =>
-                  setForm({ ...form, activity: e.target.value })
-                }
-              />
               <div className="container">
-                <TextField
-                  label="Subjects"
-                  defaultValue={form.subjects}
-                  variant="outlined"
-                  error={!form.subjects}
+                <input
+                  placeholder="Activity"
+                  value={form.activity}
+                  onChange={(e: any) =>
+                    setForm({ ...form, activity: e.target.value })
+                  }
+                />
+              </div>
+              <div className="container">
+                <input
+                  placeholder="Subjects"
+                  value={form.subjects}
                   onChange={(e: any) =>
                     setForm({ ...form, subjects: e.target.value })
                   }
                 />
               </div>
               <div className="container">
-                <TextField
-                  label="Number of subscribers"
-                  defaultValue={form.subscribers}
-                  variant="outlined"
-                  error={form.subscribers === "" || !Number(form.subscribers)}
+                <p>Number of subscribers</p>
+                <input
+                  placeholder="Number of subscribers"
+                  value={form.subscribers}
                   onChange={(e: any) =>
                     setForm({ ...form, subscribers: e.target.value })
                   }
                 />
               </div>
               <div className="container">
-                <TextField
-                  label="Average age of the audience"
-                  defaultValue={form.ageAudience}
-                  variant="outlined"
-                  error={!form.ageAudience || !Number(form.ageAudience)}
+                <p>Average age of the audience</p>
+                <input
+                  placeholder="Average age of the audience"
+                  value={form.ageAudience}
                   onChange={(e: any) =>
                     setForm({ ...form, ageAudience: e.target.value })
                   }
@@ -177,10 +160,8 @@ const MediaPersonProfileEdit = ({
             </div>
           </div>
         </div>
-        <div className="button-save">
-          <Button type="submit" variant="contained">
-            Apply changes
-          </Button>
+        <div className="button-save-media">
+          <button type="submit">Apply changes</button>
         </div>
       </form>
     </>

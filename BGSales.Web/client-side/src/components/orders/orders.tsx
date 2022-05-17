@@ -10,6 +10,7 @@ import StateInterface from "../../interfaces/StateInterface";
 import { deleteOrders, getOrders, addNameOrderUrl } from "../../actions";
 import PartialOrder from "../partial-order";
 import PartialOrderInformationInterface from "../../interfaces/PartialOrderInformationInterface";
+import Error from "../error";
 
 const Orders = ({
   orders,
@@ -65,6 +66,9 @@ const Orders = ({
       </li>
     );
   });
+  if (currentUser.role === "") {
+    return <Error />;
+  }
   return (
     <>
       <ul className="list-orders">{elements}</ul>
