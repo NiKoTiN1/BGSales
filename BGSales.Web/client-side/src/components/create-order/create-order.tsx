@@ -10,6 +10,7 @@ import CreateOrderInterface from "../../interfaces/CreateOrderInterface";
 import StateInterface from "../../interfaces/StateInterface";
 import { TextareaAutosize } from "@material-ui/core";
 import { assetList } from "../../assets";
+import Error from "../error";
 
 const CreateOrder = ({
   dispatch,
@@ -73,7 +74,7 @@ const CreateOrder = ({
   };
 
   if (role !== "Businessman") {
-    history.push("/error");
+    return <Error />;
   }
 
   return (

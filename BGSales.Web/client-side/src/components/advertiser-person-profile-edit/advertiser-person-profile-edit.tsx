@@ -10,6 +10,7 @@ import FormInterface from "../../interfaces/FormInterface";
 import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
 import StateInterface from "../../interfaces/StateInterface";
 import { useHistory } from "react-router-dom";
+import Error from "../error";
 
 const AdvertiserPersonProfileEdit = ({
   dispatch,
@@ -46,7 +47,7 @@ const AdvertiserPersonProfileEdit = ({
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Businessman") {
-    history.push("/error");
+    return <Error />;
   }
   return (
     <>

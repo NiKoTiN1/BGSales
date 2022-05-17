@@ -11,7 +11,6 @@ import Chat from "../chat";
 import Order from "../order";
 import CreateOrder from "../create-order";
 import Orders from "../orders";
-import Error from "../error";
 import MediaPersons from "../media-persons";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -38,7 +37,6 @@ const App = ({ currentUser, dispatch }: PropsAppInterface) => {
         <Route path="/authorization" exact component={LoginForm} />
         <Route path="/registration" exact component={RegistrationForm} />
         <Route path="/" exact component={Main} />
-        <Route path="/error" exact component={Error} />
         <Route path="/profileMedia" exact component={MediaPersonProfile} />
         <Route
           path="/profileMedia/:id"

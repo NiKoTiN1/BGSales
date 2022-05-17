@@ -22,6 +22,7 @@ import UserProfileInterface from "../../interfaces/UserProfileInterface";
 import history from "../../history";
 import { assetList } from "../../assets";
 import PartialMediaPerson from "../partial-media-person";
+import Error from "../error";
 
 interface OrderProps {
   id: string;
@@ -62,7 +63,7 @@ const Order = ({
     );
   });
   if (role === "") {
-    history.push("/error");
+    return <Error />;
   }
   const chekedChatId = () => {
     if (!order.chatId) {
@@ -122,7 +123,10 @@ const Order = ({
                   Write message
                 </button>
               </div>
-                {role === "Businessman" ? null : window.location.href.search("selectedProjects") === -1 && checkedAccept &&
+              {role === "Businessman" ? null : window.location.href.search(
+                  "selectedProjects"
+                ) === -1 &&
+                checkedAccept &&
                 !order.blogger ? (
                 <button
                   className="order__btn-respond"

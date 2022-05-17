@@ -34,6 +34,40 @@ const addOrder = (order: OrderInterface) => {
   };
 };
 
+const payOrder = (stripeId: string, orderId: string) => {
+  const formCheck = new FormData();
+  return (dispatch: Function) => {
+    formCheck.append("StripeId", stripeId);
+    formCheck.append("OrderId", orderId);
+    const token = localStorage.getItem("accessToken");
+    axios({
+      method: "POST",
+      url: `${bgsApi}/Order/purchase`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
+      },
+      data: formCheck,
+    })
+      .then((data: any) => {
+        window.location.href = data.data;
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(payOrder(stripeId, orderId));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
 const postOrderAccept = (
   orderId: string,
   bloggerUserId: string,
@@ -47,7 +81,7 @@ const postOrderAccept = (
     formCheck.append("BusinessmanUserId", businessmanUserId);
     axios({
       method: "POST",
-      url: `${bgsApi}Order/accept`,
+      url: `${bgsApi}/Order/accept`,
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
@@ -81,7 +115,7 @@ const postOrderReqest = (userId: string, orderId: string) => {
     formCheck.append("OrderId", orderId);
     axios({
       method: "POST",
-      url: `${bgsApi}Order/request`,
+      url: `${bgsApi}/Order/request`,
       headers: { Authorization: `Bearer ${token}` },
       data: formCheck,
     })
@@ -110,7 +144,7 @@ const getOrder = (idOrder: string) => {
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `${bgsApi}Order/${idOrder}`,
+      url: `${bgsApi}/Order/${idOrder}`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
@@ -144,7 +178,7 @@ const putOrder = (order: PutOrderInterface) => {
     formCheck.append("Budget", String(order.budget));
     axios({
       method: "PUT",
-      url: `${bgsApi}Order/update`,
+      url: `${bgsApi}/Order/update`,
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -173,7 +207,7 @@ const deleteOrder = (id: string, idOrder: string) => {
   return (dispatch: Function) => {
     axios({
       method: "DELETE",
-      url: `${bgsApi}Order/remove/${idOrder}`,
+      url: `${bgsApi}/Order/remove/${idOrder}`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
@@ -206,7 +240,7 @@ const postOrder = (order: AddOrderInterface, id: string) => {
     formCheck.append("Budget", String(order.budget));
     axios({
       method: "POST",
-      url: `${bgsApi}Order/create`,
+      url: `${bgsApi}/Order/create`,
       data: formCheck,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -229,12 +263,43 @@ const postOrder = (order: AddOrderInterface, id: string) => {
       });
   };
 };
+const getSearchOrders = (
+  bloggerId: string,
+  searchString: string,
+  typeSearch: string
+) => {
+  const token = localStorage.getItem("accessToken");
+  return (dispatch: Function) => {
+    axios({
+      method: "GET",
+      url: `${bgsApi}/Order/${typeSearch}/${bloggerId}/${searchString}`,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((data: any) => {
+        dispatch(addOrders(data.data));
+      })
+      .catch((data: any) => {
+        if (data.response.status === 401) {
+          refreshToken()
+            .then((data: any) => {
+              addToken(data.data);
+              dispatch(getSearchOrders(bloggerId, searchString, typeSearch));
+            })
+            .catch(() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              dispatch(addCheckUser(false));
+            });
+        }
+      });
+  };
+};
 const getOrders = (id: string, name: string) => {
   const token = localStorage.getItem("accessToken");
   return (dispatch: Function) => {
     axios({
       method: "GET",
-      url: `${bgsApi}Order/${name}/${id}`,
+      url: `${bgsApi}/Order/${name}/${id}`,
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((data: any) => {
@@ -258,6 +323,8 @@ const getOrders = (id: string, name: string) => {
 };
 
 export {
+  payOrder,
+  getSearchOrders,
   postOrderAccept,
   postOrderReqest,
   deleteOrders,

@@ -7,23 +7,45 @@ import AppHeaderInterface from "../../interfaces/AppHeaderInterface";
 import StateInterface from "../../interfaces/StateInterface";
 import { getPartialProfileData, addNameOrderUrl } from "../../actions";
 import { assetList } from "../../assets/";
-
+import {
+  getSearchMediaPersons,
+  getSearchOrders,
+  deleteOrders,
+} from "../../actions";
 const AppHeader = ({
   checkUser,
   currentUser,
   dispatch,
 }: AppHeaderInterface) => {
   const location = useLocation();
-  const screenWidth = window.innerWidth
-  const [search, setSearch] = useState("");
+  const screenWidth = window.innerWidth;
   const [searchHidden, setSearchHidden] = useState(false);
-
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       dispatch(getPartialProfileData());
     }
   }, []);
-
+  const serchFind = (e: any) => {
+    console.log(window.location.href);
+    if (window.location.href.search("mediaPersons") !== -1) {
+      dispatch(getSearchMediaPersons(e.target.value));
+    } else if (window.location.href.search("allProjects") !== -1) {
+      dispatch(deleteOrders());
+      dispatch(
+        getSearchOrders(currentUser.profile.userId, e.target.value, "available")
+      );
+    } else if (window.location.href.search("selectedProjects") !== -1) {
+      dispatch(deleteOrders());
+      dispatch(
+        getSearchOrders(currentUser.profile.userId, e.target.value, "requested")
+      );
+    } else if (window.location.href.search("acceptedProjects") !== -1) {
+      dispatch(deleteOrders());
+      dispatch(
+        getSearchOrders(currentUser.profile.userId, e.target.value, "accepted")
+      );
+    }
+  };
   return (
     <header className="header">
       <Link className="header__logo" to="/">
@@ -31,24 +53,30 @@ const AppHeader = ({
       </Link>
       {checkUser ? (
         <>
-          {window.location.href.search("mediaPersons") !== -1 || window.location.href.search("projects") !== -1 ?
-          <div className={(screenWidth < 1650 && currentUser.role === "Blogger") || screenWidth < 1275 ? "header__search low" : "header__search"}>
-            {searchHidden ? (
-              <input
-                className="input-hidden"
-                type="text"
-                disabled
-                onChange={(e: any) => setSearch(e.target.value)}
-              />
-            ) : (
-              <input
-                type="text"
-                onChange={(e: any) => setSearch(e.target.value)}
-              />
-            )}
-            <img src={assetList.search} />
-            </div> : null}
-          
+          {window.location.href.search("mediaPersons") !== -1 ||
+          window.location.href.search("projects") !== -1 ? (
+            <div
+              className={
+                (screenWidth < 1650 && currentUser.role === "Blogger") ||
+                screenWidth < 1275
+                  ? "header__search low"
+                  : "header__search"
+              }
+            >
+              {searchHidden ? (
+                <input
+                  className="input-hidden"
+                  type="text"
+                  disabled
+                  onChange={serchFind}
+                />
+              ) : (
+                <input type="text" onChange={serchFind} />
+              )}
+              <img src={assetList.search} />
+            </div>
+          ) : null}
+
           {currentUser.role === "Blogger" ? (
             <>
               <Link

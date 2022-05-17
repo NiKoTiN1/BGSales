@@ -5,13 +5,12 @@ import { assetList } from "../../assets";
 import "./error.scss";
 
 const Error = () => {
-
-	return (
-		<div className="container-error">
-			<img src={assetList.error}/>
-			<p>Error this page is not available</p>
-		</div>
-	);
+  return (
+    <div className="container-error">
+      <img src={assetList.error} />
+      <p>Error this page is not available</p>
+    </div>
+  );
 };
 
 export default Error;

@@ -10,6 +10,7 @@ import StateInterface from "../../interfaces/StateInterface";
 import { deleteOrders, getOrders, addNameOrderUrl } from "../../actions";
 import PartialOrder from "../partial-order";
 import PartialOrderInformationInterface from "../../interfaces/PartialOrderInformationInterface";
+import Error from "../error";
 
 const Orders = ({
   orders,
@@ -66,7 +67,7 @@ const Orders = ({
     );
   });
   if (currentUser.role === "") {
-    history.push("/error");
+    return <Error />;
   }
   return (
     <>

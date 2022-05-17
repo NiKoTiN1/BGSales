@@ -13,7 +13,7 @@ const refreshToken = () => {
   };
   return axios({
     method: "PUT",
-    url: `${bgsApi}Token/refresh`,
+    url: `${bgsApi}/Token/refresh`,
     headers: {
       "Content-Type": "application/json",
     },

@@ -10,10 +10,10 @@ import {
   addRole,
   getNewProfileData,
   getMediaPersons,
+  getSearchMediaPersons,
 } from "./profile";
 import { refreshToken } from "./token";
 import {
-  payOrder,
   addMessage,
   addChat,
   sendMessage,
@@ -22,6 +22,7 @@ import {
   joinChat,
 } from "./chat";
 import {
+  payOrder,
   postOrderAccept,
   postOrderReqest,
   deleteOrders,
@@ -31,9 +32,12 @@ import {
   deleteOrder,
   postOrder,
   getOrders,
+  getSearchOrders,
 } from "./order";
 
 export {
+  getSearchOrders,
+  getSearchMediaPersons,
   payOrder,
   addMessage,
   addChat,

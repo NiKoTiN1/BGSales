@@ -8,6 +8,7 @@ import PersonProfileInterface from "../../interfaces/PersonProfileInterface";
 import StateInterface from "../../interfaces/StateInterface";
 import { getProfileData, getNewProfileData, joinChat } from "../../actions";
 import { assetList } from "../../assets";
+import Error from "../error";
 const AdvertiserPersonProfile = ({
   profile,
   dispatch,
@@ -24,7 +25,7 @@ const AdvertiserPersonProfile = ({
     }
   }, []);
   if (role === "") {
-    history.push("/error");
+    return <Error />;
   }
   return (
     <>

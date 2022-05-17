@@ -13,8 +13,10 @@ const MessageSendForm = ({ userId, chatId, dispatch }: Props) => {
   const [value, setValue] = useState("");
   const onSubmit = (e: any) => {
     e.preventDefault();
-    dispatch(sendMessage(userId, value, chatId));
-    setValue("");
+    if (value !== "") {
+      dispatch(sendMessage(userId, value, chatId));
+      setValue("");
+    }
   };
 
   return (

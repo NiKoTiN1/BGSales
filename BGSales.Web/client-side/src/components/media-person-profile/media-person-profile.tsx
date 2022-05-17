@@ -9,6 +9,7 @@ import StateInterface from "../../interfaces/StateInterface";
 import { getProfileData, getNewProfileData, joinChat } from "../../actions";
 import history from "../../history";
 import { assetList } from "../../assets";
+import Error from "../error";
 
 const MediaPersonProfile = ({
   profile,
@@ -25,7 +26,7 @@ const MediaPersonProfile = ({
     }
   }, []);
   if (role === "") {
-    history.push("/error");
+    return <Error />;
   }
   const chekedChatId = () => {
     if (!selectedProfile.chatId) {
@@ -120,7 +121,7 @@ const MediaPersonProfile = ({
             <img src={assetList.edit} />
           </Link>
         ) : (
-          <button className="edit__link" onClick={chekedChatId}>
+          <button className="edit__message" onClick={chekedChatId}>
             Write message
           </button>
         )}

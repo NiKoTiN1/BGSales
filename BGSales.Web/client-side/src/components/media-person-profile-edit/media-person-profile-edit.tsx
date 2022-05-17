@@ -9,6 +9,8 @@ import "./media-person-profile-edit.scss";
 import FormInterface from "../../interfaces/FormInterface";
 import PersonProfileEditInterface from "../../interfaces/PersonProfileEditInterface";
 import StateInterface from "../../interfaces/StateInterface";
+import Error from "../error";
+
 const MediaPersonProfileEdit = ({
   dispatch,
   currentUser,
@@ -28,7 +30,7 @@ const MediaPersonProfileEdit = ({
   const [imgResult, setImgResult] = useState(currentUser.profile.imageUrl);
   const submitForm = (e: any) => {
     e.preventDefault();
-  
+
     const userProfile = {
       userId: currentUser.profile.userId,
       imageUrl: form.imageUrl,
@@ -41,10 +43,9 @@ const MediaPersonProfileEdit = ({
       subscribers: Number(form.subscribers),
       ageAudience: Number(form.ageAudience),
     };
-  
+
     dispatch(putMediaProfileData(userProfile));
     history.push("/profileMedia");
-  
   };
   const imageChange = (e: any) => {
     let reader = new FileReader();
@@ -56,7 +57,7 @@ const MediaPersonProfileEdit = ({
     reader.readAsDataURL(file);
   };
   if (currentUser.role !== "Blogger") {
-    history.push("/error");
+    return <Error />;
   }
   return (
     <>
@@ -77,7 +78,7 @@ const MediaPersonProfileEdit = ({
           <div className="media-profile-form__col-1">
             <h2>Personal information</h2>
             <div>
-              <div className="container"> 
+              <div className="container">
                 <input
                   placeholder="First name"
                   value={form.firstName}
@@ -137,6 +138,7 @@ const MediaPersonProfileEdit = ({
                 />
               </div>
               <div className="container">
+                <p>Number of subscribers</p>
                 <input
                   placeholder="Number of subscribers"
                   value={form.subscribers}
@@ -146,6 +148,7 @@ const MediaPersonProfileEdit = ({
                 />
               </div>
               <div className="container">
+                <p>Average age of the audience</p>
                 <input
                   placeholder="Average age of the audience"
                   value={form.ageAudience}
@@ -158,9 +161,7 @@ const MediaPersonProfileEdit = ({
           </div>
         </div>
         <div className="button-save-media">
-          <button type="submit">
-            Apply changes
-          </button>
+          <button type="submit">Apply changes</button>
         </div>
       </form>
     </>
