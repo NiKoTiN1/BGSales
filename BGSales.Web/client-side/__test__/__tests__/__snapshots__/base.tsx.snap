@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BGSales Base module check be truth base element footer  1`] = `
+Array [
+  <div
+    className="footer"
+  >
+    <label
+      className="footer__label"
+    >
+      The best project
+    </label>
+    <label
+      className="footer__label"
+    >
+      rodinhatskevich@gmail.com
+    </label>
+    <label
+      className="footer__label"
+    >
+      © Gatskevich Rodion, Biletsky Nikita
+    </label>
+    <div
+      className="footer__background-images"
+    >
+      <img
+        src={
+          Object {
+            "process": [Function],
+          }
+        }
+      />
+    </div>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales Base module check be truth base element user menu  1`] = `
+Array [
+  <div
+    className="user-menu"
+  >
+    <div>
+      <img
+        alt=""
+        className="user-menu__img"
+        onClick={[Function]}
+        src={
+          Object {
+            "process": [Function],
+          }
+        }
+      />
+    </div>
+  </div>,
+  " ",
+]
+`;

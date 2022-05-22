@@ -15,6 +15,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    hot: "only",
   },
   module: {
     rules: [

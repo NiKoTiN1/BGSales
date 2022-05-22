@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BGSales App module check be truth Advertiser person profile 1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales App module check be truth Advertiser person profile 2`] = `
+Array [
+  <div
+    className="footer"
+  >
+    <label
+      className="footer__label"
+    >
+      The best project
+    </label>
+    <label
+      className="footer__label"
+    >
+      rodinhatskevich@gmail.com
+    </label>
+    <label
+      className="footer__label"
+    >
+      © Gatskevich Rodion, Biletsky Nikita
+    </label>
+    <div
+      className="footer__background-images"
+    >
+      <img
+        src={
+          Object {
+            "process": [Function],
+          }
+        }
+      />
+    </div>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales App module check be truth Advertiser person profile edit 1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales App module check be truth Profile footer  1`] = `
+Array [
+  <div
+    className="footer"
+  >
+    <label
+      className="footer__label"
+    >
+      The best project
+    </label>
+    <label
+      className="footer__label"
+    >
+      rodinhatskevich@gmail.com
+    </label>
+    <label
+      className="footer__label"
+    >
+      © Gatskevich Rodion, Biletsky Nikita
+    </label>
+    <div
+      className="footer__background-images"
+    >
+      <img
+        src={
+          Object {
+            "process": [Function],
+          }
+        }
+      />
+    </div>
+  </div>,
+  " ",
+]
+`;
