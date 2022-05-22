@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BGSales Order module check be truth base element footer  1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales Order module check be truth base element user menu  1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales Order module check be truth create order  1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales Order module check be truth order edit  1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales Order module check be truth orders 1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;

@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BGSales Profile module check be truth Advertiser person profile 1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
+
+exports[`BGSales Profile module check be truth Advertiser person profile edit 1`] = `
+Array [
+  <div
+    className="container-error"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+    <p>
+      Error this page is not available
+    </p>
+  </div>,
+  " ",
+]
+`;
